@@ -2479,26 +2479,65 @@ function toggleTelugu(){
 })();
 
 function zoomBy(f){radiusGoal=Math.max(4.5,Math.min(HOME_R+8,radiusGoal*f))}
-var ptrs={},pinch0=0,rad0=0;
-glc.addEventListener("pointerdown",function(e){ptrs[e.pointerId]=[e.clientX,e.clientY];
-  var k=Object.keys(ptrs);if(k.length===2){var a=ptrs[k[0]],b=ptrs[k[1]];
-    pinch0=Math.hypot(a[0]-b[0],a[1]-b[1]);rad0=radiusGoal;drag=false}});
+function clampR(r){return Math.max(4.5,Math.min(HOME_R+8,r))}
+
+/* One pan implementation for both gestures, so a two-finger drag and a
+   one-finger drag move the camera by exactly the same amount. */
+function panBy(dx,dy){
+  var k=radius*0.0016,ca=Math.cos(az0),sa=Math.sin(az0);
+  var ex=(dx*ca+dy*sa)*k, ez=(-dx*sa+dy*ca)*k;
+  camGoal.x-=ex; camGoal.z-=ez; camTarget.x-=ex; camTarget.z-=ez;
+}
+
+/* Pinch. Two rules keep it steady on a phone:
+   - zoom is an ABSOLUTE ratio against the distance the gesture started at, so
+     it cannot drift or compound the way a per-frame delta would;
+   - pan comes from the MIDPOINT between the fingers, which barely moves during
+     a symmetric pinch. Panning from each finger\'s own delta (what this did
+     before) meant spreading two fingers apart also shoved the camera sideways
+     by the full spread, and the two fingers fought each other frame to frame.
+     That was the shake. */
+var ptrs={},pinch0=0,rad0=0,mx0=0,my0=0;
+glc.addEventListener("pointerdown",function(e){
+  ptrs[e.pointerId]=[e.clientX,e.clientY];
+  var k=Object.keys(ptrs);
+  if(k.length===2){
+    var a=ptrs[k[0]],b=ptrs[k[1]];
+    pinch0=Math.hypot(a[0]-b[0],a[1]-b[1]); rad0=radiusGoal;
+    mx0=(a[0]+b[0])/2; my0=(a[1]+b[1])/2;
+    drag=false; moved=99;              /* a pinch must never end in a click */
+    stage.classList.remove("grabbing");
+  }});
 glc.addEventListener("pointermove",function(e){
   if(!(e.pointerId in ptrs))return; ptrs[e.pointerId]=[e.clientX,e.clientY];
   var k=Object.keys(ptrs);
   if(k.length===2&&pinch0>0){
     var a=ptrs[k[0]],b=ptrs[k[1]],d=Math.hypot(a[0]-b[0],a[1]-b[1]);
-    radiusGoal=Math.max(4.5,Math.min(HOME_R+8,rad0*(pinch0/Math.max(d,1))));
+    radiusGoal=clampR(rad0*(pinch0/Math.max(d,1)));
+    var cx=(a[0]+b[0])/2, cy=(a[1]+b[1])/2;
+    panBy(cx-mx0,cy-my0); mx0=cx; my0=cy;
     e.preventDefault();
   }},{passive:false});
-function dropPtr(e){delete ptrs[e.pointerId];if(Object.keys(ptrs).length<2)pinch0=0}
+function dropPtr(e){
+  delete ptrs[e.pointerId];
+  var k=Object.keys(ptrs);
+  if(k.length<2){
+    pinch0=0;
+    /* Hand the surviving finger back to the one-finger pan where it actually
+       is, or lifting one finger snaps the camera by the width of the gap. */
+    if(k.length===1){lx=ptrs[k[0]][0];ly=ptrs[k[0]][1];drag=true}
+  }
+}
 glc.addEventListener("pointerup",dropPtr);glc.addEventListener("pointercancel",dropPtr);
 stage.addEventListener("wheel",function(e){e.preventDefault();
-  radiusGoal=Math.max(4.5,Math.min(HOME_R+8,radiusGoal*(1+e.deltaY*0.0016)))},{passive:false});
+  radiusGoal=clampR(radiusGoal*(1+e.deltaY*0.0016))},{passive:false});
 
 var drag=false,lx=0,ly=0,moved=0;
-glc.addEventListener("pointerdown",function(e){drag=true;moved=0;lx=e.clientX;ly=e.clientY;stage.classList.add("grabbing");glc.setPointerCapture(e.pointerId)});
+glc.addEventListener("pointerdown",function(e){
+  if(Object.keys(ptrs).length>1)return;        /* second finger: pinch owns it */
+  drag=true;moved=0;lx=e.clientX;ly=e.clientY;stage.classList.add("grabbing");glc.setPointerCapture(e.pointerId)});
 glc.addEventListener("pointermove",function(e){
+  if(Object.keys(ptrs).length>1)return;        /* pinching, not dragging */
   if(!drag){                                  /* belt cards read as clickable */
     var cr=lblc.getBoundingClientRect(),mx=e.clientX-cr.left,my=e.clientY-cr.top,over=false;
     for(var ci=0;ci<CARDHIT.length;ci++){var C=CARDHIT[ci];
@@ -2508,12 +2547,12 @@ glc.addEventListener("pointermove",function(e){
   }
   var dx=e.clientX-lx,dy=e.clientY-ly;lx=e.clientX;ly=e.clientY;
   moved+=Math.abs(dx)+Math.abs(dy);
-  var k=radius*0.0016;
-  var ca=Math.cos(az0),sa=Math.sin(az0);
-  camGoal.x-=(dx*ca+dy*sa)*k; camGoal.z-=(-dx*sa+dy*ca)*k;
-  camTarget.x-=(dx*ca+dy*sa)*k; camTarget.z-=(-dx*sa+dy*ca)*k;
+  panBy(dx,dy);
 });
-function endDrag(e){drag=false;stage.classList.remove("grabbing")}
+/* dropPtr runs first and may have handed control to a surviving finger, so
+   only really end the drag once nothing is touching the canvas. */
+function endDrag(e){if(Object.keys(ptrs).length)return;
+  drag=false;stage.classList.remove("grabbing")}
 glc.addEventListener("pointerup",endDrag);glc.addEventListener("pointercancel",endDrag);
 
 glc.addEventListener("click",function(e){
