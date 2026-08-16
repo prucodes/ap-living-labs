@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>AP AI Living Labs — Consoles</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  :root{
+    --bg:#05080e; --bg2:#080d16; --ink:#e8eef7; --dim:#8b9bb4; --faint:#5b6a80;
+    --line:rgba(140,170,210,.14); --line2:rgba(140,170,210,.26);
+    --aqua:#4fd0e0; --gw:#f0a860; --vm:#8fb4ff; --gold:#d9b872;
+  }
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink); min-height:100vh;
+    font:16px/1.55 ui-sans-serif,-apple-system,"SF Pro Text",Inter,Segoe UI,system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    background-image:
+      radial-gradient(900px 520px at 12% -8%, rgba(79,208,224,.11), transparent 62%),
+      radial-gradient(780px 480px at 92% 4%, rgba(143,180,255,.09), transparent 60%);
+    background-attachment:fixed;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:clamp(38px,7vw,86px) clamp(18px,4vw,32px) 70px}
+
+  .mark{display:flex;align-items:center;gap:11px;margin-bottom:30px}
+  .mark svg{width:26px;height:26px;flex:none}
+  .mark b{font-weight:650;letter-spacing:.015em;font-size:15px}
+  .mark span{color:var(--faint);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    border-left:1px solid var(--line2);padding-left:11px;margin-left:2px}
+
+  h1{font-size:clamp(27px,5.1vw,44px);line-height:1.14;letter-spacing:-.022em;
+    font-weight:620;margin:0 0 15px;max-width:19ch}
+  h1 em{font-style:normal;color:var(--aqua)}
+  .lede{color:var(--dim);font-size:clamp(15px,2.1vw,17px);max-width:62ch;margin:0 0 40px}
+
+  .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(258px,1fr))}
+  a.card{
+    display:block;text-decoration:none;color:inherit;position:relative;
+    background:linear-gradient(168deg,rgba(255,255,255,.05),rgba(255,255,255,.014));
+    border:1px solid var(--line);border-radius:15px;padding:21px 21px 19px;
+    transition:transform .22s cubic-bezier(.2,.7,.3,1),border-color .22s,background .22s;
+  }
+  a.card::before{content:"";position:absolute;inset:0 auto auto 0;height:2px;width:38px;
+    border-radius:15px 0 8px 0;background:var(--ac);opacity:.85}
+  a.card:hover{transform:translateY(-3px);border-color:var(--line2);
+    background:linear-gradient(168deg,rgba(255,255,255,.075),rgba(255,255,255,.02))}
+  .k{font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--ac);
+    font-weight:600;margin-bottom:9px}
+  .t{font-size:18.5px;font-weight:600;letter-spacing:-.012em;margin-bottom:6px}
+  .d{color:var(--dim);font-size:13.6px;line-height:1.5}
+  .tag{display:inline-block;margin-top:13px;font-size:11px;letter-spacing:.05em;
+    color:var(--faint);border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+
+  .held{margin-top:40px;border:1px dashed var(--line);border-radius:13px;padding:19px 21px;
+    background:rgba(255,255,255,.014)}
+  .held .hk{font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--gold);font-weight:600;margin-bottom:9px}
+  .held p{margin:0;color:var(--dim);font-size:13.6px;line-height:1.6;max-width:74ch}
+  .held b{color:var(--ink);font-weight:600}
+
+  footer{margin-top:44px;padding-top:19px;border-top:1px solid var(--line);
+    color:var(--faint);font-size:12.2px;line-height:1.7}
+  footer a{color:var(--dim)}
+  @media (prefers-reduced-motion:reduce){a.card{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="mark">
+    <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <path d="M3 19c3.4-4.6 6.7-4.6 10 0s6.6 4.6 10 0" stroke="#4fd0e0" stroke-width="2.1" stroke-linecap="round"/>
+      <path d="M3 12c3.4-4.6 6.7-4.6 10 0s6.6 4.6 10 0" stroke="#4fd0e0" stroke-width="2.1" stroke-linecap="round" opacity=".45"/>
+    </svg>
+    <b>AP AI Living Labs</b><span>Consoles</span>
+  </div>
+
+  <h1>Decision surfaces built on <em>evidence you can trace</em>.</h1>
+  <p class="lede">
+    Working consoles from the Andhra Pradesh AI Living Labs programme. Each one shows where its
+    numbers came from, and says plainly which are measured and which are illustrative.
+  </p>
+
+  <div class="grid">
+
+    <a class="card" href="aquawatch/" style="--ac:var(--aqua)">
+      <div class="k">Sentinel-1 SAR</div>
+      <div class="t">AquaWatch AP</div>
+      <div class="d">Aquaculture extent across five belts of the Godavari&ndash;Krishna delta, with a
+        corroborated encroachment result inside the Kolleru sanctuary.</div>
+      <span class="tag">1 validated &middot; 2 detected &middot; 2 under-count</span>
+    </a>
+
+    <a class="card" href="aware/" style="--ac:var(--gw)">
+      <div class="t" style="margin-top:2px">AWARE</div>
+      <div class="k" style="margin:0 0 7px">Action bridge</div>
+      <div class="d">Turning an alert into an accountable, assigned action with a name, a clock and a
+        closing record.</div>
+      <span class="tag">Concept</span>
+    </a>
+
+    <a class="card" href="vmrda/" style="--ac:var(--vm)">
+      <div class="t" style="margin-top:2px">VMRDA OneView</div>
+      <div class="k" style="margin:0 0 7px">Vizag metro region</div>
+      <div class="d">An intelligence layer above the authority's existing systems rather than another
+        application beside them.</div>
+      <span class="tag">Concept</span>
+    </a>
+
+  </div>
+
+  <div class="held">
+    <div class="hk">Not published here</div>
+    <p>The <b>Groundwater</b> console and the <b>AP AI Nerve Center</b> are held back from this public
+      site. They are built on an APWRIMS depth history that the project's own README records as a
+      research sample with <b>authorization pending</b>. Those two are shared privately until RTGS
+      clears the underlying data.</p>
+  </div>
+
+  <footer>
+    Pond footprints &copy; OpenStreetMap contributors, <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a>.
+    Imagery: Copernicus Sentinel-1 RTC via Microsoft Planetary Computer. Elevation: Copernicus GLO-30.<br>
+    Prototype work for the AP AI Living Labs programme. Not an official Government of Andhra Pradesh result.
+  </footer>
+
+</div>
+</body>
+</html>

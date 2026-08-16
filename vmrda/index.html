@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VMRDA OneView</title>
+<style>
+:root{
+  --bg:#080c11; --panel:#0e151c; --panel2:#131f28; --elev:#18262f; --line:#1c2b36; --line2:#294050;
+  --ink:#eef4f6; --ink2:#a6bac4; --ink3:#6f8794;
+  --gold:#e6b450; --gold2:#f0c874; --teal:#3fe0c8; --slate:#5b8bbf;
+  --crit:#f2603f; --warn:#e6ab3c; --good:#41c191;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:
+  radial-gradient(60% 44% at 82% -6%, rgba(230,180,80,.10), transparent 60%),
+  radial-gradient(52% 42% at 6% 104%, rgba(63,224,200,.08), transparent 58%),
+  var(--bg); color:var(--ink); font-family:var(--sans); -webkit-font-smoothing:antialiased; line-height:1.5}
+.wrap{max-width:1200px; margin:0 auto; padding:0 22px 52px}
+h1,h2,h3{margin:0; letter-spacing:-.01em}
+
+/* top bar */
+.top{display:flex; align-items:center; gap:16px; padding:15px 4px; border-bottom:1px solid var(--line); margin-bottom:20px}
+.brand{display:flex; align-items:center; gap:12px}
+.crest{width:40px;height:40px;border-radius:11px;flex:none;display:grid;place-items:center;
+  background:linear-gradient(150deg,#3a2f14,#0e151c); box-shadow:inset 0 0 0 1px rgba(230,180,80,.35)}
+.crest svg{width:22px;height:22px}
+.bt .ey{font-size:9px; letter-spacing:.24em; text-transform:uppercase; color:var(--ink3); font-weight:600}
+.bt .nm{font-size:16px; font-weight:720; letter-spacing:.01em}
+.bt .nm b{color:var(--gold); font-weight:720}
+.concept{margin-left:auto; display:inline-flex; align-items:center; gap:7px; font-size:10.5px; letter-spacing:.04em;
+  color:var(--gold2); background:rgba(230,180,80,.09); border:1px solid rgba(230,180,80,.3); border-radius:20px; padding:6px 12px}
+.clock{font-family:var(--mono); font-size:11.5px; color:var(--ink3); font-variant-numeric:tabular-nums}
+
+/* brief hero */
+.brief{position:relative; overflow:hidden; border-radius:20px; padding:24px 26px;
+  background:linear-gradient(120deg,#101922 0%,#12202b 52%,#16283350 100%); border:1px solid var(--line2); box-shadow:0 16px 40px -24px #000}
+.brief::after{content:""; position:absolute; right:-8%; top:-46%; width:380px; height:380px; border-radius:50%;
+  background:radial-gradient(circle, rgba(230,180,80,.12), transparent 66%); pointer-events:none}
+.briefTop{display:flex; justify-content:space-between; align-items:flex-start; gap:20px; flex-wrap:wrap; position:relative}
+.greet .g{font-size:12px; color:var(--ink3); letter-spacing:.02em}
+.greet h1{font-size:25px; font-weight:720; margin-top:3px}
+.greet h1 b{color:var(--gold)}
+.greet .s{margin-top:7px; font-size:13px; color:var(--ink2); max-width:440px}
+.attn{text-align:right}
+.attn .n{font-family:var(--mono); font-size:46px; font-weight:600; line-height:.9; color:var(--gold); letter-spacing:-.03em; filter:drop-shadow(0 0 18px rgba(230,180,80,.3))}
+.attn .l{font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink3); margin-top:4px}
+.changed{margin-top:18px; padding-top:15px; border-top:1px solid var(--line); position:relative}
+.changed .h{font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink3); font-weight:600; margin-bottom:9px}
+.chips{display:flex; flex-wrap:wrap; gap:8px}
+.chip{font-size:11.5px; color:var(--ink2); background:var(--panel); border:1px solid var(--line2); border-radius:8px; padding:6px 11px; display:inline-flex; align-items:center; gap:7px}
+.chip .dt{width:6px;height:6px;border-radius:50%}
+
+/* portfolio strip */
+.folio{display:grid; grid-template-columns:repeat(5,1fr); gap:11px; margin-top:16px}
+.prog{background:linear-gradient(180deg,var(--panel2),var(--panel)); border:1px solid var(--line); border-radius:13px; padding:13px 14px; position:relative; overflow:hidden}
+.prog::before{content:""; position:absolute; left:0;top:0;bottom:0; width:3px; background:var(--pc,var(--gold))}
+.prog .nm{font-size:12px; font-weight:640}
+.prog .st{font-size:10.5px; color:var(--ink3); margin-top:3px}
+.prog .bar{height:5px; border-radius:3px; background:var(--elev); margin-top:9px; overflow:hidden}
+.prog .bar i{display:block; height:100%; border-radius:3px; background:var(--pc,var(--gold))}
+.prog .pct{font-family:var(--mono); font-size:10px; color:var(--ink2); margin-top:5px; font-variant-numeric:tabular-nums}
+
+/* section head */
+.sec{margin-top:26px}
+.secH{display:flex; align-items:center; gap:10px; margin-bottom:13px}
+.secH .ti{width:26px;height:26px;border-radius:8px;flex:none;display:grid;place-items:center;background:rgba(63,224,200,.1);color:var(--teal)}
+.secH .ti svg{width:15px;height:15px}
+.secH h2{font-size:15px; font-weight:680}
+.secH .sub{font-size:11.5px; color:var(--ink3)}
+
+/* decisions */
+.decGrid{display:grid; grid-template-columns:340px 1fr; gap:15px; align-items:start}
+.card{background:linear-gradient(180deg,var(--panel2),var(--panel)); border:1px solid var(--line); border-radius:16px}
+.decList{padding:8px}
+.dec{display:flex; gap:11px; padding:12px; border-radius:12px; cursor:pointer; border:1px solid transparent; transition:.15s; position:relative}
+.dec:hover{background:var(--panel2)}
+.dec.on{background:var(--panel2); border-color:var(--line2)}
+.dec.on::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:2px;background:var(--sev)}
+.dec .ic{width:30px;height:30px;border-radius:9px;flex:none;display:grid;place-items:center;color:#fff}
+.dec .ic svg{width:16px;height:16px}
+.dec .m{flex:1; min-width:0}
+.dec .m .t{font-size:12.5px; font-weight:640; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.dec .m .s{font-size:11px; color:var(--ink3); margin-top:2px}
+.dec .fl{font-size:9px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; padding:2px 6px; border-radius:5px; align-self:flex-start; white-space:nowrap}
+
+/* detail */
+.detail{padding:20px 22px; min-height:420px}
+.dH{display:flex; align-items:flex-start; gap:12px}
+.dH .ic{width:40px;height:40px;border-radius:11px;flex:none;display:grid;place-items:center;color:#fff}
+.dH .ic svg{width:21px;height:21px}
+.dH .mn h3{font-size:18px; font-weight:700}
+.dH .mn .meta{font-size:11.5px; color:var(--ink3); margin-top:3px}
+.dH .sv{margin-left:auto; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; padding:4px 9px; border-radius:6px}
+.dNarr{margin-top:15px; font-size:13.5px; color:var(--ink2); line-height:1.55}
+.dNarr b{color:var(--ink)}
+
+/* evidence AI */
+.evidence{margin-top:18px; padding:16px; border-radius:13px; background:linear-gradient(135deg, rgba(63,224,200,.07), rgba(63,224,200,.02)); border:1px solid rgba(63,224,200,.22)}
+.evidence .eh{display:flex; align-items:center; gap:8px; font-size:10px; letter-spacing:.14em; text-transform:uppercase; font-weight:700; color:var(--teal); margin-bottom:14px}
+.ebar{margin:11px 0}
+.ebar .lab{display:flex; justify-content:space-between; font-size:11.5px; margin-bottom:5px}
+.ebar .lab b{font-family:var(--mono); font-variant-numeric:tabular-nums}
+.ebar .track{height:9px; border-radius:5px; background:var(--elev); overflow:hidden}
+.ebar .track i{display:block; height:100%; border-radius:5px}
+.evNote{margin-top:12px; font-size:12px; color:var(--ink2); line-height:1.5; padding-top:12px; border-top:1px solid rgba(63,224,200,.16)}
+.evNote b{color:var(--teal)}
+
+.dKv{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px}
+.kv{background:var(--panel); border:1px solid var(--line); border-radius:11px; padding:10px 12px}
+.kv .l{font-size:9px; letter-spacing:.11em; text-transform:uppercase; color:var(--ink3)}
+.kv .v{font-size:15px; font-weight:640; margin-top:4px; font-variant-numeric:tabular-nums}
+.action{margin-top:16px; padding:14px 15px; border-radius:12px; background:linear-gradient(135deg, rgba(230,180,80,.1), rgba(230,180,80,.04)); border:1px solid rgba(230,180,80,.28)}
+.action .h{display:flex; align-items:center; gap:8px; font-size:10px; letter-spacing:.13em; text-transform:uppercase; font-weight:700; color:var(--gold); margin-bottom:7px}
+.action .t{font-size:13.5px; color:var(--ink); line-height:1.45}
+.srcLine{margin-top:14px; font-family:var(--mono); font-size:10px; color:var(--ink3); line-height:1.7; padding-top:12px; border-top:1px solid var(--line); word-break:break-word}
+.srcLine b{color:var(--ink2)}
+
+/* two-up panels */
+.duo{display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:15px}
+.panelBody{padding:16px 18px}
+.parcel{display:flex; align-items:center; gap:12px; padding:11px 0; border-bottom:1px solid var(--line)}
+.parcel:last-child{border-bottom:none}
+.score{width:42px;height:42px;border-radius:11px;flex:none;display:grid;place-items:center;font-family:var(--mono);font-size:15px;font-weight:600;color:#0a0f14}
+.parcel .pm{flex:1; min-width:0}
+.parcel .pm .t{font-size:12.5px; font-weight:640}
+.parcel .pm .s{font-size:11px; color:var(--ink3); margin-top:2px}
+.rd{font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:6px;white-space:nowrap}
+
+/* coastal */
+.scenBar{display:flex; align-items:center; gap:10px; padding:11px 13px; border-radius:11px; background:var(--panel); border:1px solid var(--line2); margin-bottom:14px}
+.scenBar .txt{flex:1; font-size:12px; color:var(--ink2)} .scenBar .txt b{color:var(--ink)}
+.btn{border:none; border-radius:9px; padding:8px 14px; font:inherit; font-size:12px; font-weight:660; cursor:pointer; transition:.15s}
+.btn.warn{background:linear-gradient(180deg,#f4b64a,var(--warn)); color:#1a1205; box-shadow:0 4px 14px rgba(230,171,60,.3)}
+.btn.warn:hover{filter:brightness(1.06)}
+.btn.reset{background:var(--elev); color:var(--ink2)}
+.asset{display:flex; align-items:center; gap:11px; padding:10px 0; border-bottom:1px solid var(--line)}
+.asset:last-child{border-bottom:none}
+.asset .rk{width:9px;height:9px;border-radius:50%;flex:none}
+.asset .am{flex:1} .asset .am .t{font-size:12.5px;font-weight:600} .asset .am .s{font-size:11px;color:var(--ink3);margin-top:1px}
+.asset .exp{font-size:11px; font-family:var(--mono); color:var(--ink3)}
+.asset.hit .exp{color:var(--crit); font-weight:600}
+
+/* stack legend */
+.stack{margin-top:26px; padding:16px 18px; border-radius:14px; background:linear-gradient(180deg,var(--panel2),var(--panel)); border:1px solid var(--line)}
+.stack .h{font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink3); font-weight:600; margin-bottom:12px}
+.stack .row{display:flex; flex-wrap:wrap; gap:9px; align-items:center}
+.sys{font-size:11.5px; color:var(--ink2); background:var(--panel); border:1px solid var(--line2); border-radius:8px; padding:7px 12px; display:inline-flex; align-items:center; gap:8px}
+.sys .d{width:6px;height:6px;border-radius:50%;background:var(--slate)}
+.stack .note{margin-top:11px; font-size:11.5px; color:var(--ink3); line-height:1.5}
+.stack .note b{color:var(--ink2)}
+
+.footer{margin-top:24px; text-align:center; font-size:11px; color:var(--ink3); line-height:1.7}
+.footer b{color:var(--gold2); font-weight:600}
+
+@media (prefers-reduced-motion:no-preference){
+  .brief,.folio,.sec,.stack{animation:up .5s var(--ease) both}
+  @keyframes up{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+}
+@media (max-width:900px){ .decGrid{grid-template-columns:1fr} .duo{grid-template-columns:1fr} .folio{grid-template-columns:repeat(2,1fr)} .attn{text-align:left} }
+@media (max-width:560px){ .greet h1{font-size:21px} .wrap{padding:0 14px 40px} .dKv{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand"><span class="crest"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20V9l8-5 8 5v11" stroke="#e6b450" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 20v-6h6v6M4 20h16" stroke="#e6b450" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+      <div class="bt"><div class="ey">Visakhapatnam Metropolitan Region</div><div class="nm">VMRDA <b>OneView</b></div></div></div>
+    <span class="concept">◆ Concept mock · illustrative data</span>
+    <span class="clock" id="clk">--:--</span>
+  </div>
+
+  <!-- BRIEF -->
+  <section class="brief">
+    <div class="briefTop">
+      <div class="greet"><div class="g" id="greetTime">Good afternoon</div><h1>Commissioner, <b>6 decisions</b> need your attention</h1>
+        <div class="s">One view across projects, land, the Master Plan and coastal works. This layer reads from your existing systems, it does not replace them.</div></div>
+      <div class="attn"><div class="n">6</div><div class="l">need a decision today</div></div>
+    </div>
+    <div class="changed"><div class="h">What changed since yesterday</div>
+      <div class="chips">
+        <span class="chip"><span class="dt" style="background:var(--crit)"></span>Corridor 04 evidence variance widened to 15 points</span>
+        <span class="chip"><span class="dt" style="background:var(--warn)"></span>PPP #04 bid milestone slipped 17 days</span>
+        <span class="chip"><span class="dt" style="background:var(--good)"></span>MIG Layout X: 82 parcels DGPS-verified</span>
+        <span class="chip"><span class="dt" style="background:var(--teal)"></span>RK Beach resilience: work order due in 13 days</span>
+      </div></div>
+  </section>
+
+  <!-- PORTFOLIO -->
+  <div class="folio" id="folio"></div>
+
+  <!-- DECISIONS -->
+  <section class="sec">
+    <div class="secH"><span class="ti"><svg viewBox="0 0 24 24" fill="none"><path d="M9 11l3 3L22 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+      <div><h2>Decisions queue</h2></div><div class="sub" style="margin-left:auto">ranked by schedule and money at risk</div></div>
+    <div class="decGrid">
+      <div class="card decList" id="decList"></div>
+      <div class="card detail" id="detail"></div>
+    </div>
+  </section>
+
+  <!-- LAND + COASTAL -->
+  <section class="sec"><div class="duo">
+    <div class="card">
+      <div class="secH" style="padding:15px 18px 0"><span class="ti"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7l9-4 9 4-9 4-9-4Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M3 12l9 4 9-4M3 17l9 4 9-4" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span>
+        <div><h2>Land readiness</h2><div class="sub">parcel development-readiness score</div></div></div>
+      <div class="panelBody" id="landBody"></div>
+    </div>
+    <div class="card">
+      <div class="secH" style="padding:15px 18px 0"><span class="ti"><svg viewBox="0 0 24 24" fill="none"><path d="M3 15c2-2.2 4-2.2 6 0s4 2.2 6 0 4-2.2 6 0M3 19c2-2.2 4-2.2 6 0s4 2.2 6 0 4-2.2 6 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M6 11l6-6 6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div><h2>Coastal resilience</h2><div class="sub">₹176 cr programme · assets on the shore</div></div></div>
+      <div class="panelBody">
+        <div class="scenBar"><span class="txt" id="scenTxt"><b>Calm baseline.</b> Run a scenario to see exposure.</span>
+          <button class="btn warn" id="scenBtn">Severe cyclone ▸</button></div>
+        <div id="assetBody"></div>
+      </div>
+    </div>
+  </div></section>
+
+  <!-- STACK -->
+  <div class="stack">
+    <div class="h">OneView sits above your systems, and reads from them</div>
+    <div class="row">
+      <span class="sys"><span class="d"></span>NIRMAAN · engineering</span>
+      <span class="sys"><span class="d"></span>PMS · land / plots</span>
+      <span class="sys"><span class="d"></span>Asset 360 · assets</span>
+      <span class="sys"><span class="d"></span>Master Plan 2041 GIS</span>
+      <span class="sys"><span class="d"></span>VER / Bay City PMU</span>
+      <span class="sys"><span class="d" style="background:var(--teal)"></span>RTGS · AWARE · satellite</span>
+    </div>
+    <div class="note"><b>No rip-and-replace.</b> OneView is a read-only intelligence layer. Production would integrate through each system's APIs or the existing system integrator, so nothing you already run gets disturbed.</div>
+  </div>
+
+  <div class="footer">
+    <div><b>Concept mock — illustrative data, not VMRDA records.</b> Built to show how the RTGS-style decision layer would feel over VMRDA's own systems.</div>
+    <div style="margin-top:5px">Numbers, corridors and parcels here are placeholders for a conversation, not official figures.</div>
+  </div>
+</div>
+
+<script>
+const C={crit:'#f2603f',warn:'#e6ab3c',good:'#41c191',gold:'#e6b450',teal:'#3fe0c8',slate:'#5b8bbf'};
+const ICON={
+  road:'<path d="M8 3l-2 18M16 3l2 18M12 3v3M12 10v3M12 17v3" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/>',
+  land:'<path d="M3 7l9-4 9 4-9 4-9-4Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>',
+  wave:'<path d="M3 14c2-2 4-2 6 0s4 2 6 0 4-2 6 0" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>',
+  ppp:'<circle cx="7" cy="8" r="3" stroke="#fff" stroke-width="1.6"/><circle cx="17" cy="8" r="3" stroke="#fff" stroke-width="1.6"/><path d="M4 20c0-2.2 1.8-4 3-4M20 20c0-2.2-1.8-4-3-4M9.5 16h5" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>',
+};
+const SEV={High:{c:C.crit,bg:'rgba(242,96,63,.14)'},Medium:{c:C.warn,bg:'rgba(230,171,60,.14)'},Watch:{c:C.teal,bg:'rgba(63,224,200,.14)'}};
+
+/* portfolio programmes */
+const FOLIO=[
+  {nm:'Airport corridors',st:'7 corridors',pct:68,c:C.gold},
+  {nm:'Bay City / VER',st:'planning + PMU',pct:24,c:C.teal},
+  {nm:'Coastal resilience',st:'₹176 cr approved',pct:12,c:C.slate},
+  {nm:'MIG land',st:'~25,000 plots',pct:41,c:C.good},
+  {nm:'PPP pipeline',st:'6 projects',pct:33,c:C.warn},
+];
+document.getElementById('folio').innerHTML=FOLIO.map(p=>`<div class="prog" style="--pc:${p.c}">
+  <div class="nm">${p.nm}</div><div class="st">${p.st}</div>
+  <div class="bar"><i style="width:${p.pct}%"></i></div><div class="pct">${p.pct}% programme progress</div></div>`).join('');
+
+/* decisions */
+const DEC=[
+  {id:'c04',sev:'High',icon:'road',cat:'Airport Corridor 04',sub:'reported vs observed variance',
+   narr:`Corridor 04 shows <b>physical progress reported at 78%</b>, but independent evidence estimates <b>61 to 66% visible completion</b>, while <b>payment is at 74%</b>. The reported-to-observed gap has widened to 15 points since last review.`,
+   evidence:{reported:78,observed:63,payment:74,note:`Payment is running ahead of independently observed work. Recommend a joint measurement before releasing the next running bill.`},
+   kv:[['Contractor','Pkg C-04 JV'],['Sanctioned','₹214 cr'],['Spent','₹158 cr'],['Days to milestone','21']],
+   action:`Hold the next payment tranche and order a site measurement + drone flight this week. Evidence pack is attached for the review.`,
+   src:'NIRMAAN progress · geo-photos + periodic satellite · PMS payment ledger'},
+  {id:'b17',sev:'High',icon:'land',cat:'Bay City Parcel Cluster B17',sub:'boundary / ownership conflict',
+   narr:`A <b>Master Plan land-use boundary</b> and an <b>ownership boundary</b> disagree across cluster B17, blocking the catalytic-project parcels. 6 of 22 parcels are affected.`,
+   kv:[['Parcels affected','6 of 22'],['Planning use','Mixed / commercial'],['DGPS status','pending'],['Days blocked','34']],
+   action:`Commission DGPS boundary fixation for B17 on priority and refer the use-boundary conflict to the planning wing for reconciliation.`,
+   src:'Master Plan 2041 GIS · PMS parcel records · DGPS survey pipeline'},
+  {id:'rk',sev:'Watch',icon:'wave',cat:'Coastal Resilience — RK Beach',sub:'milestone due · CRZ dependency',
+   narr:`The RK Beach package under the <b>₹176 cr resilience programme</b> has a work-order milestone <b>due in 13 days</b>, but a <b>CRZ clearance dependency</b> is unresolved.`,
+   kv:[['Package','RK Beach / Gokul Park'],['Milestone in','13 days'],['CRZ clearance','unresolved'],['Implementation','20 months']],
+   action:`Escalate the CRZ dependency to the coastal authority now so the work order is not delayed past the monsoon window.`,
+   src:'NDMF programme tracker · Master Plan CRZ layer · RTGS/APSDMA coastal inputs'},
+  {id:'ppp4',sev:'Medium',icon:'ppp',cat:'PPP Project #04',sub:'bid milestone slipping',
+   narr:`The transaction-advisor milestone for <b>PPP Project #04</b> is <b>slipping 17 days</b>, which pushes the bid calendar and the financial-close target.`,
+   kv:[['Stage','Advisor empanelment'],['Slippage','17 days'],['Impact','bid calendar'],['Owner','PPP cell']],
+   action:`Convene the PPP cell to compress the advisor timeline, or re-baseline the bid calendar before it cascades to close.`,
+   src:'PPP EOI tracker · VER PMU inputs'},
+  {id:'mig',sev:'Watch',icon:'land',cat:'MIG Layout X',sub:'DGPS verification progress',
+   narr:`In MIG Layout X, <b>82 parcels are DGPS-verified</b> and auction-ready, while <b>14 need boundary resolution</b> before they can go to auction.`,
+   kv:[['Verified','82 parcels'],['Need resolution','14'],['Auction-ready','82'],['Layout','MIG-X']],
+   action:`Release the 82 verified parcels for the next auction cycle and queue the 14 for boundary fixation.`,
+   src:'DGPS survey pipeline · PMS auction module'},
+  {id:'c05',sev:'Medium',icon:'road',cat:'Airport Corridor 05',sub:'clearance blocking schedule',
+   narr:`Corridor 05 is <b>45% complete and behind schedule</b>, with a <b>forest clearance</b> holding up a 2.1 km section.`,
+   evidence:{reported:45,observed:42,payment:38,note:`Reported and observed are close here; the constraint is the clearance, not the works.`},
+   kv:[['Contractor','Pkg C-05'],['Complete','45%'],['Blocked section','2.1 km'],['Constraint','forest clearance']],
+   action:`Pursue the forest clearance as the critical path; the contractor cannot recover schedule until the 2.1 km section is released.`,
+   src:'NIRMAAN progress · Master Plan alignment · clearance tracker'},
+];
+let sel=0;
+function renderList(){
+  document.getElementById('decList').innerHTML=DEC.map((d,i)=>{ const s=SEV[d.sev];
+    return `<div class="dec ${i===sel?'on':''}" data-i="${i}" style="--sev:${s.c}">
+      <span class="ic" style="background:linear-gradient(145deg,${s.c},${shade(s.c)})"><svg viewBox="0 0 24 24" fill="none">${ICON[d.icon]}</svg></span>
+      <div class="m"><div class="t">${d.cat}</div><div class="s">${d.sub}</div></div>
+      <span class="fl" style="color:${s.c};background:${s.bg}">${d.sev}</span></div>`;}).join('');
+  document.querySelectorAll('.dec').forEach(el=>el.addEventListener('click',()=>{sel=+el.dataset.i; renderList(); renderDetail();}));
+}
+function shade(hex){const n=parseInt(hex.slice(1),16);return`rgb(${Math.max(0,(n>>16)-34)},${Math.max(0,((n>>8)&255)-28)},${Math.max(0,(n&255)-28)})`;}
+function renderDetail(){
+  const d=DEC[sel], s=SEV[d.sev];
+  let ev='';
+  if(d.evidence){ const e=d.evidence;
+    ev=`<div class="evidence"><div class="eh"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg> Evidence AI · reported vs observed</div>
+      ${ebar('Contractor reported',e.reported,C.slate)}
+      ${ebar('Independently observed',e.observed,C.teal)}
+      ${ebar('Payment released',e.payment,C.gold)}
+      <div class="evNote"><b>Read:</b> ${e.note}</div></div>`;
+  }
+  document.getElementById('detail').innerHTML=`
+    <div class="dH"><span class="ic" style="background:linear-gradient(145deg,${s.c},${shade(s.c)})"><svg viewBox="0 0 24 24" fill="none">${ICON[d.icon]}</svg></span>
+      <div class="mn"><h3>${d.cat}</h3><div class="meta">${d.sub}</div></div>
+      <span class="sv" style="color:${s.c};background:${s.bg}">${d.sev} priority</span></div>
+    <div class="dNarr">${d.narr}</div>
+    ${ev}
+    <div class="dKv">${d.kv.map(k=>`<div class="kv"><div class="l">${k[0]}</div><div class="v">${k[1]}</div></div>`).join('')}</div>
+    <div class="action"><div class="h"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M13 2 4 14h7l-1 8 9-12h-7z" fill="currentColor"/></svg> Recommended action</div><div class="t">${d.action}</div></div>
+    <div class="srcLine"><b>Reads from:</b> ${d.src}<br>logged ${new Date().toISOString().slice(0,10)} · actor commissioner:vmrda · OneView is read-only</div>`;
+}
+function ebar(lab,v,c){return `<div class="ebar"><div class="lab"><span>${lab}</span><b>${v}%</b></div><div class="track"><i style="width:${v}%;background:${c}"></i></div></div>`;}
+renderList(); renderDetail();
+
+/* land readiness */
+const PARCELS=[
+  {id:'VSP-341',use:'Commercial',score:87,rd:'GREEN',note:'DGPS ✓ · title ✓ · corridor-adjacent'},
+  {id:'VSP-118',use:'Mixed',score:74,rd:'GREEN',note:'DGPS ✓ · utilities medium'},
+  {id:'VSP-559',use:'Mixed',score:38,rd:'RED',note:'boundary + water-body buffer ⚠'},
+  {id:'VSP-402',use:'Residential',score:61,rd:'AMBER',note:'road acquisition dependency'},
+  {id:'VSP-207',use:'Institutional',score:52,rd:'AMBER',note:'encroachment signal ⚠'},
+];
+const RDC={GREEN:C.good,AMBER:C.warn,RED:C.crit};
+document.getElementById('landBody').innerHTML=PARCELS.map(p=>`<div class="parcel">
+  <span class="score" style="background:${RDC[p.rd]}">${p.score}</span>
+  <div class="pm"><div class="t">Parcel ${p.id} · ${p.use}</div><div class="s">${p.note}</div></div>
+  <span class="rd" style="color:${RDC[p.rd]};background:${RDC[p.rd]}22">${p.rd}</span></div>`).join('')
+  +`<div style="font-size:11px;color:var(--ink3);margin-top:12px;line-height:1.5">Readiness = Master Plan use + DGPS + title + encroachment + road proximity + utilities, scored per parcel. Add satellite change-detection to flag land that physically changed this quarter.</div>`;
+
+/* coastal */
+const ASSETS=[
+  {t:'RK Beach / Gokul Park',s:'promenade + resilience works',risk:C.warn,exp:1},
+  {t:'Kursura submarine museum',s:'tourism asset',risk:C.warn,exp:1},
+  {t:'Mangamaripeta',s:'shoreline habitation',risk:C.crit,exp:1},
+  {t:'Bheemunipatnam',s:'heritage + coast road',risk:C.warn,exp:1},
+  {t:'Bay City frontage',s:'planned development',risk:C.slate,exp:0},
+];
+function renderAssets(scen){
+  document.getElementById('assetBody').innerHTML=ASSETS.map(a=>`<div class="asset ${scen&&a.exp?'hit':''}">
+    <span class="rk" style="background:${a.risk};box-shadow:0 0 8px ${a.risk}88"></span>
+    <div class="am"><div class="t">${a.t}</div><div class="s">${a.s}</div></div>
+    <span class="exp">${scen? (a.exp?'exposed':'clear') : 'monitored'}</span></div>`).join('');
+}
+renderAssets(false);
+let scen=false;
+document.getElementById('scenBtn').addEventListener('click',()=>{ scen=!scen; renderAssets(scen);
+  const btn=document.getElementById('scenBtn'), txt=document.getElementById('scenTxt');
+  if(scen){ const n=ASSETS.filter(a=>a.exp).length;
+    txt.innerHTML=`<b>Severe cyclone scenario.</b> ${n} shoreline assets exposed · 4 active works at risk · 3 coast roads affected.`;
+    btn.textContent='Reset ↺'; btn.className='btn reset';
+  } else { txt.innerHTML=`<b>Calm baseline.</b> Run a scenario to see exposure.`; btn.textContent='Severe cyclone ▸'; btn.className='btn warn'; }
+});
+
+/* clock + greeting */
+function tick(){ const d=new Date(); document.getElementById('clk').textContent=d.toTimeString().slice(0,5)+' IST';
+  const h=d.getHours(); document.getElementById('greetTime').textContent=h<12?'Good morning':h<17?'Good afternoon':'Good evening'; }
+tick(); setInterval(tick,1000);
+</script>
+</body>
+</html>

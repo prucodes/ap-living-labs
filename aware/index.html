@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AWARE · Alert to Action</title>
+<style>
+:root{
+  --ink:#14271f; --ink2:#42564a; --muted:#6b7d71; --muted2:#93a399;
+  --bg:#e7eee9; --card:#ffffff; --field:#f1f5f2; --line:#dbe5de; --line2:#cbd8cf; --hair:#eaf0ec;
+  --green:#2f7d5b; --green2:#256448; --deep:#123528; --teal:#2b8a8a; --sky:#3d7fb0;
+  --high:#d0402f; --high-bg:#fbe7e3; --mod:#d0872a; --mod-bg:#faf0dd; --low:#3f9469; --low-bg:#e7f2ec;
+  --shadow:0 1px 2px rgba(20,39,31,.05), 0 10px 26px rgba(20,39,31,.07);
+  --pop:0 18px 46px rgba(18,53,40,.18);
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:
+  radial-gradient(60% 40% at 90% 0%, rgba(47,125,91,.08), transparent 60%),
+  linear-gradient(180deg,#dfe8e2,var(--bg) 30%,var(--bg));
+  color:var(--ink); font-family:var(--sans); font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased}
+.wrap{max-width:1240px; margin:0 auto; padding:20px 22px 44px; display:flex; flex-direction:column; gap:16px}
+h1,h2,h3{margin:0; letter-spacing:-.01em}
+
+/* hero */
+.hero{position:relative; overflow:hidden; border-radius:22px; color:#eaf4ee; padding:26px 28px; min-height:140px;
+  background:linear-gradient(105deg,#0f3325 0%, #164733 44%, #1c5a40 74%, #237a54 100%); box-shadow:var(--shadow)}
+.hero::after{content:""; position:absolute; right:-6%; top:-46%; width:400px; height:400px; border-radius:50%;
+  background:radial-gradient(circle, rgba(80,200,150,.2), transparent 66%); pointer-events:none}
+.heroInner{position:relative; display:flex; align-items:center; justify-content:space-between; gap:26px; flex-wrap:wrap}
+.heroL{max-width:610px}
+.eyebrow{display:inline-flex; align-items:center; gap:9px; font-size:10.5px; letter-spacing:.2em; text-transform:uppercase; color:#8fceac; margin-bottom:11px}
+.eyebrow .m{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;background:linear-gradient(145deg,#54c98f,#2f7d5b);box-shadow:0 4px 14px rgba(47,125,91,.5)}
+.eyebrow .m svg{width:14px;height:14px}
+.hero h1{font-size:25px; font-weight:660; line-height:1.14; color:#fff}
+.hero p{margin:9px 0 0; font-size:13px; color:#bfe0cd; line-height:1.5; max-width:520px}
+.hero p b{color:#eafff2; font-weight:600}
+.heroChips{display:flex; flex-wrap:wrap; gap:9px}
+.hChip{display:flex; flex-direction:column; gap:3px; min-width:92px; padding:10px 13px; border-radius:12px;
+  background:rgba(9,30,20,.42); border:1px solid rgba(120,200,160,.24); backdrop-filter:blur(6px)}
+.hChip .l{font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:#8fceac}
+.hChip .v{display:flex; align-items:center; gap:6px; font-size:13px; font-weight:640; color:#fff}
+.hChip .v .d{width:8px;height:8px;border-radius:50%;background:#57d18a;box-shadow:0 0 8px #57d18a}
+
+.note{display:flex; align-items:center; gap:12px; padding:11px 16px; border-radius:14px;
+  background:linear-gradient(90deg, rgba(47,125,91,.09), rgba(47,125,91,.03)); border:1px solid rgba(47,125,91,.26);
+  color:var(--ink2); font-size:12.5px; line-height:1.45}
+.note .i{flex:none;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:rgba(47,125,91,.14);color:var(--green)}
+.note .i svg{width:16px;height:16px} .note b{color:var(--ink)}
+
+.layout{display:grid; grid-template-columns:322px 1fr; gap:16px; align-items:start}
+.card{background:var(--card); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow)}
+.qHead{display:flex; align-items:center; justify-content:space-between; padding:15px 16px 12px; border-bottom:1px solid var(--hair)}
+.qHead .t{font-size:13px; font-weight:660; display:flex; align-items:center; gap:8px}
+.qHead .liveDot{width:8px;height:8px;border-radius:50%;background:#d0402f;box-shadow:0 0 0 0 rgba(208,64,47,.5); animation:pl 2s infinite}
+@keyframes pl{0%{box-shadow:0 0 0 0 rgba(208,64,47,.5)}70%{box-shadow:0 0 0 7px rgba(208,64,47,0)}100%{box-shadow:0 0 0 0 rgba(208,64,47,0)}}
+.qHead .c{font-size:11px; color:var(--muted)}
+.queue{max-height:640px; overflow:auto; padding:8px}
+.alert{display:flex; gap:11px; padding:11px 11px; border-radius:12px; cursor:pointer; border:1px solid transparent; transition:.15s; position:relative}
+.alert:hover{background:var(--field)}
+.alert.on{background:var(--field); border-color:var(--line2); box-shadow:inset 0 0 0 1px rgba(47,125,91,.14)}
+.alert.on::before{content:"";position:absolute;left:0;top:11px;bottom:11px;width:3px;border-radius:2px;background:var(--green)}
+.haz{width:34px;height:34px;border-radius:10px;flex:none;display:grid;place-items:center;color:#fff}
+.haz svg{width:19px;height:19px}
+.aMain{flex:1; min-width:0}
+.aTop{display:flex; align-items:center; gap:8px}
+.aTop .dist{font-size:13px; font-weight:640; color:var(--ink); flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.sev{font-size:9.5px; font-weight:700; letter-spacing:.03em; padding:2px 7px; border-radius:6px; text-transform:uppercase; white-space:nowrap}
+.sev.High{color:var(--high);background:var(--high-bg)} .sev.Moderate{color:var(--mod);background:var(--mod-bg)} .sev.Low{color:var(--low);background:var(--low-bg)}
+.aSub{font-size:11.5px; color:var(--muted); margin-top:2px; display:flex; align-items:center; gap:6px}
+.aStatus{font-size:10.5px; color:var(--green2); font-weight:600; margin-top:4px; display:inline-flex; align-items:center; gap:5px}
+.aStatus .sd{width:5px;height:5px;border-radius:50%;background:var(--green)}
+.aStatus.pending{color:var(--mod)} .aStatus.pending .sd{background:var(--mod)}
+
+/* bridge */
+.bridge{display:flex; flex-direction:column; gap:14px}
+.stage{background:var(--card); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow); overflow:hidden}
+.sHead{display:flex; align-items:center; gap:10px; padding:14px 18px; border-bottom:1px solid var(--hair)}
+.sHead .num{width:24px;height:24px;border-radius:7px;flex:none;display:grid;place-items:center;font-size:12px;font-weight:700;
+  background:var(--field); color:var(--green2); font-family:var(--mono)}
+.sHead .st{font-size:13px; font-weight:660} .sHead .ss{font-size:11.5px; color:var(--muted)}
+.sBody{padding:16px 18px}
+
+/* alert detail */
+.alertHero{display:flex; gap:14px; align-items:flex-start}
+.alertHero .haz{width:46px;height:46px;border-radius:12px}
+.alertHero .haz svg{width:24px;height:24px}
+.ahMain{flex:1; min-width:0}
+.ahTop{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.ahTop h2{font-size:19px; font-weight:680}
+.ahMeta{display:flex; flex-wrap:wrap; gap:14px; margin-top:8px; font-size:12px; color:var(--muted)}
+.ahMeta b{color:var(--ink2); font-weight:600}
+.ahSummary{margin-top:12px; font-size:13px; line-height:1.55; color:var(--ink2); padding:12px 14px; background:var(--field); border-radius:11px; border:1px solid var(--line)}
+
+/* pipeline */
+.pipe{display:flex; align-items:center; gap:0; padding:2px 4px 0}
+.pStep{flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; position:relative}
+.pStep::after{content:""; position:absolute; top:13px; left:50%; width:100%; height:2px; background:var(--line2); z-index:0}
+.pStep:last-child::after{display:none}
+.pDot{width:26px;height:26px;border-radius:50%; display:grid; place-items:center; background:var(--field); border:2px solid var(--line2); color:var(--muted); font-size:12px; z-index:1; transition:.2s}
+.pStep.done .pDot{background:var(--green); border-color:var(--green); color:#fff}
+.pStep.active .pDot{background:#fff; border-color:var(--green); color:var(--green); box-shadow:0 0 0 4px rgba(47,125,91,.14)}
+.pStep .pl{font-size:10px; color:var(--muted); font-weight:600; text-align:center; letter-spacing:.02em}
+.pStep.done .pl,.pStep.active .pl{color:var(--ink)}
+
+/* roles */
+.roles{display:grid; grid-template-columns:1fr 1fr; gap:11px}
+.role{border:1px solid var(--line); border-radius:12px; overflow:hidden; background:var(--card)}
+.roleH{display:flex; align-items:center; gap:9px; padding:10px 12px; cursor:pointer; transition:.14s}
+.roleH:hover{background:var(--field)}
+.roleH .ri{width:26px;height:26px;border-radius:7px;flex:none;display:grid;place-items:center;background:rgba(47,125,91,.12);color:var(--green2);font-size:11px;font-weight:700}
+.roleH .rn{flex:1; font-size:12.5px; font-weight:640}
+.roleH .rc{font-size:10.5px; color:var(--muted); font-family:var(--mono)}
+.roleH .chev{color:var(--muted2); transition:transform .2s; font-size:11px}
+.role.open .chev{transform:rotate(90deg)}
+.roleB{display:none; padding:0 12px 11px 47px}
+.role.open .roleB{display:block}
+.roleB li{font-size:12px; color:var(--ink2); line-height:1.45; margin:6px 0; list-style:none; position:relative; padding-left:16px}
+.roleB li::before{content:""; position:absolute; left:0; top:7px; width:6px; height:6px; border-radius:2px; background:var(--green); opacity:.6}
+
+/* channels */
+.chTabs{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px}
+.chTab{font-size:12px; font-weight:600; color:var(--muted); background:var(--field); border:1px solid var(--line); border-radius:9px; padding:7px 12px; cursor:pointer; transition:.14s}
+.chTab:hover{color:var(--ink)}
+.chTab.on{background:var(--green); border-color:var(--green); color:#fff; box-shadow:0 4px 12px rgba(47,125,91,.28)}
+.msg{background:var(--field); border:1px solid var(--line); border-radius:14px; padding:15px 16px; position:relative}
+.msg .mh{display:flex; align-items:center; gap:8px; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:700; margin-bottom:9px}
+.msg .mt{font-size:13.5px; line-height:1.6; color:var(--ink); white-space:pre-wrap}
+.msg .mfoot{margin-top:12px; padding-top:11px; border-top:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--muted)}
+.msg .reach{font-weight:600; color:var(--green2)}
+
+/* approval + audit */
+.approveBar{display:flex; align-items:center; gap:12px; padding:14px 16px; border-radius:13px;
+  background:linear-gradient(135deg, rgba(47,125,91,.08), rgba(47,125,91,.03)); border:1px solid rgba(47,125,91,.24); margin-bottom:15px; flex-wrap:wrap}
+.approveBar .txt{flex:1; min-width:180px; font-size:12.5px; color:var(--ink2)} .approveBar .txt b{color:var(--ink)}
+.btn{border:none; border-radius:10px; padding:10px 18px; font:inherit; font-size:13px; font-weight:660; cursor:pointer; transition:.15s}
+.btn.primary{background:linear-gradient(180deg,#38946c,var(--green)); color:#fff; box-shadow:0 6px 16px rgba(47,125,91,.3)}
+.btn.primary:hover{filter:brightness(1.05)} .btn.primary:active{transform:translateY(1px)}
+.btn.done{background:var(--low-bg); color:var(--green2); cursor:default; box-shadow:none}
+.audit{list-style:none; padding:0; margin:0}
+.audit li{display:flex; gap:12px; padding:0 0 14px; position:relative}
+.audit li::before{content:""; position:absolute; left:9px; top:20px; bottom:-2px; width:2px; background:var(--line2)}
+.audit li:last-child::before{display:none}
+.audit .ad{width:20px;height:20px;border-radius:50%;flex:none;display:grid;place-items:center;background:var(--green);color:#fff;font-size:10px;z-index:1;margin-top:1px}
+.audit .ad.pending{background:var(--field); border:2px solid var(--line2); color:var(--muted)}
+.audit .at{flex:1}
+.audit .at .att{font-size:12.5px; font-weight:600; color:var(--ink)}
+.audit .at .ats{font-size:11px; color:var(--muted); margin-top:2px}
+.audit .at .stamp{font-family:var(--mono); font-size:10.5px; color:var(--muted2)}
+
+.empty{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:80px 20px; color:var(--muted); text-align:center}
+.foot{text-align:center; font-size:11px; color:var(--muted2); padding-top:4px}
+
+@media (prefers-reduced-motion:no-preference){
+  .card,.hero,.note,.stage{animation:up .5s var(--ease) both}
+  @keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+}
+@media (max-width:880px){ .layout{grid-template-columns:1fr} .queue{max-height:300px} .roles{grid-template-columns:1fr} }
+@media (max-width:560px){ .hero h1{font-size:21px} .wrap{padding:14px 13px 32px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero"><div class="heroInner">
+    <div class="heroL">
+      <div class="eyebrow"><span class="m"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v6l4 2" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="1.6"/></svg></span> Andhra Pradesh · Disaster response</div>
+      <h1>From alert to accountable action</h1>
+      <p>Sending the alert is the easy part. AWARE turns one official hazard alert into <b>role-wise field actions</b> and <b>drafted messages on every channel</b>, then keeps <b>officers in control</b> with approval and a full audit trail.</p>
+    </div>
+    <div class="heroChips">
+      <div class="hChip"><span class="l">Live alerts</span><span class="v"><span class="d"></span><span id="hCount">16</span></span></div>
+      <div class="hChip"><span class="l">Hazard types</span><span class="v">6</span></div>
+      <div class="hChip"><span class="l">Dispatch</span><span class="v">officer-approved</span></div>
+    </div>
+  </div></header>
+
+  <div class="note"><span class="i"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 8v5M12 16h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+    <span><b>Demo on sample APSDMA-style alerts.</b> Nothing dispatches automatically. AWARE drafts; a human officer reviews and approves every message before it goes out. The audit trail records who approved what, and when.</span></div>
+
+  <div class="layout">
+    <!-- QUEUE -->
+    <div class="card">
+      <div class="qHead"><span class="t"><span class="liveDot"></span> Incoming alerts</span><span class="c" id="qCount"></span></div>
+      <div class="queue" id="queue"></div>
+    </div>
+
+    <!-- BRIDGE -->
+    <div class="bridge" id="bridge"></div>
+  </div>
+
+  <div class="foot">AWARE · Alert-to-Action · Andhra Pradesh disaster response · demo on sample alerts · officers approve every dispatch</div>
+</div>
+
+<script>
+const AW = {"alerts":[{"id":"cyclone-bapatla","hazard":"Cyclone","district":"Bapatla","severity":"High","source":"IMD / APSDMA","start":"5 Dec, 5:00 AM","end":"5 Dec, 11:00 PM","status":"AI draft ready","summary":"Severe Cyclonic Storm Michaung making landfall near Bapatla with winds up to 100 kmph. Coastal mandals face storm surge, uprooted trees and power loss. Evacuate low-lying and shoreline habitations."},{"id":"cyclone-nellore","hazard":"Cyclone","district":"Nellore","severity":"High","source":"IMD / APSDMA","start":"5 Dec, 4:00 AM","end":"5 Dec, 10:00 PM","status":"Pending officer approval","summary":"Cyclone Michaung outer bands bringing gale winds and very heavy rain across Nellore. Fishing suspended; secure shelters and clear coastal evacuation routes."},{"id":"flood-tirupati","hazard":"Flood","district":"Tirupati","severity":"High","source":"CWC / APSDMA","start":"4 Dec, 6:00 PM","end":"6 Dec, 12:00 PM","status":"AI draft ready","summary":"Extremely heavy rain from Michaung causing severe urban flooding in Tirupati. Streets and low-lying colonies inundated; move residents to relief centres and avoid waterlogged underpasses."},{"id":"flood-krishna","hazard":"Flood","district":"Krishna","severity":"High","source":"CWC / APSDMA","start":"5 Dec, 8:00 AM","end":"6 Dec, 6:00 PM","status":"Pending officer approval","summary":"Tanks and streams overflowing across Krishna district; several villages cut off by flooded roads. Prepare boats and shift vulnerable households to higher ground."},{"id":"flood-konaseema","hazard":"Flood","district":"Dr. B.R. Ambedkar Konaseema","severity":"High","source":"CWC / APSDMA","start":"5 Dec, 9:00 AM","end":"6 Dec, 8:00 PM","status":"AI draft ready","summary":"Delta inundation likely as heavy inflows meet high tide in Konaseema. Monitor bunds and lanka villages; keep evacuation and medical teams on standby."},{"id":"heavy-rain-prakasam","hazard":"Heavy Rain","district":"Prakasam","severity":"Moderate","source":"IMD / APSDMA","start":"5 Dec, 6:00 AM","end":"6 Dec, 6:00 AM","status":"Pending officer approval","summary":"Heavy to very heavy rain expected across Prakasam under Michaung. Watch for waterlogging and crop damage; avoid unnecessary travel on flooded stretches."},{"id":"heavy-rain-west-godavari","hazard":"Heavy Rain","district":"West Godavari","severity":"Moderate","source":"IMD / APSDMA","start":"5 Dec, 7:00 AM","end":"6 Dec, 10:00 AM","status":"AI draft ready","summary":"Sustained heavy rain over West Godavari; drains and tanks near capacity. Clear blockages and keep pumping teams ready in flood-prone towns."},{"id":"cyclone-kakinada","hazard":"Cyclone","district":"Kakinada","severity":"Moderate","source":"INCOIS / APSDMA","start":"5 Dec, 3:00 AM","end":"5 Dec, 9:00 PM","status":"AI draft ready","summary":"Rough seas and squally winds along the Kakinada coast as Michaung passes. Fishermen advised not to venture out; secure harbour craft and coastal assets."},{"id":"heavy-rain-guntur","hazard":"Heavy Rain","district":"Guntur","severity":"Moderate","source":"IMD / APSDMA","start":"5 Dec, 6:00 AM","end":"6 Dec, 8:00 AM","status":"Pending officer approval","summary":"Heavy rain and gusty winds across Guntur. Standing crops and urban low-lying areas at risk; monitor and assist waterlogged localities."},{"id":"heavy-rain-ntr","hazard":"Heavy Rain","district":"NTR","severity":"Moderate","source":"IMD / APSDMA","start":"5 Dec, 8:00 AM","end":"6 Dec, 9:00 AM","status":"AI draft ready","summary":"Heavy rain over NTR (Vijayawada) with waterlogging in low-lying wards. Keep drains clear and traffic diversions ready near known flood points."},{"id":"flood-eluru","hazard":"Flood","district":"Eluru","severity":"Moderate","source":"CWC / APSDMA","start":"5 Dec, 10:00 AM","end":"6 Dec, 2:00 PM","status":"Pending officer approval","summary":"Rising water in tanks and canals across Eluru after continuous rain. Watch vulnerable habitations and prepare relief shelters if levels rise."},{"id":"heavy-rain-east-godavari","hazard":"Heavy Rain","district":"East Godavari","severity":"Moderate","source":"IMD / APSDMA","start":"5 Dec, 7:00 AM","end":"6 Dec, 9:00 AM","status":"AI draft ready","summary":"Heavy rain across East Godavari with local flooding risk. Advise caution near overflowing streams and support field crop-damage assessment."},{"id":"heavy-rain-anakapalli","hazard":"Heavy Rain","district":"Anakapalli","severity":"Low","source":"IMD / APSDMA","start":"5 Dec, 9:00 AM","end":"6 Dec, 6:00 AM","status":"AI draft ready","summary":"Moderate to heavy rain in Anakapalli as Michaung moves north. Routine precautions for waterlogging; monitor low-lying and coastal pockets."},{"id":"heatwave-anantapur","hazard":"Heatwave","district":"Anantapur","severity":"High","source":"IMD / APSDMA","start":"24 May, 11:00 AM","end":"24 May, 6:00 PM","status":"AI draft ready","summary":"Severe heatwave over Anantapur with daytime highs near 45°C. Peak risk 11 AM–5 PM for outdoor workers, elderly and children; ensure water points, cooling shelters and health readiness."},{"id":"lightning-kurnool","hazard":"Lightning","district":"Kurnool","severity":"Moderate","source":"IMD / APSDMA","start":"18 Jul, 3:00 PM","end":"18 Jul, 7:00 PM","status":"AI draft ready","summary":"Thunderstorms with frequent lightning likely over Kurnool this evening. Risk to outdoor workers, farmers and open grounds; advise people to move indoors and suspend outdoor activity."},{"id":"rough-sea-visakhapatnam","hazard":"Rough Sea","district":"Visakhapatnam","severity":"Moderate","source":"INCOIS / APSDMA","start":"18 Jul, 6:00 AM","end":"19 Jul, 6:00 AM","status":"AI draft ready","summary":"High waves and strong winds along the Visakhapatnam coast. Fishermen advised not to venture into the sea; secure boats and coastal equipment."}],"playbooks":{"Heatwave":{"Citizens":["Avoid going out between 11 AM and 5 PM.","Drink water regularly even if not thirsty.","Check on elderly people, children, and outdoor workers."],"Schools":["Adjust school timings to avoid peak heat hours.","Ensure drinking water and ORS availability.","Conduct student awareness on hydration and heat safety."],"PHC/ASHA/ANM":["Keep ORS, basic medicines, and adequate water ready.","Monitor heat stress cases and report daily.","Activate shade and waiting areas for patients."],"Police/Traffic":["Increase patrolling in vulnerable public areas.","Assist public announcements and relief operations.","Support safe traffic flow near water points and shelters."],"Labour/Factory/Construction":["Shift outdoor work away from peak heat hours.","Ensure shade, drinking water, and rest breaks at sites.","Monitor worker health and report heat stress cases."],"Municipal/Panchayat":["Set up drinking water points in priority areas.","Check shade arrangements at bus stands and public offices.","Coordinate announcements through local channels."],"Farmers":["Avoid field activity during peak heat.","Schedule irrigation and livestock care early morning or evening.","Keep drinking water available for workers."]},"Heavy Rain":{"Citizens":["Avoid waterlogged roads, drains, and bridges.","Stay indoors and follow official updates.","Keep phones charged and emergency numbers ready."],"Village/Ward Secretariat":["Identify low-lying habitations and update local teams.","Coordinate door-to-door advisories where needed.","Report waterlogging and blocked drains."],"Schools":["Review school transport routes.","Avoid outdoor assemblies and activities.","Keep parents informed through existing school groups."],"PHC/ASHA/ANM":["Check emergency medicines and ambulance readiness.","Prepare for waterborne illness reporting.","Keep PHC contact lines active."],"Police/Traffic":["Monitor bridges and waterlogged road stretches.","Place diversions where needed.","Support evacuation if directed by district officers."],"Municipal/Panchayat":["Clear drains and monitor pumping points.","Deploy teams to chronic waterlogging areas.","Coordinate local announcements."],"Farmers":["Secure harvested produce and farm equipment.","Avoid pesticide spraying during rain.","Drain excess water from fields where possible."]},"Lightning":{"Citizens":["Move indoors during thunderstorm activity.","Avoid isolated trees, open fields, and metal structures.","Stay away from water bodies until the alert passes."],"Schools":["Keep students indoors.","Suspend outdoor sports and assembly.","Inform parents through school channels."],"Police/Traffic":["Warn people at open grounds and water bodies.","Assist crowd movement to safer areas.","Coordinate with control room for incident reporting."],"Farmers":["Stop field work during thunder and lightning.","Move livestock to safer covered areas.","Resume work only after conditions improve."],"Labour/Factory/Construction":["Pause outdoor construction work.","Move workers away from exposed steel structures.","Resume only after official clearance or improved weather."]},"Flood":{"Citizens":["Avoid low-lying and waterlogged areas.","Keep essential documents and medicines ready.","Move to safer locations if instructed by officers."],"Village/Ward Secretariat":["Prepare vulnerable household lists.","Coordinate shelters and local volunteers.","Report water levels and access issues."],"PHC/ASHA/ANM":["Prepare emergency medical kits.","Check support for pregnant women and elderly persons.","Coordinate ambulance routes."],"Police/Traffic":["Restrict unsafe crossings and submerged roads.","Support evacuation routes.","Maintain coordination with control room."],"Municipal/Panchayat":["Monitor drains, tanks, and low-lying wards.","Arrange pumps and sanitation teams.","Prepare relief center support."],"Farmers":["Move livestock to safe ground.","Protect stored seed and harvested produce.","Follow irrigation department updates."]},"Cyclone":{"Citizens":["Stay indoors and follow official updates.","Keep emergency supplies ready.","Avoid beaches, trees, and weak structures."],"Village/Ward Secretariat":["Update vulnerable household lists.","Prepare shelter readiness.","Coordinate local announcements."],"Schools":["Prepare school buildings if assigned as shelters.","Secure loose materials on campus.","Share official instructions with parents."],"PHC/ASHA/ANM":["Check emergency medicines and backup power.","Prepare support lists for vulnerable patients.","Coordinate with ambulance teams."],"Police/Traffic":["Manage route restrictions.","Support evacuation and crowd control.","Coordinate with district control room."],"Municipal/Panchayat":["Clear drains and secure public assets.","Prepare debris clearance teams.","Coordinate local response resources."],"Fisheries":["Do not venture into sea.","Secure boats and nets.","Inform fishing communities through existing groups."],"Farmers":["Secure harvested crop and equipment.","Move livestock to safe shelters.","Follow agriculture department advisories."]},"Rough Sea":{"Fisheries":["Do not venture into sea during the alert window.","Secure boats, nets, and equipment.","Inform boat owners and fishing groups."],"Police/Traffic":["Support coastal patrolling with fisheries teams.","Restrict unsafe beach access if directed.","Report violations to control room."],"Village/Ward Secretariat":["Inform coastal habitations through local channels.","Coordinate with fisheries assistants.","Maintain list of boats already at sea."],"Citizens":["Avoid beaches and rough coastal stretches.","Follow official coastal safety advisories.","Report emergencies through local officers."]}},"templates":{"WhatsApp":"{hazard} Alert for {district} District\n{severity} severity from {start} to {end}.\n\nPlease follow the recommended actions for your role. Officers will review and approve this draft before dispatch.","SMS":"{hazard} alert in {district}: {severity} severity from {start} to {end}. Follow official instructions. Officer-approved message only.","IVR Script":"This is an official alert draft for {district}. {hazard} conditions are expected from {start} to {end}. Please listen to local officers and follow safety instructions.","Local Announcement":"Attention. {hazard} conditions are expected in {district}. Please follow local officer instructions and avoid risky activity during the alert window.","Officer Brief":"Officer brief: {hazard} in {district}, {severity} severity, source {source}, active from {start} to {end}. Review role-wise actions and approve suitable channel drafts."},"roleMatrix":{"roles":["Citizens","Village/Ward Secretariat","Schools","PHC/ASHA/ANM","Police/Traffic","Labour/Factory/Construction","Municipal/Panchayat","Fisheries","Farmers"],"hazardRoles":{"Heatwave":["Citizens","Schools","PHC/ASHA/ANM","Police/Traffic","Labour/Factory/Construction","Municipal/Panchayat","Farmers"],"Heavy Rain":["Citizens","Village/Ward Secretariat","Schools","PHC/ASHA/ANM","Police/Traffic","Municipal/Panchayat","Farmers"],"Lightning":["Citizens","Schools","Police/Traffic","Farmers","Labour/Factory/Construction"],"Flood":["Citizens","Village/Ward Secretariat","PHC/ASHA/ANM","Police/Traffic","Municipal/Panchayat","Farmers"],"Cyclone":["Citizens","Village/Ward Secretariat","Schools","PHC/ASHA/ANM","Police/Traffic","Municipal/Panchayat","Fisheries","Farmers"],"Rough Sea":["Fisheries","Police/Traffic","Village/Ward Secretariat","Citizens"]}}};
+const ALERTS=AW.alerts, PB=AW.playbooks, TPL=AW.templates, RM=AW.roleMatrix;
+
+const SEVC={High:'#d0402f',Moderate:'#d0872a',Low:'#3f9469'};
+const HAZ={
+  Cyclone:{c:'#6a5bd0',ic:'<path d="M4 7c6-3 12 0 16 0M20 17c-6 3-12 0-16 0M8 12h9" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="2.3" fill="#fff"/>'},
+  Flood:{c:'#3d7fb0',ic:'<path d="M3 14c2-2 4-2 6 0s4 2 6 0 4-2 6 0M3 18c2-2 4-2 6 0s4 2 6 0 4-2 6 0" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><path d="M8 11V5M14 11V7" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>'},
+  'Heavy Rain':{c:'#4a90a4',ic:'<path d="M7 15v3M12 15v4M17 15v3" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><path d="M6 13a4 4 0 0 1 .5-7.9A5 5 0 0 1 17 6a3.5 3.5 0 0 1-.5 7H6Z" stroke="#fff" stroke-width="1.6"/>'},
+  Heatwave:{c:'#d0872a',ic:'<circle cx="12" cy="12" r="4" stroke="#fff" stroke-width="1.8"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>'},
+  Lightning:{c:'#c9902a',ic:'<path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" fill="#fff"/>'},
+  'Rough Sea':{c:'#2b8a8a',ic:'<path d="M3 16c2-2.4 4-2.4 6 0s4 2.4 6 0 4-2.4 6 0M3 20c2-2 4-2 6 0s4 2 6 0 4-2 6 0" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><path d="M15 9l3-3 3 3" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>'},
+};
+function hazSvg(h){ const d=HAZ[h]||HAZ.Flood; return `<span class="haz" style="background:linear-gradient(145deg,${d.c},${shade(d.c)})"><svg viewBox="0 0 24 24" fill="none">${d.ic}</svg></span>`; }
+function shade(hex){ const n=parseInt(hex.slice(1),16); const r=(n>>16)-30,g=((n>>8)&255)-24,b=(n&255)-24; return `rgb(${Math.max(0,r)},${Math.max(0,g)},${Math.max(0,b)})`; }
+const REACH={Cyclone:'~124,000',Flood:'~86,000','Heavy Rain':'~52,000',Heatwave:'~140,000',Lightning:'~38,000','Rough Sea':'~9,400'};
+const initials=r=>r.split(/[ /]/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+
+/* queue */
+let selected=null, approvedIds=new Set();
+function renderQueue(){
+  document.getElementById('queue').innerHTML=ALERTS.map((a,i)=>{
+    const pending=a.status.toLowerCase().includes('pending');
+    return `<div class="alert ${selected===i?'on':''}" data-i="${i}">${hazSvg(a.hazard)}
+      <div class="aMain"><div class="aTop"><span class="dist">${a.district}</span><span class="sev ${a.severity}">${a.severity}</span></div>
+      <div class="aSub">${a.hazard} · ${a.source}</div>
+      <div class="aStatus ${pending?'pending':''}"><span class="sd"></span>${approvedIds.has(a.id)?'Approved & dispatched':a.status}</div></div></div>`;
+  }).join('');
+  document.querySelectorAll('.alert').forEach(el=>el.addEventListener('click',()=>{selected=+el.dataset.i; renderQueue(); renderBridge();}));
+  document.getElementById('qCount').textContent=ALERTS.length+' active';
+}
+
+let channel='WhatsApp', openRoles=new Set();
+function fillTpl(t,a){ return t.replace(/{hazard}/g,a.hazard).replace(/{district}/g,a.district).replace(/{severity}/g,a.severity.toLowerCase())
+  .replace(/{start}/g,a.start).replace(/{end}/g,a.end).replace(/{source}/g,a.source); }
+
+function renderBridge(){
+  const bridge=document.getElementById('bridge');
+  if(selected===null){ bridge.innerHTML=`<div class="stage"><div class="empty">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M12 3v6l4 2" stroke="#9db0a4" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="#9db0a4" stroke-width="1.4"/></svg>
+    <div style="font-size:15px;font-weight:640;color:var(--ink2)">Select an alert to open its action bridge</div>
+    <div style="font-size:12.5px">Pick any incoming alert on the left to watch it become role-wise actions, drafted messages, and an approved, audited dispatch.</div></div></div>`; return; }
+  const a=ALERTS[selected];
+  const roles=Object.keys(PB[a.hazard]||{});
+  const approved=approvedIds.has(a.id);
+  const roleGrid=roles.map(r=>`<div class="role ${openRoles.has(r)?'open':''}" data-r="${r}">
+    <div class="roleH"><span class="ri">${initials(r)}</span><span class="rn">${r}</span><span class="rc">${(PB[a.hazard][r]||[]).length}</span><span class="chev">▶</span></div>
+    <ul class="roleB">${(PB[a.hazard][r]||[]).map(x=>`<li>${x}</li>`).join('')}</ul></div>`).join('');
+  const chTabs=Object.keys(TPL).map(c=>`<span class="chTab ${channel===c?'on':''}" data-c="${c}">${c}</span>`).join('');
+  const msg=fillTpl(TPL[channel],a);
+
+  bridge.innerHTML=`
+  <!-- STAGE 1 -->
+  <div class="stage"><div class="sBody">
+    <div class="alertHero">${hazSvg(a.hazard)}
+      <div class="ahMain"><div class="ahTop"><h2>${a.hazard} · ${a.district}</h2><span class="sev ${a.severity}">${a.severity} severity</span></div>
+      <div class="ahMeta"><span>Source <b>${a.source}</b></span><span>Window <b>${a.start} → ${a.end}</b></span><span>Status <b>${approved?'Dispatched':a.status}</b></span></div>
+      <div class="ahSummary">${a.summary}</div></div></div>
+    <div class="pipe" style="margin-top:16px">
+      ${['AI drafts','Officer reviews','Dispatch','Field closure'].map((s,i)=>{
+        const state = approved? (i<3?'done':'active') : (i===0?'done':i===1?'active':'');
+        return `<div class="pStep ${state}"><span class="pDot">${state==='done'?'✓':i+1}</span><span class="pl">${s}</span></div>`;}).join('')}
+    </div>
+  </div></div>
+
+  <!-- STAGE 2 -->
+  <div class="stage"><div class="sHead"><span class="num">1</span><div><div class="st">Role-wise actions</div><div class="ss">${roles.length} roles activated for a ${a.hazard.toLowerCase()} · from the hazard playbook</div></div></div>
+    <div class="sBody"><div class="roles">${roleGrid}</div></div></div>
+
+  <!-- STAGE 3 -->
+  <div class="stage"><div class="sHead"><span class="num">2</span><div><div class="st">Drafted messages, every channel</div><div class="ss">auto-filled from the alert · ready for officer review</div></div></div>
+    <div class="sBody"><div class="chTabs">${chTabs}</div>
+      <div class="msg"><div class="mh">${channel} draft</div><div class="mt">${msg}</div>
+        <div class="mfoot"><span>Language: English · Telugu ready</span><span class="reach">Est. reach ${REACH[a.hazard]||'~'} people</span></div></div>
+    </div></div>
+
+  <!-- STAGE 4 -->
+  <div class="stage"><div class="sHead"><span class="num">3</span><div><div class="st">Officer approval &amp; audit</div><div class="ss">officers stay in control · every step recorded</div></div></div>
+    <div class="sBody">
+      <div class="approveBar"><span class="txt">${approved?'<b>Approved and dispatched.</b> The action packet went out on all channels, with the audit trail sealed.':'<b>Awaiting officer sign-off.</b> Nothing dispatches until an officer approves this draft.'}</span>
+        ${approved?'<button class="btn done">✓ Dispatched</button>':`<button class="btn primary" id="approveBtn">Approve &amp; dispatch</button>`}</div>
+      <ul class="audit">
+        <li><span class="ad">✓</span><div class="at"><div class="att">AWARE drafted the action packet</div><div class="ats">${roles.length} role actions · ${Object.keys(TPL).length} channel drafts generated</div><div class="stamp">engine · auto</div></div></li>
+        ${approved
+          ? `<li><span class="ad">✓</span><div class="at"><div class="att">Officer reviewed &amp; approved</div><div class="ats">Joint Collector (I/C Disaster Management), ${a.district}</div><div class="stamp">just now</div></div></li>
+             <li><span class="ad">✓</span><div class="at"><div class="att">Dispatched on ${Object.keys(TPL).length} channels</div><div class="ats">WhatsApp · SMS · IVR · Local announcement · Officer brief</div><div class="stamp">just now</div></div></li>
+             <li><span class="ad pending">○</span><div class="at"><div class="att">Field closure pending confirmation</div><div class="ats">Secretariat to confirm actions completed on the ground</div><div class="stamp">open</div></div></li>`
+          : `<li><span class="ad pending">○</span><div class="at"><div class="att">Awaiting officer review</div><div class="ats">Draft held. No message sent yet.</div><div class="stamp">now</div></div></li>`}
+      </ul>
+    </div></div>`;
+
+  document.querySelectorAll('.role').forEach(el=>el.querySelector('.roleH').addEventListener('click',()=>{
+    const r=el.dataset.r; openRoles.has(r)?openRoles.delete(r):openRoles.add(r); el.classList.toggle('open');}));
+  document.querySelectorAll('.chTab').forEach(el=>el.addEventListener('click',()=>{channel=el.dataset.c; renderBridge();}));
+  const ab=document.getElementById('approveBtn');
+  if(ab) ab.addEventListener('click',()=>{ approvedIds.add(a.id); renderQueue(); renderBridge(); });
+}
+
+renderQueue();
+selected=0; renderQueue(); renderBridge();
+</script>
+</body>
+</html>
