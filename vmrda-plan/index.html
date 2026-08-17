@@ -8,7 +8,7 @@
 <style>
   *,*::before,*::after{box-sizing:border-box}
   :root{
-    --bg:#070b12; --panel:rgba(10,16,26,.86); --ink:#e9eff8; --dim:#8fa0b8; --faint:#5d6c84;
+    --bg:#04070d; --panel:rgba(8,13,22,.92); --ink:#e9eff8; --dim:#8fa0b8; --faint:#5d6c84;
     --line:rgba(140,175,215,.16); --line2:rgba(140,175,215,.30);
     --cy:#63d8ea; --gold:#d9b872; --warn:#f0a860; --bad:#ef6b6b; --ok:#6fcf97;
     --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
@@ -35,9 +35,35 @@
   .ico:hover{border-color:var(--line2);color:var(--ink)}
 
   .stage{position:relative;flex:1;min-height:0;overflow:hidden;
-    touch-action:none;overscroll-behavior:none;cursor:grab;background:#0a1018}
+    touch-action:none;overscroll-behavior:none;cursor:grab;background:#05090f;
+    box-shadow:inset 0 0 140px 30px rgba(0,0,0,.55)}
   .stage.grab{cursor:grabbing}
   canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+  .zpanel{position:absolute;left:12px;top:12px;z-index:5;width:min(268px,calc(100vw - 24px));
+    background:var(--panel);border:1px solid var(--line);border-radius:13px;
+    backdrop-filter:blur(16px);overflow:hidden;box-shadow:0 18px 50px -20px rgba(0,0,0,.9)}
+  .zpanel.min .zb,.zpanel.min .zf{display:none}
+  .zh{display:flex;align-items:center;gap:7px;padding:9px 10px 9px 12px;border-bottom:1px solid var(--line)}
+  .zh span{font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--cy);font-weight:600;white-space:nowrap}
+  .zh input{flex:1;min-width:0;background:rgba(255,255,255,.05);border:1px solid var(--line);
+    border-radius:7px;color:var(--ink);font:inherit;font-size:11.5px;padding:4px 8px;outline:none}
+  .zh input:focus{border-color:var(--line2)}
+  .zh button{color:var(--faint);font-size:12px;padding:0 2px}
+  .zb{max-height:min(46vh,340px);overflow-y:auto;padding:5px 5px 6px}
+  .zrow{display:flex;align-items:center;gap:8px;width:100%;padding:6px 7px;border-radius:8px;
+    text-align:left;font-size:12.4px;color:var(--dim);transition:background .13s}
+  .zrow:hover{background:rgba(255,255,255,.055);color:var(--ink)}
+  .zrow.on{background:rgba(99,216,234,.16);color:var(--ink)}
+  .zrow i{width:11px;height:11px;border-radius:3px;flex:none;border:1px solid rgba(255,255,255,.28)}
+  .zrow .zn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .zrow .za{font-family:var(--mono);font-size:10.5px;color:var(--faint);flex:none}
+  .zrow.on .za{color:var(--cy)}
+  .zrow .zp{font-size:8.5px;letter-spacing:.09em;color:var(--gold);flex:none}
+  .zf{padding:8px 12px 10px;border-top:1px solid var(--line);font-size:11px;color:var(--faint);line-height:1.5}
+  .zf b{color:var(--warn)}
+  @media (max-width:640px){ .zpanel{width:calc(100vw - 24px)} .zb{max-height:32vh} }
 
   .hint{position:absolute;left:12px;bottom:12px;z-index:3;font-family:var(--mono);
     font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);
@@ -146,6 +172,16 @@
     </div>
   </div>
 
+  <div class="zpanel" id="zpanel">
+    <div class="zh">
+      <span>Zone index</span>
+      <input id="zq" placeholder="filter" oninput="renderZones()">
+      <button onclick="document.getElementById('zpanel').classList.toggle('min')">&#9662;</button>
+    </div>
+    <div class="zb" id="zb"></div>
+    <div class="zf" id="zf"></div>
+  </div>
+
   <div class="hint">Scroll to zoom &middot; drag to pan &middot; click any area to read its zone</div>
 
   <div class="drawer" id="drawer">
@@ -230,6 +266,8 @@
 var LOOKUP = [{"rgb": [255, 255, 152], "name": "Residential", "raw": "Residential"}, {"rgb": [0, 1, 252], "name": "Commercial", "raw": "Commercial"}, {"rgb": [254, 165, 1], "name": "Mixed use", "raw": "Mixed Use 1"}, {"rgb": [255, 211, 128], "name": "Mixed use", "raw": "Mixed Use 2"}, {"rgb": [231, 151, 0], "name": "Mixed use", "raw": "Mixed Use 3"}, {"rgb": [222, 101, 254], "name": "Industrial", "raw": "Industrial existing"}, {"rgb": [226, 126, 253], "name": "Industrial (proposed)", "raw": "Industrial proposed"}, {"rgb": [253, 2, 2], "name": "Government", "raw": "Government facilities"}, {"rgb": [222, 13, 26], "name": "Educational", "raw": "Educational"}, {"rgb": [245, 7, 11], "name": "Health", "raw": "Health"}, {"rgb": [221, 29, 0], "name": "Religious", "raw": "Religious"}, {"rgb": [249, 38, 36], "name": "Facility (proposed)", "raw": "Facility proposed"}, {"rgb": [255, 135, 135], "name": "Public utilities", "raw": "Utilities existing"}, {"rgb": [255, 161, 160], "name": "Public utilities (proposed)", "raw": "Utilities proposed"}, {"rgb": [85, 255, 0], "name": "Parks", "raw": "Parks existing"}, {"rgb": [74, 212, 1], "name": "Recreational (proposed)", "raw": "Recreational proposed"}, {"rgb": [178, 178, 178], "name": "Transportation", "raw": "Transportation existing"}, {"rgb": [104, 104, 104], "name": "Transportation (proposed)", "raw": "Transportation proposed"}, {"rgb": [209, 255, 188], "name": "Agriculture", "raw": "Agriculture"}, {"rgb": [49, 67, 133], "name": "Special area", "raw": "Special Area"}, {"rgb": [114, 224, 252], "name": "Water body", "raw": "Water bodies"}, {"rgb": [38, 115, 0], "name": "Forest", "raw": "Forest"}, {"rgb": [169, 110, 3], "name": "Hills", "raw": "Hills"}, {"rgb": [83, 139, 68], "name": "Eco-sensitive", "raw": "Eco-sensitive / park"}, {"rgb": [217, 189, 144], "name": "Accreted land", "raw": "Accreted land"}];
 var GEO = {"s": 16.87, "deg": 34.4, "lon0": 83.2363196451436, "lat0": 18.092701821448614, "kx": 105815.8156647524, "ky": 110540.0, "tE": -107387.80566260655, "tN": -46425.09832071707, "cx": 15, "cy": 15, "err_m": 200};          /* sheet pixel -> lon/lat, +/- 200 m */
 var TANKS = [{"la":17.57535,"lo":83.1148,"ha":199.3,"dry":false},{"la":17.60717,"lo":82.99914,"ha":168.8,"dry":false},{"la":17.57766,"lo":83.12446,"ha":110.5,"dry":false},{"la":18.01545,"lo":83.29021,"ha":107.5,"dry":false},{"la":17.50973,"lo":82.95955,"ha":96.9,"dry":true},{"la":17.93125,"lo":83.37651,"ha":90.3,"dry":false},{"la":17.36242,"lo":82.61598,"ha":84.6,"dry":true},{"la":17.37144,"lo":82.61799,"ha":84.1,"dry":true},{"la":18.07844,"lo":83.51587,"ha":82.8,"dry":true},{"la":18.10721,"lo":83.63733,"ha":79.0,"dry":true},{"la":17.59954,"lo":83.00651,"ha":77.4,"dry":true},{"la":17.66681,"lo":83.03408,"ha":75.6,"dry":true},{"la":17.87018,"lo":82.97317,"ha":74.6,"dry":true},{"la":17.9597,"lo":83.33351,"ha":72.3,"dry":false},{"la":18.05819,"lo":83.53664,"ha":70.6,"dry":true},{"la":18.08074,"lo":83.49385,"ha":61.1,"dry":true},{"la":18.004,"lo":83.22906,"ha":58.2,"dry":false},{"la":17.75287,"lo":82.95765,"ha":57.7,"dry":false},{"la":17.70205,"lo":83.28173,"ha":57.2,"dry":false},{"la":17.92294,"lo":83.44995,"ha":54.2,"dry":false},{"la":17.51117,"lo":82.94857,"ha":51.3,"dry":true},{"la":18.15122,"lo":83.46398,"ha":50.6,"dry":true},{"la":18.02048,"lo":83.31403,"ha":48.7,"dry":true},{"la":17.76658,"lo":83.29435,"ha":47.6,"dry":false},{"la":17.71669,"lo":82.98185,"ha":47.2,"dry":true},{"la":17.9142,"lo":83.45839,"ha":46.2,"dry":false},{"la":18.09802,"lo":83.48451,"ha":45.9,"dry":true},{"la":18.06481,"lo":83.29741,"ha":44.6,"dry":true},{"la":17.44406,"lo":82.84503,"ha":42.5,"dry":true},{"la":18.22702,"lo":83.43869,"ha":42.0,"dry":true},{"la":17.94826,"lo":83.35288,"ha":41.4,"dry":false},{"la":18.2608,"lo":83.39623,"ha":40.9,"dry":true},{"la":17.84306,"lo":83.16664,"ha":40.5,"dry":false},{"la":18.06091,"lo":83.35153,"ha":38.8,"dry":false},{"la":17.78908,"lo":82.9535,"ha":37.5,"dry":true},{"la":17.44729,"lo":82.73365,"ha":37.4,"dry":false},{"la":17.81898,"lo":82.97081,"ha":35.7,"dry":true},{"la":18.11955,"lo":83.50044,"ha":35.6,"dry":true},{"la":18.01978,"lo":83.17483,"ha":34.7,"dry":false},{"la":17.96794,"lo":83.35755,"ha":33.9,"dry":false},{"la":18.02028,"lo":83.55472,"ha":33.0,"dry":false},{"la":18.22363,"lo":83.42922,"ha":32.6,"dry":true},{"la":18.04837,"lo":83.52408,"ha":32.6,"dry":true},{"la":18.28301,"lo":83.28503,"ha":32.0,"dry":false},{"la":17.66908,"lo":83.08471,"ha":31.6,"dry":false},{"la":18.13831,"lo":83.47055,"ha":31.4,"dry":true},{"la":17.96828,"lo":82.96217,"ha":30.8,"dry":true},{"la":17.94292,"lo":82.96864,"ha":30.4,"dry":true},{"la":17.44397,"lo":82.50437,"ha":30.3,"dry":true},{"la":17.9074,"lo":83.44847,"ha":28.8,"dry":false},{"la":17.46559,"lo":82.82982,"ha":28.7,"dry":false},{"la":18.03399,"lo":83.54963,"ha":27.9,"dry":true},{"la":18.05377,"lo":83.26749,"ha":27.6,"dry":true},{"la":17.9928,"lo":83.32144,"ha":27.5,"dry":false},{"la":17.92276,"lo":83.3792,"ha":27.5,"dry":false},{"la":17.93258,"lo":83.39796,"ha":27.3,"dry":true},{"la":18.00198,"lo":83.51601,"ha":27.0,"dry":false},{"la":18.0251,"lo":83.13852,"ha":26.9,"dry":true},{"la":17.49823,"lo":82.80618,"ha":26.7,"dry":true},{"la":18.16579,"lo":83.45183,"ha":26.4,"dry":true},{"la":17.97532,"lo":83.2671,"ha":26.3,"dry":true},{"la":18.11086,"lo":83.4799,"ha":26.1,"dry":true},{"la":18.08768,"lo":83.46318,"ha":25.9,"dry":false},{"la":18.10325,"lo":83.57289,"ha":25.8,"dry":false},{"la":18.10152,"lo":83.31335,"ha":25.6,"dry":false},{"la":18.2492,"lo":83.42358,"ha":25.1,"dry":true},{"la":18.09609,"lo":83.52544,"ha":25.1,"dry":true},{"la":17.70215,"lo":82.99669,"ha":25.0,"dry":false},{"la":18.07567,"lo":83.43371,"ha":24.8,"dry":false},{"la":17.43538,"lo":82.77812,"ha":24.8,"dry":false},{"la":17.39009,"lo":82.53318,"ha":24.5,"dry":true},{"la":17.72859,"lo":82.97192,"ha":24.4,"dry":false},{"la":17.76358,"lo":83.018,"ha":24.0,"dry":false},{"la":17.71449,"lo":83.25317,"ha":23.9,"dry":false},{"la":18.05717,"lo":83.24695,"ha":23.8,"dry":true},{"la":17.92706,"lo":83.44332,"ha":23.8,"dry":false},{"la":18.27247,"lo":83.382,"ha":23.7,"dry":true},{"la":17.4827,"lo":82.74815,"ha":23.6,"dry":true},{"la":17.28582,"lo":82.59017,"ha":23.6,"dry":false},{"la":17.63954,"lo":82.94506,"ha":23.1,"dry":true},{"la":18.13397,"lo":83.14006,"ha":23.0,"dry":true},{"la":17.48394,"lo":82.48765,"ha":23.0,"dry":true},{"la":17.7139,"lo":82.99374,"ha":22.9,"dry":false},{"la":18.08609,"lo":83.16853,"ha":22.8,"dry":false},{"la":18.19783,"lo":83.45408,"ha":22.5,"dry":true},{"la":17.9445,"lo":83.38354,"ha":22.4,"dry":true},{"la":17.44407,"lo":82.82243,"ha":21.8,"dry":true},{"la":17.42346,"lo":82.51905,"ha":21.5,"dry":true},{"la":18.0594,"lo":83.55375,"ha":21.5,"dry":true},{"la":18.10252,"lo":83.25656,"ha":21.3,"dry":false},{"la":17.39654,"lo":82.61783,"ha":21.3,"dry":true},{"la":18.31646,"lo":83.40524,"ha":21.2,"dry":true},{"la":18.02845,"lo":83.52766,"ha":21.1,"dry":true},{"la":17.74414,"lo":83.12624,"ha":21.0,"dry":false},{"la":18.10419,"lo":83.28037,"ha":20.8,"dry":true},{"la":18.24415,"lo":83.60242,"ha":20.8,"dry":true},{"la":18.31408,"lo":83.36722,"ha":20.7,"dry":true},{"la":18.26396,"lo":83.59599,"ha":20.7,"dry":true},{"la":18.08112,"lo":83.33756,"ha":20.2,"dry":true}];
+var ZONES = [{"raw": "Agriculture", "name": "Agriculture", "rgb": [209, 255, 188], "grp": "Agriculture", "sqkm": 1702.9, "prot": false}, {"raw": "Residential", "name": "Residential", "rgb": [255, 255, 152], "grp": "Residential", "sqkm": 457.0, "prot": false}, {"raw": "Hills", "name": "Hills", "rgb": [169, 110, 3], "grp": "Hills", "sqkm": 323.0, "prot": true}, {"raw": "Forest", "name": "Forest", "rgb": [38, 115, 0], "grp": "Forest", "sqkm": 280.7, "prot": true}, {"raw": "Transportation existing", "name": "Transportation", "rgb": [178, 178, 178], "grp": "Transportation", "sqkm": 275.3, "prot": false}, {"raw": "Water bodies", "name": "Water body", "rgb": [114, 224, 252], "grp": "Water bodies", "sqkm": 242.8, "prot": true}, {"raw": "Accreted land", "name": "Accreted land", "rgb": [217, 189, 144], "grp": "Accreted land", "sqkm": 203.2, "prot": false}, {"raw": "Industrial existing", "name": "Industrial", "rgb": [222, 101, 254], "grp": "Industrial", "sqkm": 90.9, "prot": false}, {"raw": "Mixed Use 2", "name": "Mixed use", "rgb": [255, 211, 128], "grp": "Mixed use", "sqkm": 72.6, "prot": false}, {"raw": "Transportation proposed", "name": "Transportation (proposed)", "rgb": [104, 104, 104], "grp": "Transportation", "sqkm": 70.1, "prot": false}, {"raw": "Mixed Use 3", "name": "Mixed use", "rgb": [231, 151, 0], "grp": "Mixed use", "sqkm": 58.4, "prot": false}, {"raw": "Industrial proposed", "name": "Industrial (proposed)", "rgb": [226, 126, 253], "grp": "Industrial", "sqkm": 46.4, "prot": false}, {"raw": "Eco-sensitive / park", "name": "Eco-sensitive", "rgb": [83, 139, 68], "grp": "Eco-sensitive", "sqkm": 33.3, "prot": true}, {"raw": "Special Area", "name": "Special area", "rgb": [49, 67, 133], "grp": "Special area", "sqkm": 24.0, "prot": false}, {"raw": "Mixed Use 1", "name": "Mixed use", "rgb": [254, 165, 1], "grp": "Mixed use", "sqkm": 14.5, "prot": false}, {"raw": "Recreational proposed", "name": "Recreational (proposed)", "rgb": [74, 212, 1], "grp": "Recreational", "sqkm": 13.2, "prot": false}, {"raw": "Educational", "name": "Educational", "rgb": [222, 13, 26], "grp": "Public & semi-public", "sqkm": 10.7, "prot": false}, {"raw": "Facility proposed", "name": "Facility (proposed)", "rgb": [249, 38, 36], "grp": "Public & semi-public", "sqkm": 9.6, "prot": false}, {"raw": "Utilities proposed", "name": "Public utilities (proposed)", "rgb": [255, 161, 160], "grp": "Public utilities", "sqkm": 4.5, "prot": false}, {"raw": "Parks existing", "name": "Parks", "rgb": [85, 255, 0], "grp": "Recreational", "sqkm": 3.2, "prot": false}, {"raw": "Utilities existing", "name": "Public utilities", "rgb": [255, 135, 135], "grp": "Public utilities", "sqkm": 3.1, "prot": false}, {"raw": "Religious", "name": "Religious", "rgb": [221, 29, 0], "grp": "Public & semi-public", "sqkm": 1.8, "prot": false}, {"raw": "Health", "name": "Health", "rgb": [245, 7, 11], "grp": "Public & semi-public", "sqkm": 1.7, "prot": false}, {"raw": "Commercial", "name": "Commercial", "rgb": [0, 1, 252], "grp": "Commercial", "sqkm": 0.3, "prot": false}, {"raw": "Government facilities", "name": "Government", "rgb": [253, 2, 2], "grp": "Public & semi-public", "sqkm": 0.2, "prot": false}];
+var isoZone = null;
 var showTanks = false;
 
 /* Inverse of the georeference: lon/lat back to a pixel on this cropped image.
@@ -286,6 +324,7 @@ Promise.all([
   ready=1; resize(); reset(true);
   document.getElementById("boot").classList.add("off");
   requestAnimationFrame(tick);
+  renderZones();
   if(location.hash.length>3) fromHash();
 }).catch(function(){
   document.getElementById("boot").innerHTML='<div style="color:#ef6b6b">Could not load the sheet</div>';
@@ -356,6 +395,14 @@ function draw(){
     ctx.fillStyle="rgba(99,216,234,.85)"; ctx.fillRect(w*split-1*dpr,0,2*dpr,h);
   } else { ctx.drawImage(plan,x,y,dw,dh); }
 
+  if(isoZone && isoCv.width){
+    ctx.save();
+    ctx.fillStyle="rgba(4,7,13,.74)"; ctx.fillRect(0,0,w,h);   /* push the rest back */
+    ctx.imageSmoothingEnabled=false;
+    ctx.drawImage(isoCv,x,y,dw,dh);
+    ctx.restore();
+  }
+
   if(showTanks && GEO){
     for(var i=0;i<TANKS.length;i++){
       var t=TANKS[i], p=ll2px(t.lo,t.la);
@@ -374,6 +421,30 @@ function toggleTanks(){
   document.getElementById("tBtn").style.color=showTanks?"#ef6b6b":"";
   document.getElementById("tBtn").style.borderColor=showTanks?"#ef6b6b":"";
   draw();
+}
+
+/* Isolating a zone: build a one-off mask off the identify raster (already in
+   memory) rather than re-reading the full 10080x4020 image, then scale it up.
+   Blocky at extreme zoom, instant at every useful one. */
+var isoCv=document.createElement("canvas"), isoCtx=isoCv.getContext("2d");
+function buildIso(){
+  if(!isoZone){return}
+  var w=idc.width,h=idc.height;
+  isoCv.width=w; isoCv.height=h;
+  var src=idx.getImageData(0,0,w,h), out=isoCtx.createImageData(w,h);
+  var c=isoZone.rgb, sd=src.data, od=out.data;
+  for(var i=0;i<sd.length;i+=4){
+    var dr=sd[i]-c[0], dg=sd[i+1]-c[1], db=sd[i+2]-c[2];
+    if(dr*dr+dg*dg+db*db<=2200){
+      od[i]=c[0]; od[i+1]=c[1]; od[i+2]=c[2]; od[i+3]=255;
+    } else { od[i+3]=0 }
+  }
+  isoCtx.putImageData(out,0,0);
+}
+function pickZone(i){
+  var z=ZONES[i];
+  isoZone = (isoZone && isoZone.raw===z.raw) ? null : z;
+  buildIso(); renderZones(); draw();
 }
 
 function setMode(m){
@@ -420,6 +491,24 @@ function fromHash(){
   goal.x=r.width/2-parseFloat(p[0])*goal.s;
   goal.y=r.height/2-parseFloat(p[1])*goal.s;
   clamp();
+}
+
+function renderZones(){
+  var q=(document.getElementById("zq").value||"").toLowerCase();
+  var rows=ZONES.map(function(z,i){return {z:z,i:i}})
+    .filter(function(r){return !q || r.z.name.toLowerCase().indexOf(q)>=0
+                               || r.z.grp.toLowerCase().indexOf(q)>=0});
+  document.getElementById("zb").innerHTML = rows.map(function(r){
+    var z=r.z, on=isoZone&&isoZone.raw===z.raw;
+    return '<button class="zrow'+(on?" on":"")+'" onclick="pickZone('+r.i+')">'+
+      '<i style="background:rgb('+z.rgb.join(",")+')"></i>'+
+      '<span class="zn">'+z.name+'</span>'+
+      (z.prot?'<span class="zp">PROTECTED</span>':'')+
+      '<span class="za">'+(z.sqkm>=1?Math.round(z.sqkm).toLocaleString():z.sqkm)+'</span></button>';
+  }).join("") || '<div style="padding:10px;color:var(--faint);font-size:12px">nothing matches</div>';
+  document.getElementById("zf").innerHTML = isoZone
+    ? 'Showing <b>'+isoZone.name+'</b> alone. Tap it again to bring the plan back.'
+    : 'Area in sq km, recovered from the sheet by colour. <b>&plusmn;43% median error</b> against VMRDA\'s own table, so read the ordering, not the totals.';
 }
 
 function toggleDrawer(){document.getElementById("drawer").classList.toggle("on")}
