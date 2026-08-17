@@ -8,62 +8,104 @@
 <style>
   *,*::before,*::after{box-sizing:border-box}
   :root{
-    --bg:#05080e; --bg2:#080d16; --ink:#e8eef7; --dim:#8b9bb4; --faint:#5b6a80;
-    --line:rgba(140,170,210,.14); --line2:rgba(140,170,210,.26);
-    --aqua:#4fd0e0; --gw:#f0a860; --vm:#8fb4ff; --gold:#d9b872;
+    --bg:#03050a; --ink:#eef3fa; --dim:#8b9cb5; --faint:#57667e;
+    --line:rgba(150,185,225,.13); --line2:rgba(150,185,225,.30);
+    --aqua:#5fd9ef; --amber:#ffb057; --violet:#93b4ff; --gold:#e0bd74; --red:#ff5f6d;
+    --ok:#5fd39a;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   }
-  html,body{margin:0;padding:0}
-  body{
-    background:var(--bg); color:var(--ink); min-height:100vh;
-    font:16px/1.55 ui-sans-serif,-apple-system,"SF Pro Text",Inter,Segoe UI,system-ui,sans-serif;
-    -webkit-font-smoothing:antialiased;
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--ink);position:relative;min-height:100vh;
+    font:16px/1.6 ui-sans-serif,-apple-system,"SF Pro Text",Inter,system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
     background-image:
-      radial-gradient(900px 520px at 12% -8%, rgba(79,208,224,.11), transparent 62%),
-      radial-gradient(780px 480px at 92% 4%, rgba(143,180,255,.09), transparent 60%);
-    background-attachment:fixed;
-  }
-  .wrap{max-width:940px;margin:0 auto;padding:clamp(38px,7vw,86px) clamp(18px,4vw,32px) 70px}
+      radial-gradient(1400px 720px at 8% -16%, rgba(95,217,239,.15), transparent 62%),
+      radial-gradient(1100px 600px at 96% -6%, rgba(255,95,109,.09), transparent 58%),
+      radial-gradient(1000px 1000px at 50% 122%, rgba(147,180,255,.07), transparent 62%);
+    background-attachment:fixed}
+  /* grain, so the wide dark fields do not band on a projector */
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.5;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/><feColorMatrix type='saturate' values='0'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='.035'/></svg>")}
+  .wrap{position:relative;z-index:2;max-width:1120px;margin:0 auto;
+    padding:clamp(34px,6vw,80px) clamp(16px,4vw,32px) 90px}
+  a{color:inherit}
 
-  .mark{display:flex;align-items:center;gap:11px;margin-bottom:30px}
-  .mark svg{width:26px;height:26px;flex:none}
-  .mark b{font-weight:650;letter-spacing:.015em;font-size:15px}
-  .mark span{color:var(--faint);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
-    border-left:1px solid var(--line2);padding-left:11px;margin-left:2px}
+  /* ---------- masthead ---------- */
+  .mark{display:flex;align-items:center;gap:12px;margin-bottom:clamp(34px,6vw,60px)}
+  .mark svg{width:28px;height:28px;flex:none;filter:drop-shadow(0 0 14px rgba(95,217,239,.45))}
+  .mark b{font-weight:660;letter-spacing:.005em;font-size:15.5px}
+  .mark span{color:var(--faint);font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;
+    text-transform:uppercase;border-left:1px solid var(--line2);padding-left:12px}
 
-  h1{font-size:clamp(27px,5.1vw,44px);line-height:1.14;letter-spacing:-.022em;
-    font-weight:620;margin:0 0 15px;max-width:19ch}
-  h1 em{font-style:normal;color:var(--aqua)}
-  .lede{color:var(--dim);font-size:clamp(15px,2.1vw,17px);max-width:62ch;margin:0 0 40px}
+  h1{font-size:clamp(34px,6.6vw,64px);line-height:1.02;letter-spacing:-.037em;font-weight:680;
+    margin:0 0 20px;max-width:15ch}
+  h1 em{font-style:normal;
+    background:linear-gradient(96deg,#5fd9ef 0%,#93b4ff 52%,#e0bd74 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 0 70px rgba(95,217,239,.22)}
+  .lede{color:var(--dim);font-size:clamp(15.5px,2.1vw,18px);max-width:60ch;margin:0 0 clamp(34px,5vw,52px);
+    line-height:1.68}
+  .lede b{color:var(--ink);font-weight:620}
 
-  .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(258px,1fr))}
-  a.card{
-    display:block;text-decoration:none;color:inherit;position:relative;
-    background:linear-gradient(168deg,rgba(255,255,255,.05),rgba(255,255,255,.014));
-    border:1px solid var(--line);border-radius:15px;padding:21px 21px 19px;
-    transition:transform .22s cubic-bezier(.2,.7,.3,1),border-color .22s,background .22s;
-  }
-  a.card::before{content:"";position:absolute;inset:0 auto auto 0;height:2px;width:38px;
-    border-radius:15px 0 8px 0;background:var(--ac);opacity:.85}
-  a.card:hover{transform:translateY(-3px);border-color:var(--line2);
-    background:linear-gradient(168deg,rgba(255,255,255,.075),rgba(255,255,255,.02))}
-  .k{font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--ac);
-    font-weight:600;margin-bottom:9px}
-  .t{font-size:18.5px;font-weight:600;letter-spacing:-.012em;margin-bottom:6px}
-  .d{color:var(--dim);font-size:13.6px;line-height:1.5}
-  .tag{display:inline-block;margin-top:13px;font-size:11px;letter-spacing:.05em;
-    color:var(--faint);border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+  /* ---------- headline numbers ---------- */
+  .figs{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    margin-bottom:clamp(40px,6vw,64px)}
+  .fig{position:relative;border:1px solid var(--line);border-radius:15px;padding:16px 17px 14px;
+    background:linear-gradient(168deg,rgba(255,255,255,.06),rgba(255,255,255,.012));
+    box-shadow:0 22px 44px -30px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.07);
+    overflow:hidden}
+  .fig::after{content:"";position:absolute;inset:0 auto auto 0;height:2px;width:42px;
+    border-radius:0 0 8px 0;background:var(--c);box-shadow:0 0 20px 1px var(--c);opacity:.92}
+  .fig b{display:block;font-size:clamp(25px,3.1vw,32px);font-weight:680;letter-spacing:-.035em;
+    line-height:1.04;font-variant-numeric:tabular-nums;color:var(--c)}
+  .fig span{display:block;font-size:11.8px;color:var(--dim);margin-top:6px;line-height:1.45}
 
-  .held{margin-top:40px;border:1px dashed var(--line);border-radius:13px;padding:19px 21px;
-    background:rgba(255,255,255,.014)}
-  .held .hk{font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;
-    color:var(--gold);font-weight:600;margin-bottom:9px}
-  .held p{margin:0;color:var(--dim);font-size:13.6px;line-height:1.6;max-width:74ch}
-  .held b{color:var(--ink);font-weight:600}
+  /* ---------- section rule ---------- */
+  h2{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--aqua);font-weight:600;margin:0 0 18px;display:flex;align-items:center;gap:12px}
+  h2::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(95,217,239,.3),transparent)}
+  h2.q{color:var(--gold)} h2.q::after{background:linear-gradient(90deg,rgba(224,189,116,.3),transparent)}
+  section{margin-bottom:clamp(40px,6vw,60px)}
 
-  footer{margin-top:44px;padding-top:19px;border-top:1px solid var(--line);
-    color:var(--faint);font-size:12.2px;line-height:1.7}
+  /* ---------- cards ---------- */
+  .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(272px,1fr))}
+  a.card{display:flex;flex-direction:column;text-decoration:none;position:relative;overflow:hidden;
+    border:1px solid var(--line);border-radius:17px;padding:22px 22px 20px;
+    background:linear-gradient(166deg,rgba(255,255,255,.055),rgba(255,255,255,.012));
+    box-shadow:0 24px 48px -32px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.06);
+    transition:transform .24s cubic-bezier(.2,.7,.3,1),border-color .24s,box-shadow .24s}
+  a.card::before{content:"";position:absolute;inset:0 auto auto 0;height:2px;width:52px;
+    border-radius:0 0 10px 0;background:var(--c);box-shadow:0 0 24px 1px var(--c);opacity:.9;
+    transition:width .24s}
+  a.card:hover{transform:translateY(-4px);border-color:var(--line2);
+    box-shadow:0 34px 62px -30px rgba(0,0,0,1), inset 0 1px 0 rgba(255,255,255,.09)}
+  a.card:hover::before{width:100%}
+  .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--c);font-weight:600;margin-bottom:10px}
+  .t{font-size:20px;font-weight:650;letter-spacing:-.018em;margin-bottom:8px}
+  .d{color:var(--dim);font-size:13.8px;line-height:1.55;flex:1}
+  .foot{display:flex;align-items:center;gap:8px;margin-top:16px;flex-wrap:wrap}
+  .tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--faint);border:1px solid var(--line);border-radius:999px;padding:4px 10px}
+  .tag.m{color:var(--ok);border-color:rgba(95,211,154,.34);background:rgba(95,211,154,.08)}
+  .tag.c{color:var(--gold);border-color:rgba(224,189,116,.3);background:rgba(224,189,116,.07)}
+  .go{margin-left:auto;color:var(--c);font-size:15px;opacity:.75;transition:transform .24s}
+  a.card:hover .go{transform:translateX(3px);opacity:1}
+
+  /* ---------- held-back panel ---------- */
+  .held{position:relative;border:1px solid rgba(224,189,116,.26);border-radius:16px;
+    padding:20px 22px 20px 24px;
+    background:linear-gradient(150deg,rgba(224,189,116,.09),rgba(224,189,116,.022));
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
+  .held::before{content:"";position:absolute;left:0;top:16px;bottom:16px;width:2px;border-radius:2px;
+    background:linear-gradient(180deg,var(--gold),transparent)}
+  .held p{margin:0;color:var(--dim);font-size:13.6px;line-height:1.68;max-width:76ch}
+  .held b{color:var(--ink);font-weight:620}
+
+  footer{margin-top:clamp(46px,7vw,70px);padding-top:24px;border-top:1px solid var(--line);
+    color:var(--faint);font-size:12px;line-height:1.85}
   footer a{color:var(--dim)}
-  @media (prefers-reduced-motion:reduce){a.card{transition:none}}
+  @media (prefers-reduced-motion:reduce){a.card,a.card::before,.go{transition:none}}
 </style>
 </head>
 <body>
@@ -71,74 +113,100 @@
 
   <div class="mark">
     <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
-      <path d="M3 19c3.4-4.6 6.7-4.6 10 0s6.6 4.6 10 0" stroke="#4fd0e0" stroke-width="2.1" stroke-linecap="round"/>
-      <path d="M3 12c3.4-4.6 6.7-4.6 10 0s6.6 4.6 10 0" stroke="#4fd0e0" stroke-width="2.1" stroke-linecap="round" opacity=".45"/>
+      <path d="M3 20c3.4-4.8 6.8-4.8 10.2 0s6.8 4.8 10.2 0" stroke="#5fd9ef" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M3 13c3.4-4.8 6.8-4.8 10.2 0s6.8 4.8 10.2 0" stroke="#5fd9ef" stroke-width="2.2" stroke-linecap="round" opacity=".42"/>
     </svg>
     <b>AP AI Living Labs</b><span>Consoles</span>
   </div>
 
-  <h1>Decision surfaces built on <em>evidence you can trace</em>.</h1>
-  <p class="lede">
-    Working consoles from the Andhra Pradesh AI Living Labs programme. Each one shows where its
-    numbers came from, and says plainly which are measured and which are illustrative.
-  </p>
+  <h1>Public data, pointed at <em>things nobody measured</em>.</h1>
+  <p class="lede">Working consoles built from open satellite imagery and documents that were
+    already published. Each one says which of its numbers are measured, which are illustrative,
+    and <b>what it got wrong on the way</b>. Nothing here asks you to take its word for it.</p>
 
-  <div class="grid">
-
-    <a class="card" href="aquawatch/" style="--ac:var(--aqua)">
-      <div class="k">Sentinel-1 SAR</div>
-      <div class="t">AquaWatch AP</div>
-      <div class="d">Aquaculture extent across five belts of the Godavari&ndash;Krishna delta, with a
-        corroborated encroachment result inside the Kolleru sanctuary.</div>
-      <span class="tag">1 validated &middot; 2 detected &middot; 2 under-count</span>
-    </a>
-
-    <a class="card" href="aware/" style="--ac:var(--gw)">
-      <div class="t" style="margin-top:2px">AWARE</div>
-      <div class="k" style="margin:0 0 7px">Action bridge</div>
-      <div class="d">Turning an alert into an accountable, assigned action with a name, a clock and a
-        closing record. Every alert shown is invented.</div>
-      <span class="tag">Concept &middot; fabricated data</span>
-    </a>
-
-    <a class="card" href="vmrda/" style="--ac:var(--vm)">
-      <div class="t" style="margin-top:2px">VMRDA OneView</div>
-      <div class="k" style="margin:0 0 7px">Vizag metro region</div>
-      <div class="d">An intelligence layer above the authority's existing systems rather than another
-        application beside them.</div>
-      <span class="tag">Concept</span>
-    </a>
-
-    <a class="card" href="vmrda-plan/" style="--ac:var(--gold)">
-      <div class="k">Master Plan 2041</div>
-      <div class="t">VMR Plan Reader</div>
-      <div class="d">Visakhapatnam's statutory master plan, read back from the only form it is
-        published in. What a picture of a plan can and cannot answer.</div>
-      <span class="tag">Read from the published sheet</span>
-    </a>
-
-    <a class="card" href="dry-tanks/" style="--ac:var(--gw)">
-      <div class="k">Sentinel-2 &times; Master Plan</div>
-      <div class="t">Missing Tanks of VMR</div>
-      <div class="d">58 of the water bodies Visakhapatnam's master plan protects show no water
-        at the wettest pass of the year. Every site, with the imagery.</div>
-      <span class="tag">99 sites &middot; located, not measured</span>
-    </a>
-
+  <div class="figs">
+    <div class="fig" style="--c:var(--red)"><b>38</b><span>protected water bodies with no water, each with imagery</span></div>
+    <div class="fig" style="--c:var(--aqua)"><b>446 ha</b><span>aquaculture measured inside the Kolleru sanctuary</span></div>
+    <div class="fig" style="--c:var(--violet)"><b>&plusmn;200 m</b><span>a statutory master plan put on the ground for the first time</span></div>
+    <div class="fig" style="--c:var(--gold)"><b>3</b><span>government documents that could not be obtained at all</span></div>
   </div>
 
-  <div class="held">
-    <div class="hk">Not published here</div>
-    <p>The <b>Groundwater</b> console and the <b>AP AI Nerve Center</b> are held back from this public
-      site. They are built on an APWRIMS depth history that the project's own README records as a
-      research sample with <b>authorization pending</b>. Those two are shared privately until RTGS
-      clears the underlying data.</p>
-  </div>
+  <section>
+    <h2>Measured</h2>
+    <div class="grid">
+
+      <a class="card" href="dry-tanks/" style="--c:var(--red)">
+        <div class="k">Sentinel-2 &times; Master Plan</div>
+        <div class="t">Missing Tanks of VMR</div>
+        <div class="d">Every water body Visakhapatnam's master plan protects, asked one question:
+          is there still water there? 38 say no at the wettest pass of the year. Every large
+          reservoir still holds water, so this is not a detection artifact.</div>
+        <div class="foot"><span class="tag m">Measured</span>
+          <span class="tag">99 sites &middot; imagery for each</span><span class="go">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="vmrda-plan/" style="--c:var(--violet)">
+        <div class="k">Master Plan 2041</div>
+        <div class="t">VMR Plan Reader</div>
+        <div class="d">The statutory plan is published as a picture with no coordinates. This
+          georeferences it, gives real coordinates on any click, and lets you isolate a single
+          zone across the whole region.</div>
+        <div class="foot"><span class="tag m">Georeferenced</span>
+          <span class="tag">25 zones &middot; filterable</span><span class="go">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="aquawatch/" style="--c:var(--aqua)">
+        <div class="k">Sentinel-1 SAR</div>
+        <div class="t">AquaWatch AP</div>
+        <div class="d">Aquaculture extent across five belts of the Godavari&ndash;Krishna delta,
+          with a corroborated encroachment result inside the Kolleru sanctuary. Each belt is
+          labelled by how much it can be trusted.</div>
+        <div class="foot"><span class="tag m">1 validated</span>
+          <span class="tag">2 detected &middot; 2 under-count</span><span class="go">&rarr;</span></div>
+      </a>
+
+    </div>
+  </section>
+
+  <section>
+    <h2 class="q">Concept</h2>
+    <div class="grid">
+
+      <a class="card" href="aware/" style="--c:var(--amber)">
+        <div class="k">Action bridge</div>
+        <div class="t">AWARE</div>
+        <div class="d">Turning an alert into an accountable, assigned action with a name, a clock
+          and a closing record. Every alert on the page is invented, and the page says so.</div>
+        <div class="foot"><span class="tag c">Concept</span>
+          <span class="tag">fabricated data</span><span class="go">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="vmrda/" style="--c:var(--gold)">
+        <div class="k">Vizag metro region</div>
+        <div class="t">VMRDA OneView</div>
+        <div class="d">An intelligence layer sitting above the authority's existing systems
+          rather than another application beside them.</div>
+        <div class="foot"><span class="tag c">Concept</span><span class="go">&rarr;</span></div>
+      </a>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="held">
+      <p><b>Not published here.</b> The Groundwater console and the AP AI Nerve Center are held
+        back. They run on an APWRIMS depth history that the project's own README records as a
+        research sample with <b>authorization pending</b>, so they stay private until RTGS
+        clears the underlying data. That rule is the reason the rest of this is worth reading.</p>
+    </div>
+  </section>
 
   <footer>
-    Pond footprints &copy; OpenStreetMap contributors, <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a>.
-    Imagery: Copernicus Sentinel-1 RTC via Microsoft Planetary Computer. Elevation: Copernicus GLO-30.<br>
-    Prototype work for the AP AI Living Labs programme. Not an official Government of Andhra Pradesh result.
+    Imagery: Copernicus Sentinel-1 and Sentinel-2 via Microsoft Planetary Computer.
+    Elevation: Copernicus GLO-30. Pond and boundary geometry &copy; OpenStreetMap contributors,
+    <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a>. Plan sheets as published by VMRDA.<br>
+    Independent prototype work for the AP AI Living Labs programme. Not commissioned by,
+    endorsed by, or a record of the Government of Andhra Pradesh.
   </footer>
 
 </div>
