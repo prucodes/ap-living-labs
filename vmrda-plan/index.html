@@ -89,6 +89,9 @@
   .zdet dl{display:grid;grid-template-columns:1fr auto;gap:4px 10px;margin:0;font-size:12px}
   .zdet dt{color:var(--faint)} .zdet dd{margin:0;font-family:var(--mono);font-size:11.5px;color:var(--ink)}
   .zdet dd.off{color:var(--warn)}
+  .zdet .zgo{margin-top:10px;width:100%;border:1px solid var(--line2);border-radius:8px;
+    padding:6px 0;font-size:11.5px;color:var(--cy);background:rgba(99,216,234,.09);transition:.15s}
+  .zdet .zgo:hover{background:rgba(99,216,234,.18)}
   .zdet .pr{margin-top:9px;font-size:10.5px;color:var(--gold);letter-spacing:.06em}
   .zcomp{padding:10px 12px 4px;border-top:1px solid var(--line)}
   .zcomp .cl{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;
@@ -482,10 +485,31 @@ function draw(){
 
   if(isoZone && isoCv.width){
     ctx.save();
-    ctx.fillStyle="rgba(4,7,13,.74)"; ctx.fillRect(0,0,w,h);   /* push the rest back */
+    ctx.fillStyle="rgba(4,7,13,.76)"; ctx.fillRect(0,0,w,h);   /* push the rest back */
     ctx.imageSmoothingEnabled=false;
+    ctx.shadowColor="rgba("+isoZone.rgb.join(",")+",.9)"; ctx.shadowBlur=14;
     ctx.drawImage(isoCv,x,y,dw,dh);
+    ctx.shadowBlur=0;
     ctx.restore();
+
+    /* corner brackets round the class extent, so the eye is told where to look */
+    if(isoBox){
+      var HB=isoBox.hot||isoBox;
+      var k=view.s*dpr, bx=x+HB.x0*k, by=y+HB.y0*k;
+      var bw2=(HB.x1-HB.x0)*k, bh2=(HB.y1-HB.y0)*k;
+      var L=Math.min(34*dpr, bw2*0.28, bh2*0.28);
+      ctx.save();
+      ctx.strokeStyle="rgba("+isoZone.rgb.join(",")+",.95)";
+      ctx.lineWidth=2*dpr; ctx.lineCap="round";
+      ctx.shadowColor="rgba(0,0,0,.8)"; ctx.shadowBlur=6;
+      [[bx,by,1,1],[bx+bw2,by,-1,1],[bx,by+bh2,1,-1],[bx+bw2,by+bh2,-1,-1]]
+        .forEach(function(c){
+          ctx.beginPath();
+          ctx.moveTo(c[0]+c[2]*L, c[1]); ctx.lineTo(c[0], c[1]);
+          ctx.lineTo(c[0], c[1]+c[3]*L); ctx.stroke();
+        });
+      ctx.restore();
+    }
   }
 
   if(showTanks && GEO){
@@ -512,24 +536,81 @@ function toggleTanks(){
    memory) rather than re-reading the full 10080x4020 image, then scale it up.
    Blocky at extreme zoom, instant at every useful one. */
 var isoCv=document.createElement("canvas"), isoCtx=isoCv.getContext("2d");
+var isoBox=null;
 function buildIso(){
+  isoBox=null;
   if(!isoZone){return}
   var w=idc.width,h=idc.height;
   isoCv.width=w; isoCv.height=h;
   var src=idx.getImageData(0,0,w,h), out=isoCtx.createImageData(w,h);
   var c=isoZone.rgb, sd=src.data, od=out.data;
+  /* Measure the class while masking it: extent, centroid and how many pixels
+     carry it. The panel can then say where the zone is, and the view can go
+     there, instead of leaving the reader to hunt for it. */
+  var x0=1e9,y0=1e9,x1=-1,y1=-1,sx=0,sy=0,n=0;
   for(var i=0;i<sd.length;i+=4){
     var dr=sd[i]-c[0], dg=sd[i+1]-c[1], db=sd[i+2]-c[2];
     if(dr*dr+dg*dg+db*db<=2200){
       od[i]=c[0]; od[i+1]=c[1]; od[i+2]=c[2]; od[i+3]=255;
+      var q=i>>2, px=q%w, py=(q/w)|0;
+      if(px<x0)x0=px; if(px>x1)x1=px; if(py<y0)y0=py; if(py>y1)y1=py;
+      sx+=px; sy+=py; n++;
     } else { od[i+3]=0 }
   }
   isoCtx.putImageData(out,0,0);
+  if(n===0) return;
+  var k=1/ID_SCALE;
+  isoBox={x0:x0*k,y0:y0*k,x1:(x1+1)*k,y1:(y1+1)*k,
+          cx:(sx/n)*k, cy:(sy/n)*k, px:n};
+
+  /* Every class is scattered the length of the region, so its bounding box is
+     always the whole sheet and zooming to it shows nothing. What a reader
+     actually wants is where the zone CONCENTRATES. Bin the mask into a coarse
+     grid, find the heaviest window, and go there. */
+  var GX=48, GY=20, cw=w/GX, chh=h/GY, grid=new Float32Array(GX*GY);
+  for(var i2=0;i2<sd.length;i2+=4){
+    if(od[i2+3]===0) continue;
+    var q2=i2>>2, gx=Math.min(GX-1,((q2%w)/cw)|0), gy=Math.min(GY-1,(((q2/w)|0)/chh)|0);
+    grid[gy*GX+gx]++;
+  }
+  /* 3x3 box sum, so the peak is a neighbourhood rather than one lucky cell */
+  var bi=0,bv=-1;
+  for(var gy2=0;gy2<GY;gy2++)for(var gx2=0;gx2<GX;gx2++){
+    var t2=0;
+    for(var dy=-1;dy<=1;dy++)for(var dx=-1;dx<=1;dx++){
+      var yy=gy2+dy, xx=gx2+dx;
+      if(yy<0||yy>=GY||xx<0||xx>=GX) continue;
+      t2+=grid[yy*GX+xx];
+    }
+    if(t2>bv){bv=t2;bi=gy2*GX+gx2}
+  }
+  var pgx=bi%GX, pgy=(bi/GX)|0;
+  isoBox.hot={x0:(pgx-1)*cw*k, y0:(pgy-1)*chh*k,
+              x1:(pgx+2)*cw*k, y1:(pgy+2)*chh*k,
+              share: bv/n};
+}
+
+/* Fly the view to the selected zone. Classes that are scattered across the
+   whole region simply fit the whole sheet, which is the honest answer. */
+function zoomToZone(){
+  if(!isoBox) return;
+  var r=stage.getBoundingClientRect(), pad=1.25;
+  var B=isoBox.hot||isoBox;
+  var bw=Math.max(B.x1-B.x0,120), bh=Math.max(B.y1-B.y0,120);
+  var s=Math.min(r.width/(bw*pad), r.height/(bh*pad));
+  var f=fitScale(); if(!(f>0)) return;
+  goal.s=Math.max(f*0.95, Math.min(f*22, s));
+  goal.x=r.width/2  - ((B.x0+B.x1)/2)*goal.s;
+  goal.y=r.height/2 - ((B.y0+B.y1)/2)*goal.s;
+  clamp();
 }
 function pickZone(i){
   var z=ZONES[i];
-  isoZone = (isoZone && isoZone.raw===z.raw) ? null : z;
-  buildIso(); renderZones(); draw();
+  var turningOff = isoZone && isoZone.raw===z.raw;
+  isoZone = turningOff ? null : z;
+  buildIso();
+  if(turningOff) reset(); else zoomToZone();
+  closeRead(); renderZones(); draw();
 }
 
 function setMode(m){
@@ -625,11 +706,20 @@ function renderZones(){
       cmp='<dt>VMRDA table</dt><dd>'+Math.round(z.pub).toLocaleString()+' km&sup2;</dd>'+
           '<dt>Difference</dt><dd class="off">'+(d>0?"+":"")+d.toFixed(0)+'%</dd>';
     }
+    var HB = isoBox && (isoBox.hot||isoBox);
+    var ext = HB ? ((HB.x1-HB.x0)*GEO.s/1000).toFixed(0)+' &times; '+
+              ((HB.y1-HB.y0)*GEO.s/1000).toFixed(0)+' km' : null;
+    var conc = (isoBox&&isoBox.hot) ? (isoBox.hot.share*100).toFixed(0)+'%' : null;
+    var ll  = HB ? px2ll((HB.x0+HB.x1)/2,(HB.y0+HB.y1)/2) : null;
     dt.className="zdet on";
     dt.innerHTML='<div class="dn">'+z.name+'</div><div class="dg">'+z.grp+'</div>'+
       '<dl><dt>This class</dt><dd>'+(z.sqkm>=1?Math.round(z.sqkm).toLocaleString():z.sqkm)+' km&sup2;</dd>'+
       '<dt>Group total</dt><dd>'+Math.round(z.grpkm).toLocaleString()+' km&sup2;</dd>'+
-      '<dt>Share of VMR</dt><dd>'+share.toFixed(1)+'%</dd>'+cmp+'</dl>'+
+      '<dt>Share of VMR</dt><dd>'+share.toFixed(1)+'%</dd>'+
+      (conc?'<dt>Densest in</dt><dd>'+conc+' of it</dd>':'')+
+      (ext?'<dt>That window</dt><dd>'+ext+'</dd>':'')+
+      (ll?'<dt>Centred</dt><dd>'+ll[1].toFixed(3)+', '+ll[0].toFixed(3)+'</dd>':'')+cmp+'</dl>'+
+      '<button class="zgo" onclick="zoomToZone()">Fly to where it concentrates</button>'+
       (z.prot?'<div class="pr">&#9670; Protected Use Zone. Development is barred here.</div>':'');
   } else { dt.className="zdet"; }
 
