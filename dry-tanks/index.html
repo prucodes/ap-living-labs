@@ -55,8 +55,20 @@
   .bar i{display:block;height:100%;background:var(--bad);border-radius:6px}
   tr.hi .bar i{background:var(--ok)}
 
-  #map{width:100%;height:clamp(260px,42vw,420px);display:block;border-radius:14px;
-    background:rgba(255,255,255,.02);border:1px solid var(--line);touch-action:none}
+  .mapwrap{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line);
+    background:#060a10}
+  #map{width:100%;height:clamp(340px,55vw,560px);display:block;touch-action:none;cursor:grab}
+  #map.grab{cursor:grabbing}
+  .mctl{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px;z-index:2}
+  .mctl button{width:32px;height:32px;border:1px solid var(--line2);border-radius:8px;
+    background:rgba(8,13,21,.8);backdrop-filter:blur(8px);color:var(--ink);font-size:15px;line-height:1}
+  .mleg{position:absolute;left:10px;bottom:10px;z-index:2;display:flex;gap:12px;flex-wrap:wrap;
+    background:rgba(8,13,21,.8);backdrop-filter:blur(8px);border:1px solid var(--line);
+    border-radius:9px;padding:7px 11px;font-size:11px;color:var(--dim)}
+  .mleg i{display:inline-block;width:9px;height:9px;border-radius:9px;margin-right:5px;vertical-align:-1px}
+  .mattr{position:absolute;right:10px;bottom:10px;z-index:2;font-family:var(--mono);font-size:8.5px;
+    letter-spacing:.06em;text-transform:uppercase;color:var(--faint);
+    background:rgba(8,13,21,.72);border-radius:6px;padding:4px 8px}
 
   .bar2{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px}
   .chip{border:1px solid var(--line);border-radius:999px;padding:6px 13px;font-size:12.4px;color:var(--dim)}
@@ -110,10 +122,23 @@
 
   <section>
     <h2>Where they are</h2>
-    <canvas id="map"></canvas>
-    <p class="n" style="margin-top:10px">Each circle is one planned water body, sized by the
-      area the plan gives it. Red holds no water at its wettest pass, amber is partly dry,
-      green still holds water. Tap one to open it.</p>
+    <div class="mapwrap">
+      <canvas id="map"></canvas>
+      <div class="mctl">
+        <button onclick="mz(1.6)">+</button>
+        <button onclick="mz(1/1.6)">&minus;</button>
+        <button onclick="mfit()" title="Reset">&#10226;</button>
+      </div>
+      <div class="mleg">
+        <span><i style="background:#ef6b6b"></i>no water</span>
+        <span><i style="background:#f0a860"></i>partly dry</span>
+        <span><i style="background:#6fcf97"></i>holds water</span>
+      </div>
+      <div class="mattr">Sentinel-2 &middot; Nov 2025 &ndash; Feb 2026</div>
+    </div>
+    <p class="n" style="margin-top:10px">Real Sentinel-2 imagery, not a diagram. Each circle is a
+      water body the plan protects, sized by the area the plan gives it. Scroll or pinch to zoom,
+      drag to pan, tap a circle to open its own close-up.</p>
   </section>
 
   <section>
@@ -236,50 +261,114 @@ function open(i){
 }
 render();
 
-/* ---- locator map ---- */
+/* ---- locator map, on real imagery ---- */
+var BM = {w:82.15, s:17.08, e:83.98, n:18.62};
 var cv=document.getElementById("map"), cx=cv.getContext("2d");
-var all=D.sites.concat([]), pad=0.06;
-var lo0=Math.min.apply(null,all.map(function(s){return s.lo}))-pad;
-var lo1=Math.max.apply(null,all.map(function(s){return s.lo}))+pad;
-var la0=Math.min.apply(null,all.map(function(s){return s.la}))-pad;
-var la1=Math.max.apply(null,all.map(function(s){return s.la}))+pad;
-var hits=[];
+var bm=new Image(); bm.src="basemap.jpg";
+var V={z:1, x:0, y:0}, hits=[], W0=0, H0=0, dpr=1;
+
+function layout(){
+  dpr=Math.min(devicePixelRatio||1,2);
+  var r=cv.getBoundingClientRect();
+  cv.width=Math.max(1,r.width*dpr); cv.height=Math.max(1,r.height*dpr);
+  W0=r.width; H0=r.height;
+}
+/* geographic -> base image fraction -> screen */
+function G2S(lo,la){
+  var fx=(lo-BM.w)/(BM.e-BM.w), fy=(BM.n-la)/(BM.n-BM.s);
+  return [V.x + fx*BM_W*V.z, V.y + fy*BM_H*V.z];
+}
+var BM_W=0, BM_H=0;
+function mfit(){
+  if(!bm.complete||!W0) return;
+  var ar=bm.naturalWidth/bm.naturalHeight;
+  BM_W=W0; BM_H=W0/ar;
+  if(BM_H<H0){ BM_H=H0; BM_W=H0*ar; }
+  V.z=1; V.x=(W0-BM_W)/2; V.y=(H0-BM_H)/2;
+  drawMap();
+}
+function clampV(){
+  V.z=Math.max(1,Math.min(14,V.z));
+  var w=BM_W*V.z, h=BM_H*V.z;
+  V.x=Math.min(0,Math.max(W0-w,V.x)); V.y=Math.min(0,Math.max(H0-h,V.y));
+}
+function mz(f,px,py){
+  if(px===undefined){px=W0/2;py=H0/2}
+  var ix=(px-V.x)/V.z, iy=(py-V.y)/V.z;
+  V.z*=f; V.x=px-ix*V.z; V.y=py-iy*V.z; clampV(); drawMap();
+}
 function drawMap(){
-  var r=cv.getBoundingClientRect(), dpr=Math.min(devicePixelRatio||1,2);
-  cv.width=r.width*dpr; cv.height=r.height*dpr;
+  if(!W0) return;
   cx.setTransform(dpr,0,0,dpr,0,0);
-  cx.clearRect(0,0,r.width,r.height);
-  var kx=Math.cos((la0+la1)/2*Math.PI/180);
-  var sx=r.width/((lo1-lo0)*kx), sy=r.height/(la1-la0), s=Math.min(sx,sy);
-  var ox=(r.width-(lo1-lo0)*kx*s)/2, oy=(r.height-(la1-la0)*s)/2;
-  function P(lo,la){return [ox+(lo-lo0)*kx*s, r.height-oy-(la-la0)*s]}
-
-  cx.strokeStyle="rgba(120,170,210,.34)"; cx.lineWidth=1.1;
-  D.coast.forEach(function(w){
-    cx.beginPath();
-    w.forEach(function(p,i){var q=P(p[0],p[1]); i?cx.lineTo(q[0],q[1]):cx.moveTo(q[0],q[1])});
-    cx.stroke();
-  });
-
+  cx.fillStyle="#060a10"; cx.fillRect(0,0,W0,H0);
+  if(bm.complete&&bm.naturalWidth){
+    cx.imageSmoothingEnabled = V.z<3;
+    cx.drawImage(bm, V.x, V.y, BM_W*V.z, BM_H*V.z);
+  }
   hits=[];
   D.sites.slice().sort(function(a,b){return b.ha-a.ha}).forEach(function(st){
-    var q=P(st.lo,st.la), rad=Math.max(3,Math.sqrt(st.ha)*0.62);
+    var q=G2S(st.lo,st.la);
+    if(q[0]<-40||q[0]>W0+40||q[1]<-40||q[1]>H0+40) return;
+    var rad=Math.max(3.4,Math.sqrt(st.ha)*0.55*Math.min(V.z,2.6));
+    var dry=st.st==="DRY";
     cx.beginPath(); cx.arc(q[0],q[1],rad,0,7);
-    cx.fillStyle = st.st==="DRY" ? "rgba(239,107,107,.62)" : "rgba(240,168,96,.6)";
-    cx.fill();
-    cx.strokeStyle = st.st==="DRY" ? "rgba(239,107,107,.95)" : "rgba(240,168,96,.9)";
-    cx.lineWidth=1; cx.stroke();
-    hits.push([q[0],q[1],rad+5,D.sites.indexOf(st)]);
+    cx.fillStyle=dry?"rgba(239,107,107,.30)":"rgba(240,168,96,.28)"; cx.fill();
+    cx.lineWidth=1.7; cx.strokeStyle=dry?"#ef6b6b":"#f0a860"; cx.stroke();
+    cx.beginPath(); cx.arc(q[0],q[1],1.7,0,7);
+    cx.fillStyle=dry?"#ef6b6b":"#f0a860"; cx.fill();
+    hits.push([q[0],q[1],rad+6,D.sites.indexOf(st)]);
   });
 }
+bm.onload=function(){mfit()};
+addEventListener("resize",function(){layout();mfit()});
+if(window.ResizeObserver) new ResizeObserver(function(){layout();mfit()}).observe(cv);
+layout();
+
+cv.addEventListener("wheel",function(e){
+  e.preventDefault(); var r=cv.getBoundingClientRect();
+  mz(Math.exp(-e.deltaY*0.0017), e.clientX-r.left, e.clientY-r.top);
+},{passive:false});
+
+var mp={}, mp0=0, mz0=0, mmx=0, mmy=0, md=false, mlx=0, mly=0, mmoved=0;
+cv.addEventListener("pointerdown",function(e){
+  mp[e.pointerId]=[e.clientX,e.clientY];
+  var k=Object.keys(mp);
+  if(k.length===2){
+    var a=mp[k[0]],b=mp[k[1]];
+    mp0=Math.hypot(a[0]-b[0],a[1]-b[1]); mz0=V.z;
+    mmx=(a[0]+b[0])/2; mmy=(a[1]+b[1])/2; md=false; mmoved=99; return;
+  }
+  md=true; mmoved=0; mlx=e.clientX; mly=e.clientY;
+  cv.classList.add("grab"); cv.setPointerCapture(e.pointerId);
+});
+cv.addEventListener("pointermove",function(e){
+  if(!(e.pointerId in mp))return; mp[e.pointerId]=[e.clientX,e.clientY];
+  var k=Object.keys(mp), r=cv.getBoundingClientRect();
+  if(k.length===2&&mp0>0){
+    var a=mp[k[0]],b=mp[k[1]],d=Math.hypot(a[0]-b[0],a[1]-b[1]);
+    var cxm=(a[0]+b[0])/2, cym=(a[1]+b[1])/2;
+    V.x+=cxm-mmx; V.y+=cym-mmy; mmx=cxm; mmy=cym;
+    mz((d/Math.max(mp0,1))*mz0/V.z, cxm-r.left, cym-r.top);
+    e.preventDefault(); return;
+  }
+  if(!md)return;
+  var dx=e.clientX-mlx, dy=e.clientY-mly; mlx=e.clientX; mly=e.clientY;
+  mmoved+=Math.abs(dx)+Math.abs(dy);
+  V.x+=dx; V.y+=dy; clampV(); drawMap();
+},{passive:false});
+function mdrop(e){
+  delete mp[e.pointerId]; var k=Object.keys(mp);
+  if(k.length<2){ mp0=0; if(k.length===1){mlx=mp[k[0]][0];mly=mp[k[0]][1];md=true} }
+}
+cv.addEventListener("pointerup",mdrop); cv.addEventListener("pointercancel",mdrop);
+function mend(){ if(Object.keys(mp).length)return; md=false; cv.classList.remove("grab") }
+cv.addEventListener("pointerup",mend); cv.addEventListener("pointercancel",mend);
 cv.addEventListener("click",function(e){
+  if(mmoved>6)return;
   var r=cv.getBoundingClientRect(), x=e.clientX-r.left, y=e.clientY-r.top, best=null, bd=1e9;
   hits.forEach(function(h){var d=Math.hypot(h[0]-x,h[1]-y); if(d<h[2]&&d<bd){bd=d;best=h[3]}});
   if(best!==null) open(best);
 });
-addEventListener("resize",drawMap);
-if(window.ResizeObserver) new ResizeObserver(drawMap).observe(cv);
-drawMap();
 </script>
 </body>
 </html>
