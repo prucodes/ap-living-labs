@@ -164,6 +164,26 @@ h1,h2,h3{margin:0; letter-spacing:-.01em}
 </style>
 </head>
 <body>
+<style>
+  #awareDisclosure{position:sticky;top:0;z-index:9999;display:flex;gap:10px;align-items:flex-start;
+    padding:9px 16px;background:#3a2a10;border-bottom:1px solid rgba(240,168,96,.45);
+    color:#f3dcb8;font:13px/1.45 ui-sans-serif,-apple-system,system-ui,sans-serif}
+  #awareDisclosure b{color:#f0a860;font-weight:650}
+  #awareDisclosure svg{flex:none;margin-top:1px}
+  .awareFoot{padding:16px 20px 22px;color:#8a93a3;
+    font:12px/1.7 ui-sans-serif,-apple-system,system-ui,sans-serif;
+    border-top:1px solid rgba(255,255,255,.09)}
+  .awareFoot b{color:#c9d3e2}
+</style>
+<div id="awareDisclosure">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M12 8v5M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"
+      stroke="#f0a860" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <div><b>Concept demonstration. Every alert on this page is invented.</b>
+    Nothing here is a real warning, a real incident, or a record of any agency.
+    It shows how an alert would become an assigned action, not what is happening.</div>
+</div>
+
 <div class="wrap">
   <header class="hero"><div class="heroInner">
     <div class="heroL">
@@ -296,5 +316,14 @@ function renderBridge(){
 renderQueue();
 selected=0; renderQueue(); renderBridge();
 </script>
+
+<div class="awareFoot">
+  <b>AWARE &middot; concept demonstration.</b> The alerts, districts, officers, timers and
+  actions shown are fabricated to illustrate a workflow. No part of this page draws on
+  APSDMA, RTGS or any government system, and nothing in it should be read as a live hazard,
+  an official instruction, or a record of a real event.<br>
+  Prototype work for the AP AI Living Labs programme. Not an official Government of
+  Andhra Pradesh result.
+</div>
 </body>
 </html>
