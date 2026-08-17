@@ -174,6 +174,7 @@
         <span><i style="background:#ef6b6b"></i>no water</span>
         <span><i style="background:#f0a860"></i>partly dry</span>
         <span><i style="background:#6fcf97"></i>holds water</span>
+        <span><i style="background:none;border:1.4px dashed #fff;width:11px;height:11px"></i>structures, by radar</span>
       </div>
       <div class="mattr">Sentinel-2 &middot; Nov 2025 &ndash; Feb 2026</div>
     </div>
@@ -388,17 +389,49 @@ function drawMap(){
     cx.drawImage(bm, V.x, V.y, BM_W*V.z, BM_H*V.z);
   }
   hits=[];
+  /* Markers have to survive being drawn over bright sand, dark forest and open
+     sea. A single translucent disc disappears on at least one of those, so each
+     one is built in layers: a dark halo to cut it out of whatever is underneath,
+     a bright ring, a light fill, and a solid core. Sites where radar found hard
+     structure get a second ring, because those are the ones worth a visit. */
   D.sites.slice().sort(function(a,b){return b.ha-a.ha}).forEach(function(st){
     var q=G2S(st.lo,st.la);
-    if(q[0]<-40||q[0]>W0+40||q[1]<-40||q[1]>H0+40) return;
-    var rad=Math.max(3.4,Math.sqrt(st.ha)*0.55*Math.min(V.z,2.6));
+    if(q[0]<-50||q[0]>W0+50||q[1]<-50||q[1]>H0+50) return;
+    var rad=Math.max(5,Math.sqrt(st.ha)*0.62*Math.min(V.z,2.8));
     var dry=st.st==="DRY";
+    var col=dry?"255,80,92":"255,176,87";
+    var built=st.sar==="structures present";
+
+    cx.save();
+    /* 1. halo: dark, blurred, wider than the marker */
+    cx.beginPath(); cx.arc(q[0],q[1],rad+1.6,0,7);
+    cx.strokeStyle="rgba(0,0,0,.72)"; cx.lineWidth=4.4; cx.stroke();
+
+    /* 2. glow in the marker's own colour */
+    cx.shadowColor="rgba("+col+",.95)"; cx.shadowBlur=13;
     cx.beginPath(); cx.arc(q[0],q[1],rad,0,7);
-    cx.fillStyle=dry?"rgba(239,107,107,.30)":"rgba(240,168,96,.28)"; cx.fill();
-    cx.lineWidth=1.7; cx.strokeStyle=dry?"#ef6b6b":"#f0a860"; cx.stroke();
-    cx.beginPath(); cx.arc(q[0],q[1],1.7,0,7);
-    cx.fillStyle=dry?"#ef6b6b":"#f0a860"; cx.fill();
-    hits.push([q[0],q[1],rad+6,D.sites.indexOf(st)]);
+    cx.strokeStyle="rgba("+col+",1)"; cx.lineWidth=2.2; cx.stroke();
+    cx.shadowBlur=0;
+
+    /* 3. fill and core */
+    cx.beginPath(); cx.arc(q[0],q[1],rad,0,7);
+    cx.fillStyle="rgba("+col+",.22)"; cx.fill();
+    cx.beginPath(); cx.arc(q[0],q[1],Math.max(2.1,rad*0.20),0,7);
+    cx.fillStyle="rgba(255,255,255,.95)"; cx.fill();
+    cx.beginPath(); cx.arc(q[0],q[1],Math.max(2.1,rad*0.20),0,7);
+    cx.strokeStyle="rgba(0,0,0,.6)"; cx.lineWidth=1; cx.stroke();
+
+    /* 4. second ring where radar found structure */
+    if(built){
+      cx.beginPath(); cx.arc(q[0],q[1],rad+5,0,7);
+      cx.strokeStyle="rgba(0,0,0,.55)"; cx.lineWidth=3; cx.stroke();
+      cx.beginPath(); cx.arc(q[0],q[1],rad+5,0,7);
+      cx.setLineDash([3.5,3.5]);
+      cx.strokeStyle="rgba(255,255,255,.92)"; cx.lineWidth=1.4; cx.stroke();
+      cx.setLineDash([]);
+    }
+    cx.restore();
+    hits.push([q[0],q[1],rad+8,D.sites.indexOf(st)]);
   });
 }
 bm.onload=function(){mfit()};
