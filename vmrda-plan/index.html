@@ -33,6 +33,17 @@
   .ico{border:1px solid var(--line);border-radius:9px;width:34px;height:31px;
     display:grid;place-items:center;color:var(--dim);flex:none}
   .ico:hover{border-color:var(--line2);color:var(--ink)}
+  .satwrap{display:flex;align-items:center;gap:8px;border:1px solid var(--line);
+    border-radius:9px;padding:0 11px;height:31px;flex:none;background:rgba(255,255,255,.03)}
+  .satwrap span{font-family:var(--mono);font-size:8.5px;letter-spacing:.15em;color:var(--cy)}
+  .satwrap b{font-family:var(--mono);font-size:9.5px;color:var(--faint);width:30px;text-align:right}
+  .satwrap input{-webkit-appearance:none;appearance:none;width:88px;height:3px;border-radius:3px;
+    background:linear-gradient(90deg,var(--cy),rgba(140,175,215,.25));outline:none}
+  .satwrap input::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;
+    border-radius:50%;background:#fff;box-shadow:0 0 10px rgba(99,216,234,.8);cursor:pointer}
+  .satwrap input::-moz-range-thumb{width:13px;height:13px;border:0;border-radius:50%;
+    background:#fff;box-shadow:0 0 10px rgba(99,216,234,.8);cursor:pointer}
+  @media (max-width:820px){ .satwrap span{display:none} .satwrap input{width:58px} }
 
   .stage{position:relative;flex:1;min-height:0;overflow:hidden;
     touch-action:none;overscroll-behavior:none;cursor:grab;background:#05090f;
@@ -149,6 +160,12 @@
     <button id="mZone" onclick="setMode('zone')">Zones</button>
   </div>
   <button class="ico" id="tBtn" onclick="toggleTanks()" title="Show water bodies with no water">&#9679;</button>
+  <label class="satwrap" title="Fade between the plan and what is actually there">
+    <span>SAT</span>
+    <input id="satMix" type="range" min="0" max="100" value="0"
+      oninput="satMix=this.value/100;document.getElementById('satPct').textContent=this.value+'%';draw()">
+    <b id="satPct">0%</b>
+  </label>
   <button class="ico" onclick="reset()" title="Reset view">&#10226;</button>
   <button class="ico" onclick="toggleDrawer()" title="What this plan can and cannot answer">?</button>
 </header>
@@ -268,6 +285,28 @@ var GEO = {"s": 16.87, "deg": 34.4, "lon0": 83.2363196451436, "lat0": 18.0927018
 var TANKS = [{"la":17.57535,"lo":83.1148,"ha":199.3,"dry":false},{"la":17.60717,"lo":82.99914,"ha":168.8,"dry":false},{"la":17.57766,"lo":83.12446,"ha":110.5,"dry":false},{"la":18.01545,"lo":83.29021,"ha":107.5,"dry":false},{"la":17.50973,"lo":82.95955,"ha":96.9,"dry":true},{"la":17.93125,"lo":83.37651,"ha":90.3,"dry":false},{"la":17.36242,"lo":82.61598,"ha":84.6,"dry":true},{"la":17.37144,"lo":82.61799,"ha":84.1,"dry":true},{"la":18.07844,"lo":83.51587,"ha":82.8,"dry":true},{"la":18.10721,"lo":83.63733,"ha":79.0,"dry":true},{"la":17.59954,"lo":83.00651,"ha":77.4,"dry":true},{"la":17.66681,"lo":83.03408,"ha":75.6,"dry":true},{"la":17.87018,"lo":82.97317,"ha":74.6,"dry":true},{"la":17.9597,"lo":83.33351,"ha":72.3,"dry":false},{"la":18.05819,"lo":83.53664,"ha":70.6,"dry":true},{"la":18.08074,"lo":83.49385,"ha":61.1,"dry":true},{"la":18.004,"lo":83.22906,"ha":58.2,"dry":false},{"la":17.75287,"lo":82.95765,"ha":57.7,"dry":false},{"la":17.70205,"lo":83.28173,"ha":57.2,"dry":false},{"la":17.92294,"lo":83.44995,"ha":54.2,"dry":false},{"la":17.51117,"lo":82.94857,"ha":51.3,"dry":true},{"la":18.15122,"lo":83.46398,"ha":50.6,"dry":true},{"la":18.02048,"lo":83.31403,"ha":48.7,"dry":true},{"la":17.76658,"lo":83.29435,"ha":47.6,"dry":false},{"la":17.71669,"lo":82.98185,"ha":47.2,"dry":true},{"la":17.9142,"lo":83.45839,"ha":46.2,"dry":false},{"la":18.09802,"lo":83.48451,"ha":45.9,"dry":true},{"la":18.06481,"lo":83.29741,"ha":44.6,"dry":true},{"la":17.44406,"lo":82.84503,"ha":42.5,"dry":true},{"la":18.22702,"lo":83.43869,"ha":42.0,"dry":true},{"la":17.94826,"lo":83.35288,"ha":41.4,"dry":false},{"la":18.2608,"lo":83.39623,"ha":40.9,"dry":true},{"la":17.84306,"lo":83.16664,"ha":40.5,"dry":false},{"la":18.06091,"lo":83.35153,"ha":38.8,"dry":false},{"la":17.78908,"lo":82.9535,"ha":37.5,"dry":true},{"la":17.44729,"lo":82.73365,"ha":37.4,"dry":false},{"la":17.81898,"lo":82.97081,"ha":35.7,"dry":true},{"la":18.11955,"lo":83.50044,"ha":35.6,"dry":true},{"la":18.01978,"lo":83.17483,"ha":34.7,"dry":false},{"la":17.96794,"lo":83.35755,"ha":33.9,"dry":false},{"la":18.02028,"lo":83.55472,"ha":33.0,"dry":false},{"la":18.22363,"lo":83.42922,"ha":32.6,"dry":true},{"la":18.04837,"lo":83.52408,"ha":32.6,"dry":true},{"la":18.28301,"lo":83.28503,"ha":32.0,"dry":false},{"la":17.66908,"lo":83.08471,"ha":31.6,"dry":false},{"la":18.13831,"lo":83.47055,"ha":31.4,"dry":true},{"la":17.96828,"lo":82.96217,"ha":30.8,"dry":true},{"la":17.94292,"lo":82.96864,"ha":30.4,"dry":true},{"la":17.44397,"lo":82.50437,"ha":30.3,"dry":true},{"la":17.9074,"lo":83.44847,"ha":28.8,"dry":false},{"la":17.46559,"lo":82.82982,"ha":28.7,"dry":false},{"la":18.03399,"lo":83.54963,"ha":27.9,"dry":true},{"la":18.05377,"lo":83.26749,"ha":27.6,"dry":true},{"la":17.9928,"lo":83.32144,"ha":27.5,"dry":false},{"la":17.92276,"lo":83.3792,"ha":27.5,"dry":false},{"la":17.93258,"lo":83.39796,"ha":27.3,"dry":true},{"la":18.00198,"lo":83.51601,"ha":27.0,"dry":false},{"la":18.0251,"lo":83.13852,"ha":26.9,"dry":true},{"la":17.49823,"lo":82.80618,"ha":26.7,"dry":true},{"la":18.16579,"lo":83.45183,"ha":26.4,"dry":true},{"la":17.97532,"lo":83.2671,"ha":26.3,"dry":true},{"la":18.11086,"lo":83.4799,"ha":26.1,"dry":true},{"la":18.08768,"lo":83.46318,"ha":25.9,"dry":false},{"la":18.10325,"lo":83.57289,"ha":25.8,"dry":false},{"la":18.10152,"lo":83.31335,"ha":25.6,"dry":false},{"la":18.2492,"lo":83.42358,"ha":25.1,"dry":true},{"la":18.09609,"lo":83.52544,"ha":25.1,"dry":true},{"la":17.70215,"lo":82.99669,"ha":25.0,"dry":false},{"la":18.07567,"lo":83.43371,"ha":24.8,"dry":false},{"la":17.43538,"lo":82.77812,"ha":24.8,"dry":false},{"la":17.39009,"lo":82.53318,"ha":24.5,"dry":true},{"la":17.72859,"lo":82.97192,"ha":24.4,"dry":false},{"la":17.76358,"lo":83.018,"ha":24.0,"dry":false},{"la":17.71449,"lo":83.25317,"ha":23.9,"dry":false},{"la":18.05717,"lo":83.24695,"ha":23.8,"dry":true},{"la":17.92706,"lo":83.44332,"ha":23.8,"dry":false},{"la":18.27247,"lo":83.382,"ha":23.7,"dry":true},{"la":17.4827,"lo":82.74815,"ha":23.6,"dry":true},{"la":17.28582,"lo":82.59017,"ha":23.6,"dry":false},{"la":17.63954,"lo":82.94506,"ha":23.1,"dry":true},{"la":18.13397,"lo":83.14006,"ha":23.0,"dry":true},{"la":17.48394,"lo":82.48765,"ha":23.0,"dry":true},{"la":17.7139,"lo":82.99374,"ha":22.9,"dry":false},{"la":18.08609,"lo":83.16853,"ha":22.8,"dry":false},{"la":18.19783,"lo":83.45408,"ha":22.5,"dry":true},{"la":17.9445,"lo":83.38354,"ha":22.4,"dry":true},{"la":17.44407,"lo":82.82243,"ha":21.8,"dry":true},{"la":17.42346,"lo":82.51905,"ha":21.5,"dry":true},{"la":18.0594,"lo":83.55375,"ha":21.5,"dry":true},{"la":18.10252,"lo":83.25656,"ha":21.3,"dry":false},{"la":17.39654,"lo":82.61783,"ha":21.3,"dry":true},{"la":18.31646,"lo":83.40524,"ha":21.2,"dry":true},{"la":18.02845,"lo":83.52766,"ha":21.1,"dry":true},{"la":17.74414,"lo":83.12624,"ha":21.0,"dry":false},{"la":18.10419,"lo":83.28037,"ha":20.8,"dry":true},{"la":18.24415,"lo":83.60242,"ha":20.8,"dry":true},{"la":18.31408,"lo":83.36722,"ha":20.7,"dry":true},{"la":18.26396,"lo":83.59599,"ha":20.7,"dry":true},{"la":18.08112,"lo":83.33756,"ha":20.2,"dry":true}];
 var ZONES = [{"raw": "Agriculture", "name": "Agriculture", "rgb": [209, 255, 188], "grp": "Agriculture", "sqkm": 1702.9, "prot": false}, {"raw": "Residential", "name": "Residential", "rgb": [255, 255, 152], "grp": "Residential", "sqkm": 457.0, "prot": false}, {"raw": "Hills", "name": "Hills", "rgb": [169, 110, 3], "grp": "Hills", "sqkm": 323.0, "prot": true}, {"raw": "Forest", "name": "Forest", "rgb": [38, 115, 0], "grp": "Forest", "sqkm": 280.7, "prot": true}, {"raw": "Transportation existing", "name": "Transportation", "rgb": [178, 178, 178], "grp": "Transportation", "sqkm": 275.3, "prot": false}, {"raw": "Water bodies", "name": "Water body", "rgb": [114, 224, 252], "grp": "Water bodies", "sqkm": 242.8, "prot": true}, {"raw": "Accreted land", "name": "Accreted land", "rgb": [217, 189, 144], "grp": "Accreted land", "sqkm": 203.2, "prot": false}, {"raw": "Industrial existing", "name": "Industrial", "rgb": [222, 101, 254], "grp": "Industrial", "sqkm": 90.9, "prot": false}, {"raw": "Mixed Use 2", "name": "Mixed use", "rgb": [255, 211, 128], "grp": "Mixed use", "sqkm": 72.6, "prot": false}, {"raw": "Transportation proposed", "name": "Transportation (proposed)", "rgb": [104, 104, 104], "grp": "Transportation", "sqkm": 70.1, "prot": false}, {"raw": "Mixed Use 3", "name": "Mixed use", "rgb": [231, 151, 0], "grp": "Mixed use", "sqkm": 58.4, "prot": false}, {"raw": "Industrial proposed", "name": "Industrial (proposed)", "rgb": [226, 126, 253], "grp": "Industrial", "sqkm": 46.4, "prot": false}, {"raw": "Eco-sensitive / park", "name": "Eco-sensitive", "rgb": [83, 139, 68], "grp": "Eco-sensitive", "sqkm": 33.3, "prot": true}, {"raw": "Special Area", "name": "Special area", "rgb": [49, 67, 133], "grp": "Special area", "sqkm": 24.0, "prot": false}, {"raw": "Mixed Use 1", "name": "Mixed use", "rgb": [254, 165, 1], "grp": "Mixed use", "sqkm": 14.5, "prot": false}, {"raw": "Recreational proposed", "name": "Recreational (proposed)", "rgb": [74, 212, 1], "grp": "Recreational", "sqkm": 13.2, "prot": false}, {"raw": "Educational", "name": "Educational", "rgb": [222, 13, 26], "grp": "Public & semi-public", "sqkm": 10.7, "prot": false}, {"raw": "Facility proposed", "name": "Facility (proposed)", "rgb": [249, 38, 36], "grp": "Public & semi-public", "sqkm": 9.6, "prot": false}, {"raw": "Utilities proposed", "name": "Public utilities (proposed)", "rgb": [255, 161, 160], "grp": "Public utilities", "sqkm": 4.5, "prot": false}, {"raw": "Parks existing", "name": "Parks", "rgb": [85, 255, 0], "grp": "Recreational", "sqkm": 3.2, "prot": false}, {"raw": "Utilities existing", "name": "Public utilities", "rgb": [255, 135, 135], "grp": "Public utilities", "sqkm": 3.1, "prot": false}, {"raw": "Religious", "name": "Religious", "rgb": [221, 29, 0], "grp": "Public & semi-public", "sqkm": 1.8, "prot": false}, {"raw": "Health", "name": "Health", "rgb": [245, 7, 11], "grp": "Public & semi-public", "sqkm": 1.7, "prot": false}, {"raw": "Commercial", "name": "Commercial", "rgb": [0, 1, 252], "grp": "Commercial", "sqkm": 0.3, "prot": false}, {"raw": "Government facilities", "name": "Government", "rgb": [253, 2, 2], "grp": "Public & semi-public", "sqkm": 0.2, "prot": false}];
 var isoZone = null;
+var BASEMAP = {"w": 82.15, "s": 17.08, "e": 83.98, "n": 18.62};
+var sat=new Image(), satReady=false, satMix=0, satAff=null;
+sat.onload=function(){ satReady=true; buildSatAffine(); draw(); };
+sat.src="basemap.jpg";
+
+/* The plan sheet is rotated 34.4 degrees off north; the satellite mosaic is a
+   plain lat/lon grid. Both are affine in lon/lat, so their composition is a
+   single affine and the basemap can be drawn straight into the sheet's frame
+   with one canvas transform instead of resampling anything. Solved from three
+   corners rather than derived by hand. */
+function buildSatAffine(){
+  if(!BASEMAP||!sat.naturalWidth) return;
+  var W=sat.naturalWidth, H=sat.naturalHeight;
+  function bm2px(bx,by){
+    var lo=BASEMAP.w+(bx/W)*(BASEMAP.e-BASEMAP.w);
+    var la=BASEMAP.n-(by/H)*(BASEMAP.n-BASEMAP.s);
+    return ll2px(lo,la);
+  }
+  var o=bm2px(0,0), x=bm2px(W,0), y=bm2px(0,H);
+  satAff={a:(x[0]-o[0])/W, b:(x[1]-o[1])/W,
+          c:(y[0]-o[0])/H, d:(y[1]-o[1])/H, e:o[0], f:o[1]};
+}
 var showTanks = false;
 
 /* Inverse of the georeference: lon/lat back to a pixel on this cropped image.
@@ -387,6 +426,20 @@ function draw(){
   ctx.fillStyle="#0a1018"; ctx.fillRect(0,0,w,h);
   ctx.imageSmoothingEnabled = view.s < 1.4;
   var x=view.x*dpr, y=view.y*dpr, dw=IW*view.s*dpr, dh=IH*view.s*dpr;
+
+  /* Ground truth underneath. At 0 the sheet is opaque; drag toward 100 and the
+     plan dissolves into the imagery it was drawn over. */
+  if(satMix>0 && satReady && satAff){
+    ctx.save();
+    var k=view.s*dpr;
+    ctx.setTransform(satAff.a*k, satAff.b*k, satAff.c*k, satAff.d*k,
+                     x + satAff.e*k, y + satAff.f*k);
+    ctx.imageSmoothingEnabled=true;
+    ctx.drawImage(sat,0,0);
+    ctx.restore();
+    ctx.setTransform(1,0,0,1,0,0);
+  }
+  ctx.globalAlpha = satMix>0 ? (1-satMix) : 1;
   if(mode==="zone"){ ctx.drawImage(zone,x,y,dw,dh); }
   else if(mode==="split"){
     ctx.drawImage(plan,x,y,dw,dh);
@@ -394,6 +447,7 @@ function draw(){
     ctx.drawImage(zone,x,y,dw,dh); ctx.restore();
     ctx.fillStyle="rgba(99,216,234,.85)"; ctx.fillRect(w*split-1*dpr,0,2*dpr,h);
   } else { ctx.drawImage(plan,x,y,dw,dh); }
+  ctx.globalAlpha=1;
 
   if(isoZone && isoCv.width){
     ctx.save();
