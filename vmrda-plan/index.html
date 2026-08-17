@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>VMR Plan Reader</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  :root{
+    --bg:#070b12; --panel:rgba(10,16,26,.86); --ink:#e9eff8; --dim:#8fa0b8; --faint:#5d6c84;
+    --line:rgba(140,175,215,.16); --line2:rgba(140,175,215,.30);
+    --cy:#63d8ea; --gold:#d9b872; --warn:#f0a860; --bad:#ef6b6b; --ok:#6fcf97;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  html,body{margin:0;height:100%;height:100dvh}
+  body{background:var(--bg);color:var(--ink);overflow:hidden;
+    display:flex;flex-direction:column;
+    font:14px/1.5 ui-sans-serif,-apple-system,"SF Pro Text",Inter,system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
+
+  header{flex:none;display:flex;align-items:center;gap:14px;padding:10px 14px;
+    border-bottom:1px solid var(--line);background:rgba(6,10,17,.92);z-index:5}
+  .brand{display:flex;align-items:baseline;gap:9px;min-width:0}
+  .brand b{font-size:15px;font-weight:640;letter-spacing:-.01em;white-space:nowrap}
+  .brand span{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--faint);white-space:nowrap}
+  .seg{margin-left:auto;display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;flex:none}
+  .seg button{padding:6px 12px;font-size:12px;color:var(--dim);white-space:nowrap}
+  .seg button.on{background:rgba(99,216,234,.15);color:var(--cy)}
+  .seg button+button{border-left:1px solid var(--line)}
+  .ico{border:1px solid var(--line);border-radius:9px;width:34px;height:31px;
+    display:grid;place-items:center;color:var(--dim);flex:none}
+  .ico:hover{border-color:var(--line2);color:var(--ink)}
+
+  .stage{position:relative;flex:1;min-height:0;overflow:hidden;
+    touch-action:none;overscroll-behavior:none;cursor:grab;background:#0a1018}
+  .stage.grab{cursor:grabbing}
+  canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+  .hint{position:absolute;left:12px;bottom:12px;z-index:3;font-family:var(--mono);
+    font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);
+    background:var(--panel);border:1px solid var(--line);border-radius:999px;
+    padding:6px 13px;backdrop-filter:blur(9px);pointer-events:none}
+  .zoombox{position:absolute;right:12px;top:12px;z-index:3;display:flex;flex-direction:column;gap:6px}
+  .zoombox button{width:34px;height:34px;border:1px solid var(--line);border-radius:9px;
+    background:var(--panel);backdrop-filter:blur(9px);color:var(--ink);font-size:16px;line-height:1}
+
+  /* readout */
+  .read{position:absolute;left:12px;top:12px;z-index:4;width:min(310px,calc(100vw - 24px));
+    background:var(--panel);border:1px solid var(--line);border-radius:13px;
+    backdrop-filter:blur(14px);overflow:hidden;transform:translateY(-6px);opacity:0;
+    pointer-events:none;transition:.18s}
+  .read.on{transform:none;opacity:1;pointer-events:auto}
+  .read .rh{display:flex;align-items:center;gap:9px;padding:11px 13px;border-bottom:1px solid var(--line)}
+  .sw{width:15px;height:15px;border-radius:4px;border:1px solid rgba(255,255,255,.28);flex:none}
+  .read .rn{font-weight:610;font-size:14.5px}
+  .read .rx{margin-left:auto;color:var(--faint);font-size:17px;line-height:1;padding:0 2px}
+  .read .rb{padding:10px 13px 12px;font-size:12.2px;color:var(--dim);line-height:1.55}
+  .read .rb code{font-family:var(--mono);font-size:11px;color:var(--cy)}
+  .caveat{margin-top:9px;padding-top:9px;border-top:1px dashed var(--line);
+    font-size:11.2px;color:var(--warn);line-height:1.5}
+
+  /* findings drawer */
+  .drawer{position:absolute;right:0;top:0;bottom:0;width:min(430px,100vw);z-index:6;
+    background:rgba(8,13,21,.97);border-left:1px solid var(--line);
+    backdrop-filter:blur(18px);transform:translateX(101%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+    display:flex;flex-direction:column}
+  .drawer.on{transform:none}
+  .dh{flex:none;display:flex;align-items:center;gap:10px;padding:13px 15px;border-bottom:1px solid var(--line)}
+  .dh b{font-size:14.5px;font-weight:620}
+  .dh button{margin-left:auto;color:var(--faint);font-size:19px;line-height:1}
+  .db{flex:1;overflow-y:auto;padding:15px 16px 30px}
+  .db h3{margin:20px 0 8px;font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;
+    text-transform:uppercase;color:var(--cy);font-weight:600}
+  .db h3:first-child{margin-top:0}
+  .db p{margin:0 0 10px;font-size:12.8px;color:var(--dim);line-height:1.62}
+  .db b{color:var(--ink);font-weight:600}
+  .f{display:flex;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:12.6px;line-height:1.5}
+  .f .m{flex:none;width:15px;text-align:center;font-size:12px}
+  .f.bad .m{color:var(--bad)} .f.warn .m{color:var(--warn)} .f.ok .m{color:var(--ok)}
+  .f div{color:var(--dim)} .f div b{color:var(--ink)}
+  table{width:100%;border-collapse:collapse;margin-top:6px;font-size:12px}
+  th{font-family:var(--mono);font-size:8.6px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--faint);font-weight:600;text-align:left;padding:0 0 6px;border-bottom:1px solid var(--line)}
+  th.n,td.n{text-align:right}
+  td{padding:6px 0;border-bottom:1px dashed rgba(150,200,235,.1);color:var(--dim)}
+  td.d{font-family:var(--mono);font-size:11px}
+  td.d.pos{color:var(--warn)} td.d.neg{color:var(--bad)}
+  tr.unrel td{opacity:.5}
+  .verdict{margin-top:14px;padding:12px 13px;border:1px solid rgba(239,107,107,.3);
+    border-radius:10px;background:rgba(239,107,107,.07);font-size:12.6px;line-height:1.6;color:var(--ink)}
+
+  footer{flex:none;padding:7px 14px;border-top:1px solid var(--line);
+    font-family:var(--mono);font-size:9px;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--faint);background:rgba(6,10,17,.92);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+  .boot{position:absolute;inset:0;z-index:9;display:grid;place-items:center;
+    background:var(--bg);transition:opacity .4s}
+  .boot.off{opacity:0;pointer-events:none}
+  .boot div{text-align:center;font-family:var(--mono);font-size:10.5px;letter-spacing:.15em;
+    text-transform:uppercase;color:var(--faint)}
+  .bar{width:190px;height:2px;background:var(--line);border-radius:2px;margin:13px auto 0;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:var(--cy);transition:width .3s}
+
+  @media (max-width:640px){
+    header{gap:9px;padding:8px 11px}
+    .brand span{display:none}
+    .seg button{padding:6px 9px;font-size:11.5px}
+    .hint{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand"><b>VMR Plan Reader</b><span>Master Plan 2041 &middot; draft sheet</span></div>
+  <div class="seg">
+    <button id="mPlan" class="on" onclick="setMode('plan')">Plan</button>
+    <button id="mSplit" onclick="setMode('split')">Split</button>
+    <button id="mZone" onclick="setMode('zone')">Zones</button>
+  </div>
+  <button class="ico" onclick="reset()" title="Reset view">&#10226;</button>
+  <button class="ico" onclick="toggleDrawer()" title="What this plan can and cannot answer">?</button>
+</header>
+
+<div class="stage" id="stage">
+  <canvas id="cv"></canvas>
+
+  <div class="zoombox">
+    <button onclick="zoomBy(1.5)">+</button>
+    <button onclick="zoomBy(1/1.5)">&minus;</button>
+  </div>
+
+  <div class="read" id="read">
+    <div class="rh"><i class="sw" id="rSw"></i><span class="rn" id="rN">&nbsp;</span>
+      <button class="rx" onclick="closeRead()">&times;</button></div>
+    <div class="rb">
+      <div id="rP"></div>
+      <div class="caveat">Read back from the published picture by colour, not from
+        VMRDA records. Not authoritative. Do not rely on this for any decision
+        about a specific parcel.</div>
+    </div>
+  </div>
+
+  <div class="hint">Scroll to zoom &middot; drag to pan &middot; click any area to read its zone</div>
+
+  <div class="drawer" id="drawer">
+    <div class="dh"><b>What this plan can and cannot answer</b>
+      <button onclick="toggleDrawer()">&times;</button></div>
+    <div class="db">
+      <p>The Master Plan 2041 is a statutory instrument covering 4,873 sq km and
+        carrying <b>&#8377;1,49,201 crore</b> of capital investment. It is published
+        to the public as a picture. This page is that picture, read as far as it
+        can be read.</p>
+
+      <h3>What is checkable today</h3>
+      <div class="f ok"><span class="m">&#10003;</span><div>The sheet itself. <b>43,200 &times; 16,200 px</b>
+        across 14,462 tiles, recovered in full from VMRDA's own viewer.</div></div>
+      <div class="f ok"><span class="m">&#10003;</span><div>The <b>pattern</b> of zoning. Agriculture, forest,
+        the hill ranges and the industrial belt all come back cleanly.</div></div>
+      <div class="f warn"><span class="m">!</span><div>Zone at a point, to roughly
+        <b>17 m</b>, by colour. Good enough to browse, never good enough to cite.</div></div>
+
+      <h3>What is not</h3>
+      <div class="f bad"><span class="m">&times;</span><div><b>Area.</b> Recovered figures miss VMRDA's
+        own Table 17-4 by a median of <b>43%</b>. Detail below.</div></div>
+      <div class="f bad"><span class="m">&times;</span><div><b>Any comparison between versions.</b> Two
+        pictures cannot be differenced. When the plan is said to have changed
+        between draft and final, nothing published can settle it either way.</div></div>
+      <div class="f bad"><span class="m">&times;</span><div><b>The final plan at all.</b> The official
+        download for the Final Revised Master Plan 2041 does not resolve, from
+        inside India or outside it.</div></div>
+      <div class="f bad"><span class="m">&times;</span><div><b>What has changed on the ground.</b> The base
+        map was interpreted by hand from imagery captured in <b>2015 and 2017</b>.
+        No refresh cycle is defined, and the capital plan funds none.</div></div>
+
+      <h3>The recovery test</h3>
+      <p>Every zone colour was sampled off the published legend, every map pixel
+        classified to its nearest match, and the result measured against VMRDA's
+        published table. 34% of the plan area carries a readable zone
+        colour; the rest is boundary line work and type.</p>
+      <table>
+        <thead><tr><th>Category</th><th class="n">Read</th><th class="n">Published</th><th class="n">Diff</th></tr></thead>
+        <tbody><tr class=""><td>Residential</td><td class="n">457</td><td class="n">958</td><td class="n d neg">-52%</td></tr><tr class=""><td>Commercial</td><td class="n">0</td><td class="n">21</td><td class="n d neg">-99%</td></tr><tr class=""><td>Mixed Use</td><td class="n">146</td><td class="n">75</td><td class="n d pos">+93%</td></tr><tr class=""><td>Industrial</td><td class="n">137</td><td class="n">181</td><td class="n d neg">-24%</td></tr><tr class=""><td>Public & Semi Public</td><td class="n">24</td><td class="n">96</td><td class="n d neg">-75%</td></tr><tr class=""><td>Public Utilities</td><td class="n">8</td><td class="n">9</td><td class="n d neg">-19%</td></tr><tr class=""><td>Recreational / Tourism</td><td class="n">16</td><td class="n">97</td><td class="n d neg">-83%</td></tr><tr class="unrel"><td>Transportation</td><td class="n">345</td><td class="n">188</td><td class="n d pos">+84%</td></tr><tr class=""><td>Protected (forest+hills)</td><td class="n">637</td><td class="n">725</td><td class="n d neg">-12%</td></tr><tr class=""><td>Water Bodies</td><td class="n">243</td><td class="n">367</td><td class="n d neg">-34%</td></tr><tr class=""><td>Agriculture</td><td class="n">1,703</td><td class="n">2,078</td><td class="n d neg">-18%</td></tr></tbody>
+      </table>
+      <p style="margin-top:9px;font-size:11.5px">Areas in sq km, scaled so the plan
+        footprint equals the published 4,873.38 sq km. Transportation is greyed
+        because its two greys are also the colour of the sheet's line work.</p>
+
+      <div class="verdict">Given the official sheet, the printed legend and the
+        published area table to check against, the zoning still could not be
+        reconstructed to better than half. That is the argument for publishing
+        the vector data, and it is a measurement rather than an opinion.</div>
+
+      <h3>What would fix it</h3>
+      <p><b>1.</b> Publish the plan as vector layers with a change log, so any two
+        versions can be compared and every edit carries who, when and why.</p>
+      <p><b>2.</b> Repair the Final Revised Master Plan download. A statutory
+        document nobody can obtain cannot be complied with.</p>
+      <p><b>3.</b> Once there is a baseline, Sentinel imagery gives a free
+        twelve-day check on whether the ground is diverging from the plan.</p>
+
+      <h3>Provenance</h3>
+      <p>Sheet: <b>Draft Master Plan 2041, Proposed Landuse</b>, notified 19 June
+        2021, from the Zoomify pyramid at vmrda.gov.in/dmpmaps. Areas checked
+        against Table 17-4 of the Draft Master Plan Report, June 2021.
+        Independent work, not commissioned by and not endorsed by VMRDA.</p>
+    </div>
+  </div>
+
+  <div class="boot" id="boot"><div>Loading the published sheet
+    <div class="bar"><i id="bar"></i></div></div></div>
+</div>
+
+<footer id="foot">Draft Master Plan 2041 as published &middot; zones read back by colour, indicative only &middot; not a VMRDA record</footer>
+
+<script>
+"use strict";
+var LOOKUP = [{"rgb": [255, 255, 152], "name": "Residential", "raw": "Residential"}, {"rgb": [0, 1, 252], "name": "Commercial", "raw": "Commercial"}, {"rgb": [254, 165, 1], "name": "Mixed use", "raw": "Mixed Use 1"}, {"rgb": [255, 211, 128], "name": "Mixed use", "raw": "Mixed Use 2"}, {"rgb": [231, 151, 0], "name": "Mixed use", "raw": "Mixed Use 3"}, {"rgb": [222, 101, 254], "name": "Industrial", "raw": "Industrial existing"}, {"rgb": [226, 126, 253], "name": "Industrial (proposed)", "raw": "Industrial proposed"}, {"rgb": [253, 2, 2], "name": "Government", "raw": "Government facilities"}, {"rgb": [222, 13, 26], "name": "Educational", "raw": "Educational"}, {"rgb": [245, 7, 11], "name": "Health", "raw": "Health"}, {"rgb": [221, 29, 0], "name": "Religious", "raw": "Religious"}, {"rgb": [249, 38, 36], "name": "Facility (proposed)", "raw": "Facility proposed"}, {"rgb": [255, 135, 135], "name": "Public utilities", "raw": "Utilities existing"}, {"rgb": [255, 161, 160], "name": "Public utilities (proposed)", "raw": "Utilities proposed"}, {"rgb": [85, 255, 0], "name": "Parks", "raw": "Parks existing"}, {"rgb": [74, 212, 1], "name": "Recreational (proposed)", "raw": "Recreational proposed"}, {"rgb": [178, 178, 178], "name": "Transportation", "raw": "Transportation existing"}, {"rgb": [104, 104, 104], "name": "Transportation (proposed)", "raw": "Transportation proposed"}, {"rgb": [209, 255, 188], "name": "Agriculture", "raw": "Agriculture"}, {"rgb": [49, 67, 133], "name": "Special area", "raw": "Special Area"}, {"rgb": [114, 224, 252], "name": "Water body", "raw": "Water bodies"}, {"rgb": [38, 115, 0], "name": "Forest", "raw": "Forest"}, {"rgb": [169, 110, 3], "name": "Hills", "raw": "Hills"}, {"rgb": [83, 139, 68], "name": "Eco-sensitive", "raw": "Eco-sensitive / park"}, {"rgb": [217, 189, 144], "name": "Accreted land", "raw": "Accreted land"}];
+
+var cv=document.getElementById("cv"), ctx=cv.getContext("2d",{alpha:false});
+var stage=document.getElementById("stage");
+var plan=new Image(), zone=new Image(), ready=0, mode="plan";
+var IW=0, IH=0, split=0.5, dpr=1;
+var view={x:0,y:0,s:1}, goal={x:0,y:0,s:1};
+
+/* identify raster, kept small: a full 10080x4020 backing store is 160 MB and
+   dies on a phone. 4x down is ~70 m on the ground, which is honest for a
+   browse-level readout and is labelled as such. */
+var idc=document.createElement("canvas"), idx=idc.getContext("2d",{willReadFrequently:true});
+var ID_SCALE=0.25;
+
+function loadImg(im,src,onp){return new Promise(function(res,rej){
+  var xhr=new XMLHttpRequest(); xhr.open("GET",src); xhr.responseType="blob";
+  xhr.onprogress=function(e){if(e.lengthComputable)onp(e.loaded/e.total)};
+  xhr.onload=function(){ if(xhr.status>=400){rej();return}
+    im.onload=function(){res()}; im.src=URL.createObjectURL(xhr.response)};
+  xhr.onerror=rej; xhr.send();
+})}
+
+var bar=document.getElementById("bar"), p1=0,p2=0;
+function prog(){bar.style.width=(100*(p1*0.63+p2*0.37)).toFixed(0)+"%"}
+
+Promise.all([
+  loadImg(plan,"plan.jpg",function(v){p1=v;prog()}),
+  loadImg(zone,"zones.png",function(v){p2=v;prog()})
+]).then(function(){
+  IW=plan.naturalWidth; IH=plan.naturalHeight;
+  idc.width=Math.round(IW*ID_SCALE); idc.height=Math.round(IH*ID_SCALE);
+  /* Nearest neighbour, not smoothing. Interpolating a class raster invents
+     colours that belong to no class: blending white paper against the cyan sea
+     produced a grey that read as Transportation. */
+  idx.imageSmoothingEnabled=false;
+  idx.drawImage(zone,0,0,idc.width,idc.height);
+  ready=1; resize(); reset(true);
+  document.getElementById("boot").classList.add("off");
+  requestAnimationFrame(tick);
+  if(location.hash.length>3) fromHash();
+}).catch(function(){
+  document.getElementById("boot").innerHTML='<div style="color:#ef6b6b">Could not load the sheet</div>';
+});
+
+function resize(){
+  dpr=Math.min(window.devicePixelRatio||1,2);
+  var r=stage.getBoundingClientRect();
+  cv.width=Math.max(1,Math.floor(r.width*dpr));
+  cv.height=Math.max(1,Math.floor(r.height*dpr));
+  /* If the page came up before the viewport had a size, every scale computed
+     so far was zero and nothing would ever recover on its own. Re-fit the
+     moment a real size arrives. This is the normal case on a phone, where the
+     browser chrome is still settling when the images finish loading. */
+  if(ready && (!isFinite(view.s) || view.s<=0)) reset(true);
+  draw();
+}
+addEventListener("resize",resize);
+addEventListener("orientationchange",function(){setTimeout(resize,260)});
+if(window.ResizeObserver) new ResizeObserver(resize).observe(stage);
+
+function fitScale(){
+  var r=stage.getBoundingClientRect();
+  if(!(r.width>0&&r.height>0&&IW>0&&IH>0)) return 0;
+  return Math.min(r.width/IW, r.height/IH);
+}
+function reset(now){
+  var r=stage.getBoundingClientRect(), s=fitScale();
+  if(s<=0) return;                       /* no viewport yet; resize() retries */
+  goal={s:s, x:(r.width-IW*s)/2, y:(r.height-IH*s)/2};
+  if(now) view={s:goal.s,x:goal.x,y:goal.y};
+  closeRead();
+}
+function clamp(){
+  var r=stage.getBoundingClientRect(), f=fitScale();
+  goal.s=Math.max(f*0.85,Math.min(f*26,goal.s));
+  var w=IW*goal.s,h=IH*goal.s;
+  var mx=Math.min(0,r.width-w), my=Math.min(0,r.height-h);
+  goal.x=w<r.width?(r.width-w)/2:Math.max(mx,Math.min(0,goal.x));
+  goal.y=h<r.height?(r.height-h)/2:Math.max(my,Math.min(0,goal.y));
+}
+function zoomAt(cx,cy,f){
+  var ix=(cx-goal.x)/goal.s, iy=(cy-goal.y)/goal.s;
+  goal.s*=f; goal.x=cx-ix*goal.s; goal.y=cy-iy*goal.s; clamp();
+}
+function zoomBy(f){var r=stage.getBoundingClientRect();zoomAt(r.width/2,r.height/2,f)}
+
+function tick(){
+  var k=0.22, d=Math.abs(view.s-goal.s)+Math.abs(view.x-goal.x)+Math.abs(view.y-goal.y);
+  if(d>0.01){
+    view.s+=(goal.s-view.s)*k; view.x+=(goal.x-view.x)*k; view.y+=(goal.y-view.y)*k;
+    draw();
+  }
+  requestAnimationFrame(tick);
+}
+
+function draw(){
+  if(!ready)return;
+  var w=cv.width,h=cv.height;
+  ctx.fillStyle="#0a1018"; ctx.fillRect(0,0,w,h);
+  ctx.imageSmoothingEnabled = view.s < 1.4;
+  var x=view.x*dpr, y=view.y*dpr, dw=IW*view.s*dpr, dh=IH*view.s*dpr;
+  if(mode==="zone"){ ctx.drawImage(zone,x,y,dw,dh); }
+  else if(mode==="split"){
+    ctx.drawImage(plan,x,y,dw,dh);
+    ctx.save(); ctx.beginPath(); ctx.rect(w*split,0,w-w*split,h); ctx.clip();
+    ctx.drawImage(zone,x,y,dw,dh); ctx.restore();
+    ctx.fillStyle="rgba(99,216,234,.85)"; ctx.fillRect(w*split-1*dpr,0,2*dpr,h);
+  } else { ctx.drawImage(plan,x,y,dw,dh); }
+}
+
+function setMode(m){
+  mode=m;
+  document.getElementById("mPlan").classList.toggle("on",m==="plan");
+  document.getElementById("mSplit").classList.toggle("on",m==="split");
+  document.getElementById("mZone").classList.toggle("on",m==="zone");
+  draw();
+}
+
+/* ---- zone identify ------------------------------------------------------ */
+function nearest(r,g,b){
+  var best=null,bd=1e9;
+  for(var i=0;i<LOOKUP.length;i++){
+    var c=LOOKUP[i].rgb, d=(c[0]-r)*(c[0]-r)+(c[1]-g)*(c[1]-g)+(c[2]-b)*(c[2]-b);
+    if(d<bd){bd=d;best=LOOKUP[i]}
+  }
+  return bd<=2200?best:null;
+}
+function identify(cx,cy){
+  var ix=Math.floor((cx-view.x)/view.s), iy=Math.floor((cy-view.y)/view.s);
+  if(ix<0||iy<0||ix>=IW||iy>=IH){closeRead();return}
+  var px=idx.getImageData(Math.floor(ix*ID_SCALE),Math.floor(iy*ID_SCALE),1,1).data;
+  var hit=nearest(px[0],px[1],px[2]);
+  var rd=document.getElementById("read");
+  document.getElementById("rSw").style.background=hit?"rgb("+hit.rgb.join(",")+")":"#333";
+  document.getElementById("rN").textContent=hit?hit.name:"No zone colour here";
+  document.getElementById("rP").innerHTML= hit
+    ? "Legend class <b>"+hit.raw+"</b>.<br>Sheet position <code>"+ix+", "+iy+"</code>."
+    : "This pixel is boundary line work, a label, or outside the plan area.";
+  rd.classList.add("on");
+  location.replace("#"+ix+","+iy+","+goal.s.toFixed(4));
+}
+function closeRead(){document.getElementById("read").classList.remove("on")}
+function fromHash(){
+  var p=location.hash.slice(1).split(",");
+  if(p.length<3)return;
+  var r=stage.getBoundingClientRect();
+  goal.s=parseFloat(p[2])||goal.s;
+  goal.x=r.width/2-parseFloat(p[0])*goal.s;
+  goal.y=r.height/2-parseFloat(p[1])*goal.s;
+  clamp();
+}
+
+function toggleDrawer(){document.getElementById("drawer").classList.toggle("on")}
+
+/* ---- input -------------------------------------------------------------- */
+stage.addEventListener("wheel",function(e){
+  e.preventDefault();
+  var r=stage.getBoundingClientRect();
+  zoomAt(e.clientX-r.left, e.clientY-r.top, Math.exp(-e.deltaY*0.0016));
+},{passive:false});
+
+var ptrs={}, pinch0=0, s0=0, mx0=0, my0=0, drag=false, seam=false, lx=0, ly=0, moved=0;
+
+/* Pinch drives zoom from the ABSOLUTE finger separation and pan from the
+   MIDPOINT, which barely moves during a symmetric pinch. Panning off each
+   finger's own delta makes spreading them shove the map sideways. */
+stage.addEventListener("pointerdown",function(e){
+  ptrs[e.pointerId]=[e.clientX,e.clientY];
+  var k=Object.keys(ptrs);
+  if(k.length===2){
+    var a=ptrs[k[0]],b=ptrs[k[1]];
+    pinch0=Math.hypot(a[0]-b[0],a[1]-b[1]); s0=goal.s;
+    mx0=(a[0]+b[0])/2; my0=(a[1]+b[1])/2;
+    drag=false; moved=99; stage.classList.remove("grab"); return;
+  }
+  var rr=stage.getBoundingClientRect();
+  seam = mode==="split" &&
+         Math.abs((e.clientX-rr.left)/rr.width - split) < 0.05;
+  drag=true; moved=0; lx=e.clientX; ly=e.clientY;
+  stage.classList.add("grab"); stage.setPointerCapture(e.pointerId);
+});
+stage.addEventListener("pointermove",function(e){
+  if(!(e.pointerId in ptrs))return;
+  ptrs[e.pointerId]=[e.clientX,e.clientY];
+  var k=Object.keys(ptrs), r=stage.getBoundingClientRect();
+  if(k.length===2&&pinch0>0){
+    var a=ptrs[k[0]],b=ptrs[k[1]],d=Math.hypot(a[0]-b[0],a[1]-b[1]);
+    var cx=(a[0]+b[0])/2, cy=(a[1]+b[1])/2;
+    goal.x+=cx-mx0; goal.y+=cy-my0; mx0=cx; my0=cy;
+    var f=(d/Math.max(pinch0,1))*s0/goal.s;
+    zoomAt(cx-r.left, cy-r.top, f);
+    e.preventDefault(); return;
+  }
+  if(!drag)return;
+  var ddx=e.clientX-lx, ddy=e.clientY-ly; lx=e.clientX; ly=e.clientY;
+  moved+=Math.abs(ddx)+Math.abs(ddy);
+  if(seam){                    /* grabbed the seam: move the wipe, not the map */
+    split=Math.max(.04,Math.min(.96,(e.clientX-r.left)/r.width));
+    draw(); return;
+  }
+  goal.x+=ddx; goal.y+=ddy; clamp();
+},{passive:false});
+function drop(e){
+  delete ptrs[e.pointerId];
+  var k=Object.keys(ptrs);
+  if(k.length<2){ pinch0=0;
+    if(k.length===1){lx=ptrs[k[0]][0];ly=ptrs[k[0]][1];drag=true} }
+}
+stage.addEventListener("pointerup",drop); stage.addEventListener("pointercancel",drop);
+function endDrag(){ if(Object.keys(ptrs).length)return; drag=false; seam=false; stage.classList.remove("grab") }
+stage.addEventListener("pointerup",endDrag); stage.addEventListener("pointercancel",endDrag);
+
+stage.addEventListener("click",function(e){
+  if(moved>6)return;
+  var r=stage.getBoundingClientRect();
+  identify(e.clientX-r.left, e.clientY-r.top);
+});
+
+addEventListener("keydown",function(e){
+  if(e.key==="Escape"){closeRead();document.getElementById("drawer").classList.remove("on")}
+  if(e.key==="1")setMode("plan"); if(e.key==="2")setMode("split"); if(e.key==="3")setMode("zone");
+});
+</script>
+</body>
+</html>
