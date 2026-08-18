@@ -1,0 +1,66 @@
+{
+ "width": 43200,
+ "height": 16200,
+ "tile": 512,
+ "levels": [
+  {
+   "level": 0,
+   "w": 43200,
+   "h": 16200,
+   "cols": 85,
+   "rows": 32
+  },
+  {
+   "level": 1,
+   "w": 21600,
+   "h": 8100,
+   "cols": 43,
+   "rows": 16
+  },
+  {
+   "level": 2,
+   "w": 10800,
+   "h": 4050,
+   "cols": 22,
+   "rows": 8
+  },
+  {
+   "level": 3,
+   "w": 5400,
+   "h": 2025,
+   "cols": 11,
+   "rows": 4
+  },
+  {
+   "level": 4,
+   "w": 2700,
+   "h": 1013,
+   "cols": 6,
+   "rows": 2
+  },
+  {
+   "level": 5,
+   "w": 1350,
+   "h": 507,
+   "cols": 3,
+   "rows": 1
+  },
+  {
+   "level": 6,
+   "w": 675,
+   "h": 254,
+   "cols": 2,
+   "rows": 1
+  },
+  {
+   "level": 7,
+   "w": 338,
+   "h": 127,
+   "cols": 1,
+   "rows": 1
+  }
+ ],
+ "maxLevel": 7,
+ "scale_m_per_px": 4.2175,
+ "note": "level 0 is VMRDA's own full-resolution draft sheet, re-cut to 512 px"
+}
