@@ -1,0 +1,61 @@
+{
+  "source": "AP Common Zoning Regulations 2025, G.O. Ms. No. 216 dated 22.10.2025, Section V. The Revised Master Plan 2041 legend states it is read with this same G.O. Summaries of the notified activity lists; read the G.O. for the exhaustive text.",
+  "zones": {
+    "Residential": {
+      "permit": ["All residential buildings, apartments, group housing, shop-cum-residences, townships", "Hostels, boarding and guest houses, service apartments, staff quarters", "Post offices, police and fire stations, government and local-body offices, electric sub-stations", "Playgrounds, parks, libraries, gardens, gymnasia, yoga and health clinics", "Tiffin centres, restaurants, bakeries, banks and ATMs", "Play schools through junior colleges"],
+      "prohibit": ["Blue, Green, Orange and Red category industries", "Bars, pubs, banquet halls, lodges", "Petrol, gas and diesel filling stations", "Cinemas, multiplexes, malls, large commercial establishments", "Hospitals over 20 beds; hospitals for contagious diseases", "Warehousing, cold storage, wholesale mandis, junk yards, slaughter houses", "Dairy, poultry, fish farms, hatcheries, piggeries", "Truck and bus terminals, goods and logistics hubs"]
+    },
+    "Commercial": {
+      "permit": ["Shops, retail, offices, business establishments", "Hotels, restaurants, banquet halls", "Cinemas, malls, entertainment", "Banks, professional offices"],
+      "prohibit": ["Red and Orange category industries", "Hazardous and obnoxious uses", "Activities creating public nuisance"]
+    },
+    "Mixed use": {
+      "permit": ["Everything permitted in Residential, Commercial, Public & Semi-Public and Transportation", "Industries except Red and Orange category", "Subject to the road width in the building rules"],
+      "prohibit": ["Red and Orange category industries"]
+    },
+    "Public & semi-public": {
+      "permit": ["Government and institutional buildings", "Educational, health, religious and cultural facilities", "Utilities and civic amenities"],
+      "prohibit": ["Private residential and commercial development beyond the notified use", "Industry"]
+    },
+    "Industrial": {
+      "permit": ["Work Centre zone: Green and White category industries", "Red and Orange category industries only in the belt zoned for them", "Warehousing, logistics and allied uses"],
+      "prohibit": ["Residential development within the industrial use", "Category of industry other than the one the belt is zoned for"]
+    },
+    "Recreational": {
+      "permit": ["Parks, playgrounds, gardens, sports facilities", "Open space and green recreation"],
+      "prohibit": ["Permanent building beyond recreational amenities", "Residential, commercial and industrial use"]
+    },
+    "Transportation": {
+      "permit": ["Roads, rail, metro, terminals and transport infrastructure", "Associated utilities"],
+      "prohibit": ["Development unrelated to transport"]
+    },
+    "Agriculture": {
+      "permit": ["All agriculture and horticulture", "Farmhouse up to 5% plinth, G+1, on a plot of at least 0.5 acre", "Food processing and agro-based industry with proper access", "White, Green and Blue category industry with change-of-land-use charges", "Solar and wind stations, cold storage, warehousing of local produce"],
+      "prohibit": ["Heavy, noxious, hazardous and extractive industries", "Any obnoxious or nuisance activity", "On notified forest land, only afforestation is permitted"]
+    },
+    "Special area": {
+      "permit": ["Heritage buildings, monuments, precincts and archaeological sites, under the Heritage Regulations", "Defence and military land, per the defence manual"],
+      "prohibit": ["Residential", "Commercial", "Industrial", "Mining and excavation"]
+    },
+    "Protected water": {
+      "headline": "No construction is permitted in the water-spread.",
+      "permit": ["Fishing, boating and picnics along the banks", "Open jetties, house boats, fishing platforms, rain shelters and snack bars, each under 100 sq m"],
+      "prohibit": ["Residential", "Commercial", "Industrial", "Public and Semi-Public", "Transportation", "Mining and excavation"]
+    },
+    "Protected forest": {
+      "headline": "No development except agriculture, horticulture and forestry.",
+      "permit": ["Agriculture, horticulture, forestry", "Parks, botanical gardens, picnic spots", "Electrical sub-stations and communication towers"],
+      "prohibit": ["Residential, commercial, industrial development", "Any built development beyond the above"]
+    },
+    "Protected hills": {
+      "headline": "Development restricted zone.",
+      "permit": ["Afforestation and conservation uses"],
+      "prohibit": ["Residential, commercial and industrial development", "Quarrying, mining and excavation of the hillside"]
+    },
+    "Protected other": {
+      "headline": "Eco-sensitive, CRZ and green protected zone.",
+      "permit": ["Uses consistent with the Eco-Sensitive Zone and CRZ guidelines of MoEF&CC"],
+      "prohibit": ["Residential, commercial and industrial development", "Anything the CRZ notification bars"]
+    }
+  }
+}

@@ -234,7 +234,7 @@
     background:var(--panel);backdrop-filter:blur(9px);color:var(--ink);font-size:16px;line-height:1}
 
   /* readout */
-  .read{position:absolute;left:12px;bottom:12px;z-index:6;width:min(320px,calc(100vw - 24px));
+  .read{position:absolute;left:12px;bottom:12px;z-index:6;width:min(360px,calc(100vw - 24px));
     background:var(--panel);border:1px solid var(--line);border-radius:13px;
     backdrop-filter:blur(14px);overflow:hidden;transform:translateY(-6px);opacity:0;
     pointer-events:none;transition:.18s;transform:translateY(6px)}
@@ -611,6 +611,7 @@ function drawTiles(x,y,alpha){
   return missing===0;
 }
 var isoZone = null;
+var IDGEO = null;   /* identify raster transform, separate from the tile pyramid */
 var BASEMAP = {"w": 82.15, "s": 17.08, "e": 83.98, "n": 18.62};
 var sat=new Image(), satReady=false, satMix=0, satAff=null;
 sat.onload=function(){ satReady=true; buildSatAffine(); draw(); };
@@ -1017,7 +1018,15 @@ function loadTiles(V){
   if(!V.tiles){ TILES=null; return }
   fetch(V.tiles+"/meta.json").then(function(r){return r.json()}).then(function(m){
     m.base=V.tiles; TILES=m;
-    IW=m.width; IH=m.height;                       /* source pixels now */
+    /* The tile pyramid renders at full source resolution, so IW/IH and the
+       display scale become the pyramid's. But identify still samples the
+       lower-res zones raster (idc), which lives in the DISPLAY pixel space.
+       Keep a separate transform for identify so a click resolves correctly
+       whether or not tiles are loaded. */
+    IDGEO = {s: GEO.s, deg: GEO.deg, lon0: GEO.lon0, lat0: GEO.lat0,
+             kx: GEO.kx, ky: GEO.ky, tE: GEO.tE, tN: GEO.tN,
+             cx: GEO.cx, cy: GEO.cy, IW: IW, IH: IH};
+    IW=m.width; IH=m.height;
     GEO=Object.assign({},GEO,{s:m.scale_m_per_px});
     reset(true); draw();
   }).catch(function(){ TILES=null });
@@ -1076,10 +1085,22 @@ function nearest(r,g,b){
   return bd<=2200?best:null;
 }
 function identifyAt(ix,iy,title){ identify(view.x+ix*view.s, view.y+iy*view.s, title) }
+function idPx(lon,lat){
+  var g = IDGEO || GEO;
+  var th=g.deg*Math.PI/180, c=Math.cos(th), sn=Math.sin(th);
+  var e=((lon-g.lon0)*g.kx-g.tE)/g.s, n=((lat-g.lat0)*g.ky-g.tN)/g.s;
+  return [e*c+n*sn-g.cx, e*sn-n*c-g.cy];
+}
 function identify(cx,cy,title){
   var ix=Math.floor((cx-view.x)/view.s), iy=Math.floor((cy-view.y)/view.s);
   if(ix<0||iy<0||ix>=IW||iy>=IH){closeRead();return}
-  var px=idx.getImageData(Math.floor(ix*ID_SCALE),Math.floor(iy*ID_SCALE),1,1).data;
+  /* screen pixel -> ground -> identify-raster pixel (which may be a different
+     resolution from the tiles now on screen) */
+  var ll0 = px2ll(ix,iy);
+  var idp = idPx(ll0[0], ll0[1]);
+  var idW = (IDGEO?IDGEO.IW:IW), idH=(IDGEO?IDGEO.IH:IH);
+  if(idp[0]<0||idp[1]<0||idp[0]>=idW||idp[1]>=idH){closeRead();return}
+  var px=idx.getImageData(Math.floor(idp[0]*ID_SCALE),Math.floor(idp[1]*ID_SCALE),1,1).data;
   var hit=nearest(px[0],px[1],px[2]);
   var rd=document.getElementById("read");
   document.getElementById("rSw").style.background=hit?"rgb("+hit.rgb.join(",")+")":"#333";
@@ -1111,6 +1132,24 @@ function identify(cx,cy,title){
         '<div class="lrow no"><b>Not permitted</b><ul>'+
           pr.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ul></div>'+
         '</div>';
+    }
+  }
+  var lawTxt="";
+  if(hit && RULES){
+    var rk=RULEKEY[hit.raw]||RULEKEY[hit.name];
+    var R=rk?RULES.zones[rk]:null;
+    if(R){
+      var lim=function(a,n){return (a||[]).slice(0,n)};
+      lawTxt='<div class="law">'+
+        '<div class="lh">What G.O. 216 allows here'+(R.prot?'':'')+'</div>'+
+        (R.headline?'<div class="lhd">'+R.headline+'</div>':'')+
+        '<div class="lg ok"><b>Permitted</b>'+lim(R.permit,4).map(function(x){
+          return '<span>'+x+'</span>'}).join("")+
+          (R.permit.length>4?'<em>+'+(R.permit.length-4)+' more</em>':'')+'</div>'+
+        '<div class="lg no"><b>Prohibited</b>'+lim(R.prohibit,5).map(function(x){
+          return '<span>'+x+'</span>'}).join("")+
+          (R.prohibit.length>5?'<em>+'+(R.prohibit.length-5)+' more</em>':'')+'</div>'+
+        '<div class="lc">AP Common Zoning Regulations 2025, G.O. Ms. 216 &middot; summary, read the G.O. for the full list</div></div>';
     }
   }
   document.getElementById("rP").innerHTML=
