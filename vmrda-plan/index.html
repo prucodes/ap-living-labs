@@ -58,7 +58,12 @@
     background:var(--panel);border:1px solid var(--line);border-radius:13px;
     backdrop-filter:blur(16px);overflow:hidden;box-shadow:0 18px 50px -20px rgba(0,0,0,.9)}
   .zpanel .zh{flex:none} .zpanel .zdet,.zpanel .zcomp,.zpanel .zf{flex:none}
-  .zpanel.min .zb,.zpanel.min .zf{display:none}
+  /* Collapse everything below the header. The detail card and composition bar
+     were added after this rule was first written and were not in it, which is
+     why the panel appeared not to minimise at all. */
+  .zpanel.min .zb,.zpanel.min .zf,
+  .zpanel.min .zdet,.zpanel.min .zcomp{display:none}
+  .zpanel.min{max-height:none}
   .zh{display:flex;align-items:center;gap:7px;padding:9px 10px 9px 12px;border-bottom:1px solid var(--line)}
   .zh span{font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;
     color:var(--cy);font-weight:600;white-space:nowrap}
@@ -485,7 +490,7 @@ function draw(){
 
   if(isoZone && isoCv.width){
     ctx.save();
-    ctx.fillStyle="rgba(4,7,13,.76)"; ctx.fillRect(0,0,w,h);   /* push the rest back */
+    ctx.fillStyle="rgba(4,7,13,.58)"; ctx.fillRect(0,0,w,h);   /* push the rest back, do not erase it */
     ctx.imageSmoothingEnabled=false;
     ctx.shadowColor="rgba("+isoZone.rgb.join(",")+",.9)"; ctx.shadowBlur=14;
     ctx.drawImage(isoCv,x,y,dw,dh);
@@ -731,7 +736,23 @@ function renderZones(){
 function toggleDrawer(){document.getElementById("drawer").classList.toggle("on")}
 
 /* ---- input -------------------------------------------------------------- */
-stage.addEventListener("wheel",function(e){
+/* The zone index, the readout and the drawer are children of .stage, so every
+   click on them also reached the map handlers: selecting a zone opened a
+   "no zone colour here" readout instead. Anything inside a panel is UI. */
+["pointerdown","pointermove","pointerup","click","wheel","dblclick"].forEach(function(t){
+  ["zpanel","read","drawer"].forEach(function(id){
+    var el=document.getElementById(id);
+    /* Bubble phase, not capture. On capture the event is stopped before the
+       button's own onclick ever runs, so the panel became inert. On bubble the
+       control acts first and the map never hears about it. */
+    if(el) el.addEventListener(t,function(e){ e.stopPropagation() }, false);
+  });
+});
+
+function onUI(e){ return !!(e.target && e.target.closest &&
+  e.target.closest(".zpanel,.read,.drawer,.zoombox,.hint")) }
+
+stage.addEventListener("wheel",function(e){ if(onUI(e))return;
   e.preventDefault();
   var r=stage.getBoundingClientRect();
   zoomAt(e.clientX-r.left, e.clientY-r.top, Math.exp(-e.deltaY*0.0016));
@@ -743,6 +764,7 @@ var ptrs={}, pinch0=0, s0=0, mx0=0, my0=0, drag=false, seam=false, lx=0, ly=0, m
    MIDPOINT, which barely moves during a symmetric pinch. Panning off each
    finger's own delta makes spreading them shove the map sideways. */
 stage.addEventListener("pointerdown",function(e){
+  if(onUI(e))return;
   ptrs[e.pointerId]=[e.clientX,e.clientY];
   var k=Object.keys(ptrs);
   if(k.length===2){
@@ -789,6 +811,7 @@ function endDrag(){ if(Object.keys(ptrs).length)return; drag=false; seam=false; 
 stage.addEventListener("pointerup",endDrag); stage.addEventListener("pointercancel",endDrag);
 
 stage.addEventListener("click",function(e){
+  if(onUI(e))return;
   if(moved>6)return;
   var r=stage.getBoundingClientRect();
   identify(e.clientX-r.left, e.clientY-r.top);
