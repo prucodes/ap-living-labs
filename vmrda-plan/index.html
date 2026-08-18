@@ -243,7 +243,18 @@
   .sw{width:15px;height:15px;border-radius:4px;border:1px solid rgba(255,255,255,.28);flex:none}
   .read .rn{font-weight:610;font-size:14.5px}
   .read .rx{margin-left:auto;color:var(--faint);font-size:17px;line-height:1;padding:0 2px}
-  .read .rb{padding:10px 13px 12px;font-size:12.2px;color:var(--dim);line-height:1.55}
+  .read .rb{padding:10px 13px 12px;font-size:12.2px;color:var(--dim);line-height:1.55;
+    max-height:min(56vh,520px);overflow-y:auto}
+  .law{margin:9px 0 2px;padding:9px 10px;border:1px solid var(--line);border-radius:9px;
+    background:rgba(95,211,154,.05)}
+  .law .lh{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ok);font-weight:600;margin-bottom:6px}
+  .law .lhead{font-size:12px;color:var(--ink);font-weight:600;margin-bottom:7px}
+  .law .lrow{margin-top:7px}
+  .law .lrow b{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ok)}
+  .law .lrow.no b{color:var(--bad)}
+  .law ul{margin:3px 0 0;padding-left:15px}
+  .law li{font-size:11.5px;line-height:1.5;margin-bottom:2px}
   .read .rb code{font-family:var(--mono);font-size:11px;color:var(--cy)}
   .both{display:flex;flex-direction:column;gap:3px;margin:8px 0 2px;padding:8px 9px;
     border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.035);
@@ -502,6 +513,26 @@ var VERSIONS = {"draft": {"label": "Draft 2021", "plan": "plan.jpg", "zones": "z
 var VER = "draft";
 var CLASSDIFF = [{"k": "Affordable Housing Zone", "d": "not present", "f": "new class", "why": "A land use category that did not exist in the 2021 draft."}, {"k": "Industrial", "d": "existing / proposed", "f": "Green & White / Red & Orange", "why": "Re-cut along CPCB pollution categories. It now decides which class of industry may be sited where, not merely whether industry exists yet."}, {"k": "Mixed Use", "d": "3 sub-classes", "f": "1", "why": "Mixed Use 1, 2 and 3 collapsed into a single zone."}, {"k": "Public & Semi-Public", "d": "6 sub-classes", "f": "1", "why": "Government, educational, health, religious, crematorium and proposed facility merged into one."}, {"k": "Protected Green", "d": "not present", "f": "new class", "why": "A protected category separate from Forest."}, {"k": "Protected zones", "d": "ungrouped", "f": "Development Restricted Zones", "why": "Grouped under a heading that states the restriction on its face."}, {"k": "Kambalakonda ESZ", "d": "not named", "f": "named on the legend", "why": "Eco-Sensitive Zone / NAOB Buffer / Zoological Park called out explicitly."}];
 var SHIFT = {"note": "shares of each plan's own recovered area, not absolute sq km: the two sheets classify different fractions of their paper, so only shares are comparable. Colour recovery carried 43% median error on the draft, so read the direction and the ordering.", "draft_recovered_sqkm": 3943.4, "final_recovered_sqkm": 3683.5, "rows": [{"cls": "Agriculture", "draft_pct": 43.2, "final_pct": 40.6, "shift": -2.6}, {"cls": "Residential", "draft_pct": 11.6, "final_pct": 17.1, "shift": 5.5}, {"cls": "Mixed use", "draft_pct": 3.7, "final_pct": 8.8, "shift": 5.1}, {"cls": "Protected water", "draft_pct": 6.2, "final_pct": 8.4, "shift": 2.3}, {"cls": "Protected forest", "draft_pct": 7.1, "final_pct": 7.8, "shift": 0.7}, {"cls": "Protected hills", "draft_pct": 8.2, "final_pct": 6.8, "shift": -1.4}, {"cls": "Protected other", "draft_pct": 6.0, "final_pct": 4.5, "shift": -1.5}, {"cls": "Transportation", "draft_pct": 8.8, "final_pct": 2.8, "shift": -6.0}, {"cls": "Public & semi-public", "draft_pct": 0.8, "final_pct": 1.1, "shift": 0.3}, {"cls": "Industrial", "draft_pct": 3.5, "final_pct": 1.1, "shift": -2.4}, {"cls": "Special area", "draft_pct": 0.6, "final_pct": 0.8, "shift": 0.2}, {"cls": "Commercial", "draft_pct": 0.0, "final_pct": 0.2, "shift": 0.2}, {"cls": "Recreational", "draft_pct": 0.4, "final_pct": 0.0, "shift": -0.4}]};
+var RULES = {"source": "AP Common Zoning Regulations 2025, G.O. Ms. No. 216 dated 22.10.2025, Section V. The Revised Master Plan 2041 legend states it is read with this same G.O. Summaries of the notified activity lists; read the G.O. for the exhaustive text.", "zones": {"Residential": {"permit": ["All residential buildings, apartments, group housing, shop-cum-residences, townships", "Hostels, boarding and guest houses, service apartments, staff quarters", "Post offices, police and fire stations, government and local-body offices, electric sub-stations", "Playgrounds, parks, libraries, gardens, gymnasia, yoga and health clinics", "Tiffin centres, restaurants, bakeries, banks and ATMs", "Play schools through junior colleges"], "prohibit": ["Blue, Green, Orange and Red category industries", "Bars, pubs, banquet halls, lodges", "Petrol, gas and diesel filling stations", "Cinemas, multiplexes, malls, large commercial establishments", "Hospitals over 20 beds; hospitals for contagious diseases", "Warehousing, cold storage, wholesale mandis, junk yards, slaughter houses", "Dairy, poultry, fish farms, hatcheries, piggeries", "Truck and bus terminals, goods and logistics hubs"]}, "Commercial": {"permit": ["Shops, retail, offices, business establishments", "Hotels, restaurants, banquet halls", "Cinemas, malls, entertainment", "Banks, professional offices"], "prohibit": ["Red and Orange category industries", "Hazardous and obnoxious uses", "Activities creating public nuisance"]}, "Mixed use": {"permit": ["Everything permitted in Residential, Commercial, Public & Semi-Public and Transportation", "Industries except Red and Orange category", "Subject to the road width in the building rules"], "prohibit": ["Red and Orange category industries"]}, "Public & semi-public": {"permit": ["Government and institutional buildings", "Educational, health, religious and cultural facilities", "Utilities and civic amenities"], "prohibit": ["Private residential and commercial development beyond the notified use", "Industry"]}, "Industrial": {"permit": ["Work Centre zone: Green and White category industries", "Red and Orange category industries only in the belt zoned for them", "Warehousing, logistics and allied uses"], "prohibit": ["Residential development within the industrial use", "Category of industry other than the one the belt is zoned for"]}, "Recreational": {"permit": ["Parks, playgrounds, gardens, sports facilities", "Open space and green recreation"], "prohibit": ["Permanent building beyond recreational amenities", "Residential, commercial and industrial use"]}, "Transportation": {"permit": ["Roads, rail, metro, terminals and transport infrastructure", "Associated utilities"], "prohibit": ["Development unrelated to transport"]}, "Agriculture": {"permit": ["All agriculture and horticulture", "Farmhouse up to 5% plinth, G+1, on a plot of at least 0.5 acre", "Food processing and agro-based industry with proper access", "White, Green and Blue category industry with change-of-land-use charges", "Solar and wind stations, cold storage, warehousing of local produce"], "prohibit": ["Heavy, noxious, hazardous and extractive industries", "Any obnoxious or nuisance activity", "On notified forest land, only afforestation is permitted"]}, "Special area": {"permit": ["Heritage buildings, monuments, precincts and archaeological sites, under the Heritage Regulations", "Defence and military land, per the defence manual"], "prohibit": ["Residential", "Commercial", "Industrial", "Mining and excavation"]}, "Protected water": {"headline": "No construction is permitted in the water-spread.", "permit": ["Fishing, boating and picnics along the banks", "Open jetties, house boats, fishing platforms, rain shelters and snack bars, each under 100 sq m"], "prohibit": ["Residential", "Commercial", "Industrial", "Public and Semi-Public", "Transportation", "Mining and excavation"]}, "Protected forest": {"headline": "No development except agriculture, horticulture and forestry.", "permit": ["Agriculture, horticulture, forestry", "Parks, botanical gardens, picnic spots", "Electrical sub-stations and communication towers"], "prohibit": ["Residential, commercial, industrial development", "Any built development beyond the above"]}, "Protected hills": {"headline": "Development restricted zone.", "permit": ["Afforestation and conservation uses"], "prohibit": ["Residential, commercial and industrial development", "Quarrying, mining and excavation of the hillside"]}, "Protected other": {"headline": "Eco-sensitive, CRZ and green protected zone.", "permit": ["Uses consistent with the Eco-Sensitive Zone and CRZ guidelines of MoEF&CC"], "prohibit": ["Residential, commercial and industrial development", "Anything the CRZ notification bars"]}}};
+/* recovered legend class -> rules key in G.O. 216 */
+var RULEKEY={
+ "Residential":"Residential","Affordable Housing":"Residential",
+ "Commercial":"Commercial","Public & Semi Public":"Public & semi-public",
+ "Government facilities":"Public & semi-public","Educational":"Public & semi-public",
+ "Health":"Public & semi-public","Religious":"Public & semi-public",
+ "Facility proposed":"Public & semi-public","Utilities existing":"Public & semi-public",
+ "Utilities proposed":"Public & semi-public",
+ "Industrial Work Centre":"Industrial","Industrial Red & Orange":"Industrial",
+ "Industrial existing":"Industrial","Industrial proposed":"Industrial",
+ "Recreational":"Recreational","Parks existing":"Recreational","Recreational proposed":"Recreational",
+ "Transportation":"Transportation","Transportation existing":"Transportation","Transportation proposed":"Transportation",
+ "Mixed Use":"Mixed use","Mixed Use 1":"Mixed use","Mixed Use 2":"Mixed use","Mixed Use 3":"Mixed use",
+ "Agriculture":"Agriculture","Special Area":"Special area",
+ "Water body":"Protected water","Water bodies":"Protected water","Protected Blue":"Protected water",
+ "Forest":"Protected forest","Protected Forest":"Protected forest",
+ "Hills":"Protected hills","Protected Hills":"Protected hills",
+ "Protected Green":"Protected forest","Eco-sensitive / park":"Protected other",
+ "Protected Kambalakonda ESZ":"Protected other","Accreted land":"Protected other"};
 var PLACES=[];
 fetch("places.json").then(function(r){return r.json()}).then(function(j){PLACES=j});
 
@@ -1067,9 +1098,24 @@ function identify(cx,cy,title){
       '<span><b>'+OTHER.label+'</b> '+oz+'</span>'+
       (differs?'<em>the two plans disagree here</em>':'')+'</div>';
   }
+  var lawTxt="";
+  if(hit && RULES){
+    var rk=RULEKEY[hit.raw], rule=rk?RULES.zones[rk]:null;
+    if(rule){
+      var pm=(rule.permit||[]).slice(0,4), pr=(rule.prohibit||[]).slice(0,5);
+      lawTxt='<div class="law">'+
+        '<div class="lh">What G.O. 216 allows here</div>'+
+        (rule.headline?'<div class="lhead">'+rule.headline+'</div>':'')+
+        '<div class="lrow"><b>Permitted</b><ul>'+
+          pm.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ul></div>'+
+        '<div class="lrow no"><b>Not permitted</b><ul>'+
+          pr.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ul></div>'+
+        '</div>';
+    }
+  }
   document.getElementById("rP").innerHTML=
     (hit ? "Legend class <b>"+hit.raw+"</b>.<br>" : "Boundary line work, a label, or outside the plan area.<br>")
-    + otherTxt
+    + otherTxt + lawTxt
     + (ll ? "<code>"+ll[1].toFixed(5)+", "+ll[0].toFixed(5)+"</code> &plusmn;200 m"
           + " &middot; <a href='https://www.google.com/maps/@"+ll[1].toFixed(5)+","
           + ll[0].toFixed(5)+",16z' target='_blank' rel='noopener' style='color:var(--cy)'>maps</a>"
