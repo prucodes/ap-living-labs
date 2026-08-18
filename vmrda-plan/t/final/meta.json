@@ -1,0 +1,67 @@
+{
+ "width": 54000,
+ "height": 20700,
+ "tile": 512,
+ "levels": [
+  {
+   "level": 0,
+   "w": 54000,
+   "h": 20700,
+   "cols": 106,
+   "rows": 41
+  },
+  {
+   "level": 1,
+   "w": 27000,
+   "h": 10350,
+   "cols": 53,
+   "rows": 21
+  },
+  {
+   "level": 2,
+   "w": 13500,
+   "h": 5175,
+   "cols": 27,
+   "rows": 11
+  },
+  {
+   "level": 3,
+   "w": 6750,
+   "h": 2588,
+   "cols": 14,
+   "rows": 6
+  },
+  {
+   "level": 4,
+   "w": 3375,
+   "h": 1294,
+   "cols": 7,
+   "rows": 3
+  },
+  {
+   "level": 5,
+   "w": 1688,
+   "h": 647,
+   "cols": 4,
+   "rows": 2
+  },
+  {
+   "level": 6,
+   "w": 844,
+   "h": 324,
+   "cols": 2,
+   "rows": 1
+  },
+  {
+   "level": 7,
+   "w": 422,
+   "h": 162,
+   "cols": 1,
+   "rows": 1
+  }
+ ],
+ "maxLevel": 7,
+ "scale_m_per_px": 3.387,
+ "body_px": 50300,
+ "note": "level 0 is full resolution 3.387 m/px; a missing tile is blank paper"
+}
