@@ -136,13 +136,21 @@
      and the map keeps the middle of the screen. */
   @media (max-width:720px){
     /* The controls need the room, so the wordmark yields rather than collides. */
-    /* Whatever the width, the bar scrolls rather than letting controls sit on
-       top of each other. Nothing in here is ever hidden by another control. */
-    header{gap:8px;padding:8px 10px;flex-wrap:nowrap;overflow-x:auto;
-      -webkit-overflow-scrolling:touch;scrollbar-width:none}
-    header::-webkit-scrollbar{display:none}
-    .brand{flex:0 0 auto;overflow:hidden;max-width:38vw}
-    .seg{margin-left:8px}
+    /* Two rows, not a scroller. A control you have to swipe sideways to find is
+       a control nobody finds. Search takes the first row, everything else the
+       second, and nothing is ever off-screen. */
+    header{gap:6px;padding:6px 8px;flex-wrap:wrap;overflow:visible}
+    .brand{display:none}
+    .find{order:1;flex:1 1 100%;height:34px}
+    .fres{top:39px}
+    .vseg{order:2;margin-left:0;flex:1 1 auto}
+    .vseg button{flex:1;padding:8px 6px}
+    .seg{order:3;margin-left:0;flex:1 1 auto}
+    .seg button{flex:1;padding:8px 6px;text-align:center}
+    .ico{order:4;height:32px;width:36px}
+    .ico.wide{width:36px;padding:0}
+    .satwrap{order:5;height:32px;padding:0 9px}
+    .zoombox{top:auto;bottom:12px;right:10px}
     .brand span{display:none}
     .brand b{font-size:14px;overflow:hidden;text-overflow:ellipsis;display:block}
     .seg{flex:none}
@@ -173,7 +181,7 @@
     .zoombox{right:10px;top:auto;bottom:calc(100% - 100%);top:64px}
     .drawer{width:100%}
   }
-  @media (max-width:560px){ .brand{display:none} }
+
   @media (max-width:720px) and (max-height:520px){
     .zpanel{max-height:76%}
   }
@@ -328,6 +336,9 @@
     <span>Dry water</span></button>
   <button class="ico wide" id="cBtn" onclick="toggleChanged()"
     title="What changed between the 2021 draft and the 2026 revision">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M4 8h11l-3-3M20 16H9l3 3" stroke="currentColor" stroke-width="2.2"
+        stroke-linecap="round" stroke-linejoin="round"/></svg>
     <span>What changed</span></button>
   <label class="satwrap" title="Fade between the plan and what is actually there">
     <span>SAT</span>
@@ -683,8 +694,11 @@ function fitScale(){
      empty. Cover part of the way instead, so the map actually fills the frame
      and the reader pans, which is the normal way to hold a map on a phone. */
   if(r.height > r.width*1.3){
+    /* A 2.6:1 sheet inside a 0.5:1 screen leaves most of a phone empty if it is
+       merely contained. Go most of the way to cover so the map fills the frame
+       and the reader pans, which is how a map is held on a phone. */
     var cover=Math.max(r.width/IW, r.height/IH);
-    return contain + (cover-contain)*0.42;
+    return contain + (cover-contain)*0.78;
   }
   return contain;
 }
