@@ -130,61 +130,9 @@
   .zcomp .ck u{width:8px;height:8px;border-radius:2px;text-decoration:none}
   .zf{padding:8px 12px 10px;border-top:1px solid var(--line);font-size:11px;color:var(--faint);line-height:1.5}
   .zf b{color:var(--warn)}
-  /* ---------- narrow screens ----------
-     On a phone the index becomes a bottom sheet and the click readout sits at
-     the top. They occupy opposite ends, so neither can ever cover the other,
-     and the map keeps the middle of the screen. */
-  @media (max-width:720px){
-    /* The controls need the room, so the wordmark yields rather than collides. */
-    /* Two rows, not a scroller. A control you have to swipe sideways to find is
-       a control nobody finds. Search takes the first row, everything else the
-       second, and nothing is ever off-screen. */
-    header{gap:6px;padding:6px 8px;flex-wrap:wrap;overflow:visible}
-    .brand{display:none}
-    .find{order:1;flex:1 1 100%;height:34px}
-    .fres{top:39px}
-    .vseg{order:2;margin-left:0;flex:1 1 auto}
-    .vseg button{flex:1;padding:8px 6px}
-    .seg{order:3;margin-left:0;flex:1 1 auto}
-    .seg button{flex:1;padding:8px 6px;text-align:center}
-    .ico{order:4;height:32px;width:36px}
-    .ico.wide{width:36px;padding:0}
-    .satwrap{order:5;height:32px;padding:0 9px}
-    .zoombox{top:auto;bottom:12px;right:10px}
-    .brand span{display:none}
-    .brand b{font-size:14px;overflow:hidden;text-overflow:ellipsis;display:block}
-    .seg{flex:none}
-    .seg button{padding:7px 10px;font-size:12px}
-    .ico{width:36px;height:34px}
-    .satwrap{padding:0 8px;height:34px;gap:6px}
-    .satwrap b{display:none}
-    .satwrap input{width:52px}
-
-    .zpanel{left:0;right:0;bottom:0;top:auto;width:100%;
-      max-height:min(62%,430px);border-radius:16px 16px 0 0;
-      border-left:0;border-right:0;border-bottom:0;
-      box-shadow:0 -18px 46px -14px rgba(0,0,0,.95)}
-    .zpanel.min{max-height:none}
-    /* a grab bar, so it reads as a sheet */
-    .zh{padding:12px 12px 11px 14px;position:relative}
-    .zh::before{content:"";position:absolute;left:50%;top:5px;width:34px;height:3px;
-      margin-left:-17px;border-radius:3px;background:rgba(255,255,255,.18)}
-    .zrow{padding:10px 9px;font-size:13.5px}
-    .zb{max-height:none}
-    .zdet dl{font-size:13px}
-    .zdet .zgo{padding:11px 0;font-size:13px}
-
-    .read{left:10px;right:10px;bottom:auto;top:10px;width:auto;
-      transform:translateY(-6px)}
-    .read.on{transform:none}
-    .hint{display:none}
-    .zoombox{right:10px;top:auto;bottom:calc(100% - 100%);top:64px}
-    .drawer{width:100%}
-  }
-
-  @media (max-width:720px) and (max-height:520px){
-    .zpanel{max-height:76%}
-  }
+  /* Phones no longer squeeze this layout at all: below 760px the header, the
+     side panels and the desktop readout are removed outright and the mobile
+     shell at the end of this sheet takes over. See MOBILE SHELL below. */
 
   body.reading .hint{opacity:0}
   .chg{position:absolute;right:0;top:0;bottom:0;width:min(460px,100vw);z-index:7;
@@ -245,16 +193,29 @@
   .read .rx{margin-left:auto;color:var(--faint);font-size:17px;line-height:1;padding:0 2px}
   .read .rb{padding:10px 13px 12px;font-size:12.2px;color:var(--dim);line-height:1.55;
     max-height:min(56vh,520px);overflow-y:auto}
-  .law{margin:9px 0 2px;padding:9px 10px;border:1px solid var(--line);border-radius:9px;
-    background:rgba(95,211,154,.05)}
-  .law .lh{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--ok);font-weight:600;margin-bottom:6px}
-  .law .lhead{font-size:12px;color:var(--ink);font-weight:600;margin-bottom:7px}
-  .law .lrow{margin-top:7px}
-  .law .lrow b{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ok)}
-  .law .lrow.no b{color:var(--bad)}
-  .law ul{margin:3px 0 0;padding-left:15px}
-  .law li{font-size:11.5px;line-height:1.5;margin-bottom:2px}
+  /* The zoning-law card. The readout emits .lhd/.lg/.lc; those selectors had
+     never been written, so the permit and prohibit lists came out as one
+     unstyled run of text and the feature read as missing. */
+  .law{margin:10px 0 2px;border:1px solid var(--line);border-radius:11px;overflow:hidden;
+    background:rgba(255,255,255,.025)}
+  .law .lh{font-family:var(--mono);font-size:8.6px;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--cy);font-weight:600;padding:8px 11px;border-bottom:1px solid var(--line);
+    background:rgba(99,216,234,.07)}
+  .law .lhd{padding:9px 11px 0;font-size:12.3px;color:var(--ink);line-height:1.5}
+  .law .lg{padding:9px 11px 10px}
+  .law .lg+.lg{border-top:1px dashed var(--line)}
+  .law .lg>b{display:block;font-size:8.8px;letter-spacing:.14em;text-transform:uppercase;
+    margin-bottom:7px;font-weight:600}
+  .law .lg.ok>b{color:var(--ok)}
+  .law .lg.no>b{color:var(--bad)}
+  .law .lg span{display:block;position:relative;padding-left:18px;font-size:12.1px;
+    line-height:1.5;color:var(--dim);margin-bottom:5px}
+  .law .lg span::before{position:absolute;left:1px;top:0;font-size:11px;line-height:1.6}
+  .law .lg.ok span::before{content:"\2713";color:var(--ok)}
+  .law .lg.no span::before{content:"\2715";color:var(--bad)}
+  .law .lg em{display:block;font-style:normal;font-size:10.8px;color:var(--faint);padding-left:18px}
+  .law .lc{padding:8px 11px 9px;border-top:1px solid var(--line);
+    font-size:10.4px;color:var(--faint);line-height:1.45}
   .read .rb code{font-family:var(--mono);font-size:11px;color:var(--cy)}
   .both{display:flex;flex-direction:column;gap:3px;margin:8px 0 2px;padding:8px 9px;
     border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.035);
@@ -309,11 +270,198 @@
   .bar{width:190px;height:2px;background:var(--line);border-radius:2px;margin:13px auto 0;overflow:hidden}
   .bar i{display:block;height:100%;width:0;background:var(--cy);transition:width .3s}
 
-  @media (max-width:640px){
-    header{gap:9px;padding:8px 11px}
-    .brand span{display:none}
-    .seg button{padding:6px 9px;font-size:11.5px}
-    .hint{display:none}
+
+  /* ============================================================
+     MOBILE SHELL
+     A phone is not a narrow desktop. Below 760px the toolbar, the
+     zone panel and the desktop readout are removed outright, and
+     the page becomes three things: a full-bleed sheet, one search,
+     and a bottom card that carries the answer.
+
+     The reason is the question. On a laptop somebody surveys a
+     plan; on a phone somebody is standing somewhere and wants to
+     know what the plan says about here. So the answer is the
+     surface and the map is the backdrop, not the other way round.
+     ============================================================ */
+  .mshell{display:none}
+  .mpane{display:none}
+
+  @media (max-width:760px){
+    header,footer,.zpanel,.hint,.zoombox,.read{display:none!important}
+    .stage{box-shadow:inset 0 -90px 100px -70px rgba(0,0,0,.7)}
+
+    .mshell{display:block;position:absolute;inset:0;z-index:8;pointer-events:none;--sh:160px}
+    .mshell>*{pointer-events:auto}
+
+    /* ---- one search, one menu. Nothing else lives at the top. ---- */
+    .mtop{position:absolute;left:10px;right:10px;top:calc(env(safe-area-inset-top,0px) + 10px);
+      display:flex;gap:8px}
+    .mfind{flex:1;min-width:0;display:flex;align-items:center;gap:10px;height:48px;padding:0 15px;
+      border-radius:15px;background:rgba(10,16,26,.88);backdrop-filter:blur(18px) saturate(1.4);
+      border:1px solid var(--line2);color:var(--dim);font-size:14.5px;text-align:left;
+      box-shadow:0 12px 32px -14px rgba(0,0,0,.95)}
+    .mfind svg{flex:none;color:var(--cy)}
+    .mfind span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .mmore{flex:none;width:48px;height:48px;border-radius:15px;display:grid;place-items:center;
+      background:rgba(10,16,26,.88);backdrop-filter:blur(18px) saturate(1.4);
+      border:1px solid var(--line2);color:var(--dim);
+      box-shadow:0 12px 32px -14px rgba(0,0,0,.95)}
+
+    /* which sheet you are reading, stated where it changes the map */
+    .mver{position:absolute;left:10px;top:calc(env(safe-area-inset-top,0px) + 70px);
+      display:flex;border-radius:12px;overflow:hidden;border:1px solid var(--line2);
+      background:rgba(10,16,26,.88);backdrop-filter:blur(18px) saturate(1.4);
+      box-shadow:0 10px 28px -16px rgba(0,0,0,.95)}
+    .mver button{padding:9px 14px;font-size:12.5px;color:var(--dim);white-space:nowrap}
+    .mver button.on{background:rgba(224,184,114,.2);color:var(--gold);font-weight:640}
+    .mver button+button{border-left:1px solid var(--line)}
+
+    /* ---- thumb rail. Anchored to the sheet, so it rides up with it
+            and never ends up underneath. ---- */
+    .mrail{position:absolute;right:10px;bottom:calc(var(--sh) + 14px);
+      display:flex;flex-direction:column;gap:9px;
+      transition:bottom .32s cubic-bezier(.32,.72,0,1)}
+    .mrail button{position:relative;width:48px;height:48px;border-radius:16px;
+      display:grid;place-items:center;color:var(--dim);
+      background:rgba(10,16,26,.88);backdrop-filter:blur(18px) saturate(1.4);
+      border:1px solid var(--line2);box-shadow:0 12px 32px -16px rgba(0,0,0,.95);
+      transition:color .15s,border-color .15s,background .15s}
+    .mrail button.on{color:var(--cy);border-color:rgba(99,216,234,.55);background:rgba(99,216,234,.17)}
+    .mrail button.warn.on{color:var(--bad);border-color:rgba(239,107,107,.55);background:rgba(239,107,107,.17)}
+    .mrail button u{position:absolute;right:-3px;top:-3px;text-decoration:none;
+      font-family:var(--mono);font-size:8.5px;letter-spacing:.02em;
+      background:var(--cy);color:#04070d;border-radius:999px;padding:2px 5px;font-weight:700}
+
+    /* ---- the answer. Three detents, dragged by the handle. ---- */
+    .msheet{position:absolute;left:0;right:0;bottom:0;height:160px;z-index:9;
+      display:flex;flex-direction:column;
+      background:rgba(9,14,23,.955);backdrop-filter:blur(26px) saturate(1.5);
+      border-top:1px solid var(--line2);border-radius:22px 22px 0 0;
+      box-shadow:0 -24px 64px -22px rgba(0,0,0,.98);
+      transition:height .32s cubic-bezier(.32,.72,0,1)}
+    .mhandle{flex:none;height:26px;display:grid;place-items:center;touch-action:none}
+    .mhandle i{width:40px;height:4px;border-radius:4px;background:rgba(255,255,255,.24)}
+    .msbody{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
+      padding:2px 16px calc(env(safe-area-inset-bottom,0px) + 20px);
+      scrollbar-width:none}
+    .msbody::-webkit-scrollbar,.mpb::-webkit-scrollbar{width:0;height:0}
+    .mpb{scrollbar-width:none}
+
+    .meyebrow{font-family:var(--mono);font-size:9.4px;letter-spacing:.17em;text-transform:uppercase;
+      color:var(--cy);margin-bottom:8px}
+    .mzone{display:flex;align-items:center;gap:12px}
+    .mzone i{width:28px;height:28px;border-radius:9px;flex:none;
+      border:1px solid rgba(255,255,255,.32);box-shadow:0 0 0 3px rgba(255,255,255,.05)}
+    .mzone span{font-size:21.5px;font-weight:660;letter-spacing:-.018em;line-height:1.15}
+    .msub{font-size:12.6px;color:var(--faint);line-height:1.5;margin:7px 0 3px}
+    .mmaps{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-top:11px;
+      padding:10px 12px;border:1px solid var(--line);border-radius:10px;
+      background:rgba(255,255,255,.035);text-decoration:none}
+    .mmaps code{font-family:var(--mono);font-size:12px;color:var(--cy)}
+    .mmaps span{font-size:11.4px;color:var(--faint)}
+    .mcav{margin-top:12px;padding-top:11px;border-top:1px dashed var(--line);
+      font-size:11.4px;color:var(--warn);line-height:1.55}
+    .mprov{margin-top:9px;font-size:10.6px;color:var(--faint);line-height:1.5}
+
+    /* the state before anything is picked: an offer, not an empty panel */
+    .mempty .meh{font-size:19.5px;font-weight:650;letter-spacing:-.018em;margin:2px 0 7px;
+      line-height:1.25}
+    .mempty .mep{font-size:13.2px;color:var(--dim);line-height:1.55;margin-bottom:15px}
+    .mbtn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;height:52px;
+      border-radius:15px;border:1px solid var(--line2);color:var(--ink);font-size:14.6px;
+      background:rgba(255,255,255,.045);margin-bottom:9px}
+    .mbtn.pri{background:rgba(99,216,234,.16);border-color:rgba(99,216,234,.5);
+      color:var(--cy);font-weight:640}
+    .mbtn:active{filter:brightness(1.35)}
+
+    /* a picked zone, isolated on the sheet */
+    .mzdl{display:grid;grid-template-columns:1fr auto;gap:6px 12px;margin:12px 0 0;font-size:13px}
+    .mzdl dt{color:var(--faint)}
+    .mzdl dd{margin:0;font-family:var(--mono);font-size:12.4px;color:var(--ink)}
+
+    /* both-plan block reads bigger here than on a laptop */
+    .both{font-size:13px;padding:10px 11px;gap:5px}
+    .both b{width:72px;font-size:8.8px}
+    .law .lg span{font-size:12.8px;padding-left:20px;margin-bottom:6px}
+    .law .lhd{font-size:13px}
+    .law .lh{font-size:9px}
+
+    /* ---- full-screen panes: search, and the zone index ---- */
+    .mpane{position:fixed;inset:0;z-index:24;background:rgba(6,10,17,.985);
+      backdrop-filter:blur(26px);flex-direction:column}
+    .mpane.on{display:flex}
+    .mph{flex:none;display:flex;align-items:center;gap:11px;
+      padding:calc(env(safe-area-inset-top,0px) + 12px) 12px 12px;
+      border-bottom:1px solid var(--line)}
+    .mph b{font-size:16.5px;font-weight:650;padding-left:3px}
+    .mph input{flex:1;min-width:0;height:46px;border-radius:14px;padding:0 15px;
+      background:rgba(255,255,255,.06);border:1px solid var(--line2);color:var(--ink);
+      font:inherit;font-size:15.5px;outline:none}
+    .mph input:focus{border-color:var(--cy)}
+    .mph .mx{margin-left:auto;color:var(--cy);font-size:14.6px;padding:10px 4px;flex:none}
+    .mpb{flex:1;overflow-y:auto;padding:4px 8px calc(env(safe-area-inset-bottom,0px) + 24px)}
+    .mrow{display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+      padding:14px 12px;font-size:15px;color:var(--ink);border-radius:13px}
+    .mrow:active{background:rgba(255,255,255,.075)}
+    .mrow+.mrow{border-top:1px solid rgba(140,175,215,.09)}
+    .mrow.on{background:rgba(99,216,234,.15)}
+    .mrow i.sw{width:16px;height:16px;border-radius:5px;flex:none;
+      border:1px solid rgba(255,255,255,.3)}
+    .mrow .rn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .mrow .rn em{font-style:normal;font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+      color:var(--gold);margin-left:7px}
+    .mrow .rt{font-family:var(--mono);font-size:10.4px;letter-spacing:.08em;
+      color:var(--faint);flex:none}
+    .mnote{padding:22px 14px;font-size:13px;color:var(--faint);line-height:1.6}
+
+    /* ---- menu, toast ---- */
+    .mmenu{position:absolute;right:10px;top:calc(env(safe-area-inset-top,0px) + 64px);
+      width:min(290px,calc(100vw - 20px));z-index:13;
+      background:rgba(12,18,28,.96);backdrop-filter:blur(24px) saturate(1.4);
+      border:1px solid var(--line2);border-radius:17px;overflow:hidden;
+      box-shadow:0 26px 64px -20px rgba(0,0,0,.97);display:none}
+    .mmenu.on{display:block}
+    .mmenu button{display:block;width:100%;text-align:left;padding:15px 16px;
+      font-size:14.4px;color:var(--ink)}
+    .mmenu button+button{border-top:1px solid var(--line)}
+    .mmenu button:active{background:rgba(255,255,255,.075)}
+    .mmenu button i{display:block;font-style:normal;font-size:11.4px;color:var(--faint);
+      margin-top:3px;line-height:1.45}
+
+    .mtoast{position:absolute;left:12px;right:70px;bottom:calc(var(--sh) + 16px);z-index:15;
+      transform:translateY(7px);text-align:center;
+      background:rgba(12,18,28,.96);border:1px solid var(--line2);border-radius:16px;
+      padding:11px 15px;font-size:12.8px;line-height:1.4;color:var(--ink);
+      backdrop-filter:blur(16px);opacity:0;pointer-events:none;transition:.22s}
+    .mtoast.on{opacity:1;transform:none}
+
+    /* Opened full, the sheet is the whole screen; the map controls have
+       nothing left to control, so they step back rather than pile up. */
+    .mrail,.mtop,.mver{transition:opacity .24s, bottom .32s cubic-bezier(.32,.72,0,1)}
+    .mshell.full .mrail,.mshell.full .mtoast,
+    .mshell.full .mtop,.mshell.full .mver{opacity:0;pointer-events:none}
+
+    /* the two long-form panels, as full-screen reads */
+    .chg,.drawer{z-index:26;width:100%}
+    .ch,.dh{padding-top:calc(env(safe-area-inset-top,0px) + 14px)}
+    .cb,.db{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 44px)}
+    .ch b,.dh b{font-size:16px}
+    .ch button,.dh button{font-size:27px;padding:2px 6px}
+    .cb p,.db p{font-size:14px}
+    .cb .cd .w,.db .f{font-size:13.6px}
+    .cb,.db{scrollbar-width:none}
+    .cb::-webkit-scrollbar,.db::-webkit-scrollbar{width:0;height:0}
+  }
+
+  /* Landscape on a phone: the sheet would eat the map, so it opens shorter
+     and the rail moves in beside it rather than above it. */
+  @media (max-width:900px) and (max-height:480px){
+    .msheet{left:auto;right:0;width:min(360px,58vw);top:0;height:100%!important;
+      border-radius:0;border-left:1px solid var(--line2);border-top:0}
+    .mhandle{display:none}
+    .msbody{padding-top:calc(env(safe-area-inset-top,0px) + 14px)}
+    .mrail{bottom:14px;right:calc(min(360px,58vw) + 10px)}
+    .mtoast{bottom:16px;left:12px;right:calc(min(360px,58vw) + 68px)}
   }
 </style>
 </head>
@@ -497,8 +645,87 @@
     </div>
   </div>
 
+
+  <!-- ---------- mobile shell ----------
+       Present in the DOM always, shown only under 760px. It shares the canvas,
+       the georeference and the identify path with the desktop layout; what it
+       replaces is everything around them. -->
+  <div class="mshell" id="mshell">
+    <div class="mtop">
+      <button class="mfind" onclick="mPane('msearchp',1)">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.2"/>
+          <path d="m20 20-3.6-3.6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <span>Find a village or town</span></button>
+      <button class="mmore" onclick="mMenu()" aria-label="More">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <circle cx="5" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="19" cy="12" r="1.9"/></svg></button>
+    </div>
+
+    <div class="mver">
+      <button id="mvD" class="on" onclick="setVersion('draft')">Draft 2021</button>
+      <button id="mvF" onclick="setVersion('final')">Final 2026</button>
+    </div>
+
+    <div class="mmenu" id="mmenu">
+      <button onclick="mMenu(0);toggleChanged()">What changed between the plans
+        <i>Certain, directional, and what cannot be said</i></button>
+      <button onclick="mMenu(0);toggleDrawer()">What this plan can and cannot answer
+        <i>The recovery test, and where it fails</i></button>
+      <button onclick="mMenu(0);reset()">Show the whole region again</button>
+    </div>
+
+    <div class="mrail">
+      <button id="mbLoc" onclick="mLocate()" aria-label="Where I am">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="6" stroke="currentColor" stroke-width="1.9"/>
+          <circle cx="12" cy="12" r="2.1" fill="currentColor"/>
+          <path d="M12 2.2v3.1M12 18.7v3.1M2.2 12h3.1M18.7 12h3.1"
+            stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></button>
+      <button id="mbZ" onclick="mPane('mzonep',1)" aria-label="Zone index">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 3 3 7.4l9 4.4 9-4.4L12 3Z" stroke="currentColor" stroke-width="1.85" stroke-linejoin="round"/>
+          <path d="m3 12.3 9 4.4 9-4.4M3 16.9l9 4.4 9-4.4" stroke="currentColor" stroke-width="1.85" stroke-linejoin="round"/></svg></button>
+      <button id="mbW" class="warn" onclick="toggleTanks()" aria-label="Water bodies that hold no water">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 2.8s6.1 6.6 6.1 10.6a6.1 6.1 0 1 1-12.2 0C5.9 9.4 12 2.8 12 2.8Z"
+            stroke="currentColor" stroke-width="1.85" stroke-linejoin="round"/></svg></button>
+      <button id="mbS" onclick="mSat()" aria-label="Fade to satellite">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="8.4" stroke="currentColor" stroke-width="1.85"/>
+          <path d="M12 3.6a8.4 8.4 0 0 1 0 16.8V3.6Z" fill="currentColor"/></svg>
+        <u id="mbSv" style="display:none"></u></button>
+    </div>
+
+    <div class="mtoast" id="mtoast"></div>
+
+    <div class="msheet" id="msheet">
+      <div class="mhandle" id="mhandle"><i></i></div>
+      <div class="msbody" id="msbody"></div>
+    </div>
+  </div>
+
   <div class="boot" id="boot"><div>Loading the published sheet
     <div class="bar"><i id="bar"></i></div></div></div>
+</div>
+
+
+<!-- Full-screen panes. Kept outside .stage so no map handler ever sees them
+     and no ancestor filter can trap their fixed positioning. -->
+<div class="mpane" id="msearchp">
+  <div class="mph">
+    <input id="mq" placeholder="Find a village or town" autocomplete="off"
+      autocapitalize="words" oninput="mFind()"
+      onkeydown="if(event.key==='Enter'){event.preventDefault();mGo(0)}">
+    <button class="mx" onclick="mPane('msearchp',0)">Cancel</button>
+  </div>
+  <div class="mpb" id="mfres"></div>
+</div>
+
+<div class="mpane" id="mzonep">
+  <div class="mph"><b>Zone index</b>
+    <button class="mx" onclick="mPane('mzonep',0)">Done</button></div>
+  <div class="mpb" id="mzb"></div>
 </div>
 
 <footer id="foot"><span id="vNote">Draft Master Plan 2041, notified 19 June 2021. Superseded.</span> &middot; Draft Master Plan 2041 as published &middot; zones read back by colour, indicative only &middot; not a VMRDA record</footer>
@@ -534,6 +761,10 @@ var RULEKEY={
  "Protected Green":"Protected forest","Eco-sensitive / park":"Protected other",
  "Protected Kambalakonda ESZ":"Protected other","Accreted land":"Protected other"};
 var PLACES=[];
+/* One breakpoint decides which of the two shells is live. Everything below it
+   is the phone layout; nothing above it changed. */
+var MOBILE=matchMedia("(max-width:760px)").matches;
+var NDRY=73;
 fetch("places.json").then(function(r){return r.json()}).then(function(j){PLACES=j});
 
 /* ---- tile engine ----------------------------------------------------------
@@ -692,10 +923,7 @@ Promise.all([
   requestAnimationFrame(tick);
   renderComposition();
   renderZones();
-  /* Open on a laptop, collapsed on a phone: the sheet should not be the first
-     thing between the reader and the map. */
-  if(matchMedia("(max-width:720px)").matches)
-    document.getElementById("zpanel").classList.add("min");
+  if(MOBILE) mBoot();
   loadTiles(VERSIONS[VER]); loadOther();
   if(location.hash.length>3) fromHash();
 }).catch(function(){
@@ -877,7 +1105,7 @@ function draw(){
       }
       ctx.restore();
     }
-    if(seen){
+    if(seen && !MOBILE){
       ctx.save();
       ctx.font=(11*dpr)+"px ui-monospace,Menlo,monospace";
       ctx.fillStyle="rgba(255,74,88,.95)";
@@ -885,12 +1113,40 @@ function draw(){
       ctx.restore();
     }
   }
+  drawMark(x,y,w,h);
+}
+
+/* Nothing on the sheet said which point the panel was answering about, which
+   on a phone is the whole question. Anchored by lon/lat rather than pixels so
+   it survives a version switch and the swap from the display raster to the
+   tile pyramid, both of which change what a pixel means. */
+function drawMark(x,y,w,h){
+  if(!LAST||!LAST.ll||!GEO) return;
+  var q=ll2px(LAST.ll[0],LAST.ll[1]);
+  var sx=x+q[0]*view.s*dpr, sy=y+q[1]*view.s*dpr;
+  if(sx<-40||sy<-40||sx>w+40||sy>h+40) return;
+  var col=LAST.hit ? LAST.hit.rgb : [99,216,234];
+  ctx.save(); ctx.translate(sx,sy);
+  ctx.beginPath(); ctx.arc(0,0,13*dpr,0,7);
+  ctx.lineWidth=4.5*dpr; ctx.strokeStyle="rgba(0,0,0,.6)"; ctx.stroke();
+  ctx.lineWidth=2.2*dpr; ctx.strokeStyle="rgba(255,255,255,.96)"; ctx.stroke();
+  ctx.beginPath(); ctx.arc(0,0,4*dpr,0,7);
+  ctx.shadowColor="rgba(0,0,0,.75)"; ctx.shadowBlur=5*dpr;
+  ctx.fillStyle="rgb("+col.join(",")+")"; ctx.fill();
+  ctx.lineWidth=1.2*dpr; ctx.shadowBlur=0;
+  ctx.strokeStyle="rgba(0,0,0,.45)"; ctx.stroke();
+  ctx.restore();
 }
 
 function toggleTanks(){
   showTanks=!showTanks;
   document.getElementById("tBtn").style.color=showTanks?"#ef6b6b":"";
   document.getElementById("tBtn").style.borderColor=showTanks?"#ef6b6b":"";
+  var mb=document.getElementById("mbW");
+  if(mb) mb.classList.toggle("on",showTanks);
+  if(MOBILE) mToast(showTanks
+    ? NDRY+" of the water bodies this plan protects hold no water"
+    : "Water pins hidden");
   draw();
 }
 
@@ -904,6 +1160,10 @@ var OTHER={img:null, ctx:null, geo:null, lookup:null, ver:null};
 function loadOther(){
   var ov = VER==="draft" ? "final" : "draft";
   var V=VERSIONS[ov];
+  /* Drop the old one first. During a switch the previous OTHER is the version
+     now being shown, so leaving it in place made the readout compare the new
+     plan against itself and print the same label twice. */
+  OTHER={img:null, ctx:null, geo:null, lookup:null, ver:null};
   var im=new Image();
   im.onload=function(){
     var cnv=document.createElement("canvas");
@@ -913,6 +1173,12 @@ function loadOther(){
     c2.drawImage(im,0,0,cnv.width,cnv.height);
     OTHER={img:im, ctx:c2, geo:V.geo, lookup:V.lookup, ver:ov,
            label:V.label, w:cnv.width, h:cnv.height, px:V.px};
+    /* The comparison only becomes answerable now. Refresh a reading that is
+       already on screen rather than leaving it one plan short. */
+    if(LAST && LAST.ll){
+      var q=ll2px(LAST.ll[0],LAST.ll[1]);
+      identifyAt(q[0],q[1],LAST.title);
+    }
   };
   im.src=V.zones;
 }
@@ -922,12 +1188,8 @@ function zoneAtLL(o, lon, lat){
   var e=((lon-g.lon0)*g.kx-g.tE)/g.s, n=((lat-g.lat0)*g.ky-g.tN)/g.s;
   var x=Math.round((e*c+n*sn-g.cx)*ID_SCALE), y=Math.round((e*sn-n*c-g.cy)*ID_SCALE);
   if(x<0||y<0||x>=o.w||y>=o.h) return "off that sheet";
-  var d=o.ctx.getImageData(x,y,1,1).data, best=null, bd=1e9;
-  o.lookup.forEach(function(k){
-    var q=(k.rgb[0]-d[0])*(k.rgb[0]-d[0])+(k.rgb[1]-d[1])*(k.rgb[1]-d[1])+(k.rgb[2]-d[2])*(k.rgb[2]-d[2]);
-    if(q<bd){bd=q;best=k}
-  });
-  return bd<=2200 ? best.name : "no zone colour";
+  var pr=probeAt(o.ctx, o.lookup, o.w, o.h, x, y);
+  return pr.hit ? pr.hit.name : "no zone colour";
 }
 
 var isoCv=document.createElement("canvas"), isoCtx=isoCv.getContext("2d");
@@ -1014,8 +1276,18 @@ function pickZone(i){
    rasters with their own georeferences, so the screen centre is converted to
    lon/lat under the old transform and put back under the new one. Pixels are
    meaningless across versions; ground is not. */
+/* A point being read survives a version switch, but only once the new sheet's
+   raster, scale and georeference are all in place. Holding it here rather than
+   on a timer means it never fires against the previous sheet. */
+var RELOC=null, PENDVIEW=null;
+function doReloc(){
+  if(!RELOC) return;
+  var k=RELOC; RELOC=null;
+  var q=ll2px(k.ll[0],k.ll[1]);
+  identifyAt(q[0],q[1],k.t);
+}
 function loadTiles(V){
-  if(!V.tiles){ TILES=null; return }
+  if(!V.tiles){ TILES=null; PENDVIEW=null; doReloc(); return }
   fetch(V.tiles+"/meta.json").then(function(r){return r.json()}).then(function(m){
     m.base=V.tiles; TILES=m;
     /* The tile pyramid renders at full source resolution, so IW/IH and the
@@ -1026,17 +1298,39 @@ function loadTiles(V){
     IDGEO = {s: GEO.s, deg: GEO.deg, lon0: GEO.lon0, lat0: GEO.lat0,
              kx: GEO.kx, ky: GEO.ky, tE: GEO.tE, tN: GEO.tN,
              cx: GEO.cx, cy: GEO.cy, IW: IW, IH: IH};
+    /* The pyramid renders at source resolution, so IW/IH and the scale all
+       change under us. Blindly refitting here threw the view back to the whole
+       region every time the version was switched, which undid the whole point
+       of switching in place. Carry the centre across as ground, and carry the
+       zoom across as a multiple of fit. */
     IW=m.width; IH=m.height;
     GEO=Object.assign({},GEO,{s:m.scale_m_per_px});
-    reset(true); draw();
-  }).catch(function(){ TILES=null });
+    if(PENDVIEW && PENDVIEW.mul>1.08){
+      var r=stage.getBoundingClientRect(), f=fitScale();
+      goal.s=f*PENDVIEW.mul;
+      var q=ll2px(PENDVIEW.ll[0],PENDVIEW.ll[1]);
+      goal.x=r.width/2-q[0]*goal.s;
+      goal.y=r.height*(MOBILE?0.40:0.5)-q[1]*goal.s;
+      clamp();
+      view.s=goal.s; view.x=goal.x; view.y=goal.y;
+    } else { reset(true); }
+    PENDVIEW=null;
+    draw(); doReloc();
+  }).catch(function(){ TILES=null; PENDVIEW=null; doReloc() });
 }
 
 function setVersion(v){
   if(v===VER) return;
+  /* Hold on to the ground point being read, so switching sheets answers the
+     same question about the same place instead of clearing the panel. */
+  var keep = LAST && LAST.ll ? {ll:LAST.ll, t:LAST.title} : null;
   var r=stage.getBoundingClientRect();
   var cx=(r.width/2-view.x)/view.s, cy=(r.height/2-view.y)/view.s;
   var here = GEO ? px2ll(cx,cy) : null;
+  /* Captured now, while a pixel still means what it meant when the reader
+     zoomed. Applied at the far end of loadTiles, when it means something else. */
+  var f_=fitScale();
+  PENDVIEW = (here && f_>0) ? {ll:here, mul:view.s/f_} : null;
 
   VER=v;
   var V=VERSIONS[v];
@@ -1061,10 +1355,13 @@ function setVersion(v){
     renderComposition(); renderZones(); draw();
     document.getElementById("vNote").textContent=V.note;
     loadTiles(V); loadOther();
+    if(keep) RELOC=keep; else if(MOBILE) mEmpty();
   }
   np_.onload=done; nz.onload=done; np_.src=V.plan; nz.src=V.zones;
   document.getElementById("vDraft").classList.toggle("on",v==="draft");
   document.getElementById("vFinal").classList.toggle("on",v==="final");
+  document.getElementById("mvD").classList.toggle("on",v==="draft");
+  document.getElementById("mvF").classList.toggle("on",v==="final");
 }
 
 function setMode(m){
@@ -1076,14 +1373,51 @@ function setMode(m){
 }
 
 /* ---- zone identify ------------------------------------------------------ */
-function nearest(r,g,b){
+function nearestIn(L,r,g,b){
   var best=null,bd=1e9;
-  for(var i=0;i<LOOKUP.length;i++){
-    var c=LOOKUP[i].rgb, d=(c[0]-r)*(c[0]-r)+(c[1]-g)*(c[1]-g)+(c[2]-b)*(c[2]-b);
-    if(d<bd){bd=d;best=LOOKUP[i]}
+  for(var i=0;i<L.length;i++){
+    var c=L[i].rgb, d=(c[0]-r)*(c[0]-r)+(c[1]-g)*(c[1]-g)+(c[2]-b)*(c[2]-b);
+    if(d<bd){bd=d;best=L[i]}
   }
   return bd<=2200?best:null;
 }
+function nearest(r,g,b){ return nearestIn(LOOKUP,r,g,b) }
+
+/* One pixel is a bad question to ask this sheet. Roads, zone boundaries and
+   place labels are all drawn over the fill, they are wide enough to swallow a
+   probe, and a fingertip is not precise anyway, so "No zone colour here" was
+   the commonest answer the map gave and it made the tool feel broken.
+
+   Ask the point first and keep its answer when there is one. Only when the
+   point itself is unreadable, widen to the nearest ring that carries a class
+   and say how far out that was. Tolerant where it has to be, exact where it
+   can be, and never silently pretending to a precision it does not have. */
+function probeAt(c2,L,W,H,px,py){
+  if(!isFinite(px)||!isFinite(py)) return {hit:null, ring:-1};
+  if(px<0||py<0||px>=W||py>=H) return {hit:null, ring:-1};
+  var d0=c2.getImageData(px,py,1,1).data;
+  var h0=nearestIn(L,d0[0],d0[1],d0[2]);
+  if(h0) return {hit:h0, ring:0};
+  var R=4, x0=Math.max(0,px-R), y0=Math.max(0,py-R),
+      x1=Math.min(W-1,px+R), y1=Math.min(H-1,py+R);
+  var w=x1-x0+1, h=y1-y0+1;
+  if(w<1||h<1) return {hit:null, ring:0};
+  var d=c2.getImageData(x0,y0,w,h).data, t={};
+  for(var y=0;y<h;y++) for(var x=0;x<w;x++){
+    var i=(y*w+x)*4, k=nearestIn(L,d[i],d[i+1],d[i+2]);
+    if(!k) continue;
+    var rr=Math.max(Math.abs(x0+x-px), Math.abs(y0+y-py));
+    var e=t[k.raw] || (t[k.raw]={k:k, n:0, r:99});
+    e.n++; if(rr<e.r) e.r=rr;
+  }
+  /* nearest ring wins; within a ring, the class that covers the most of it */
+  var best=null, bn=0, br=99;
+  for(var q in t){ var e2=t[q];
+    if(e2.r<br || (e2.r===br && e2.n>bn)){ best=e2.k; bn=e2.n; br=e2.r } }
+  return {hit:best, ring: best?br:0};
+}
+/* Ground metres per pixel of the identify raster, so a ring can be quoted. */
+function idMetres(){ return ((IDGEO?IDGEO.s:GEO.s)/ID_SCALE) }
 function identifyAt(ix,iy,title){ identify(view.x+ix*view.s, view.y+iy*view.s, title) }
 function idPx(lon,lat){
   var g = IDGEO || GEO;
@@ -1091,82 +1425,102 @@ function idPx(lon,lat){
   var e=((lon-g.lon0)*g.kx-g.tE)/g.s, n=((lat-g.lat0)*g.ky-g.tN)/g.s;
   return [e*c+n*sn-g.cx, e*sn-n*c-g.cy];
 }
+/* One probe, two surfaces. identify() resolves the point and hands back a
+   plain result; the laptop paints it into the corner readout and the phone
+   paints it into the bottom sheet. Nothing about the reading differs, only
+   where it lands. */
+var LAST=null;
+function unread(v){ return !v || v==="no zone colour" || v.indexOf("off ")===0 }
+
 function identify(cx,cy,title){
   var ix=Math.floor((cx-view.x)/view.s), iy=Math.floor((cy-view.y)/view.s);
-  if(ix<0||iy<0||ix>=IW||iy>=IH){closeRead();return}
+  if(!isFinite(ix)||!isFinite(iy)||ix<0||iy<0||ix>=IW||iy>=IH){closeRead();return}
   /* screen pixel -> ground -> identify-raster pixel (which may be a different
      resolution from the tiles now on screen) */
   var ll0 = px2ll(ix,iy);
   var idp = idPx(ll0[0], ll0[1]);
   var idW = (IDGEO?IDGEO.IW:IW), idH=(IDGEO?IDGEO.IH:IH);
-  if(idp[0]<0||idp[1]<0||idp[0]>=idW||idp[1]>=idH){closeRead();return}
-  var px=idx.getImageData(Math.floor(idp[0]*ID_SCALE),Math.floor(idp[1]*ID_SCALE),1,1).data;
-  var hit=nearest(px[0],px[1],px[2]);
-  var rd=document.getElementById("read");
-  document.getElementById("rSw").style.background=hit?"rgb("+hit.rgb.join(",")+")":"#333";
-  document.getElementById("rN").textContent=title||(hit?hit.name:"No zone colour here");
+  if(!isFinite(idp[0])||!isFinite(idp[1])||
+     idp[0]<0||idp[1]<0||idp[0]>=idW||idp[1]>=idH){closeRead();return}
+  var pr=probeAt(idx, LOOKUP, idc.width, idc.height,
+                 Math.floor(idp[0]*ID_SCALE), Math.floor(idp[1]*ID_SCALE));
+  var hit=pr.hit;
   var ll=GEO?px2ll(ix,iy):null;
-  var otherTxt="";
-  if(ll && OTHER.ctx){
-    var oz=zoneAtLL(OTHER,ll[0],ll[1]);
-    var mine=hit?hit.name:"no zone colour";
-    /* Only call it a disagreement when BOTH sheets actually read a class there.
-       "no zone colour" means line work or type under the probe, not a change. */
-    var unread = function(v){ return !v || v==="no zone colour" || v.indexOf("off ")===0 };
-    var differs = !unread(oz) && !unread(mine) && oz!==mine;
-    otherTxt='<div class="both'+(differs?' diff':'')+'">'+
-      '<span><b>'+VERSIONS[VER].label+'</b> '+mine+'</span>'+
-      '<span><b>'+OTHER.label+'</b> '+oz+'</span>'+
-      (differs?'<em>the two plans disagree here</em>':'')+'</div>';
-  }
-  var lawTxt="";
-  if(hit && RULES){
-    var rk=RULEKEY[hit.raw], rule=rk?RULES.zones[rk]:null;
-    if(rule){
-      var pm=(rule.permit||[]).slice(0,4), pr=(rule.prohibit||[]).slice(0,5);
-      lawTxt='<div class="law">'+
-        '<div class="lh">What G.O. 216 allows here</div>'+
-        (rule.headline?'<div class="lhead">'+rule.headline+'</div>':'')+
-        '<div class="lrow"><b>Permitted</b><ul>'+
-          pm.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ul></div>'+
-        '<div class="lrow no"><b>Not permitted</b><ul>'+
-          pr.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ul></div>'+
-        '</div>';
-    }
-  }
-  var lawTxt="";
-  if(hit && RULES){
-    var rk=RULEKEY[hit.raw]||RULEKEY[hit.name];
-    var R=rk?RULES.zones[rk]:null;
-    if(R){
-      var lim=function(a,n){return (a||[]).slice(0,n)};
-      lawTxt='<div class="law">'+
-        '<div class="lh">What G.O. 216 allows here'+(R.prot?'':'')+'</div>'+
-        (R.headline?'<div class="lhd">'+R.headline+'</div>':'')+
-        '<div class="lg ok"><b>Permitted</b>'+lim(R.permit,4).map(function(x){
-          return '<span>'+x+'</span>'}).join("")+
-          (R.permit.length>4?'<em>+'+(R.permit.length-4)+' more</em>':'')+'</div>'+
-        '<div class="lg no"><b>Prohibited</b>'+lim(R.prohibit,5).map(function(x){
-          return '<span>'+x+'</span>'}).join("")+
-          (R.prohibit.length>5?'<em>+'+(R.prohibit.length-5)+' more</em>':'')+'</div>'+
-        '<div class="lc">AP Common Zoning Regulations 2025, G.O. Ms. 216 &middot; summary, read the G.O. for the full list</div></div>';
-    }
-  }
-  document.getElementById("rP").innerHTML=
-    (hit ? "Legend class <b>"+hit.raw+"</b>.<br>" : "Boundary line work, a label, or outside the plan area.<br>")
-    + otherTxt + lawTxt
-    + (ll ? "<code>"+ll[1].toFixed(5)+", "+ll[0].toFixed(5)+"</code> &plusmn;200 m"
-          + " &middot; <a href='https://www.google.com/maps/@"+ll[1].toFixed(5)+","
-          + ll[0].toFixed(5)+",16z' target='_blank' rel='noopener' style='color:var(--cy)'>maps</a>"
-        : "");
-  rd.classList.add("on"); document.body.classList.add("reading");
-  if(!matchMedia("(max-width:720px)").matches &&
-     stage.getBoundingClientRect().height < 560)
-    document.getElementById("zpanel").classList.add("min");
+  var oz=(ll&&OTHER.ctx)?zoneAtLL(OTHER,ll[0],ll[1]):null;
+  var mine=hit?hit.name:"no zone colour";
+  var rule=null;
+  if(hit&&RULES){ var rk=RULEKEY[hit.raw]||RULEKEY[hit.name]; rule=rk?RULES.zones[rk]:null }
+  /* Only call it a disagreement when BOTH sheets actually read a class there.
+     "no zone colour" means line work or type under the probe, not a change. */
+  LAST={ix:ix, iy:iy, hit:hit, title:title||null, ll:ll, other:oz, mine:mine,
+        rule:rule, ring:pr.ring,
+        differs: !!(oz && !unread(oz) && !unread(mine) && oz!==mine)};
+  if(MOBILE) mAnswer(LAST); else renderRead(LAST);
   location.replace("#"+ix+","+iy+","+goal.s.toFixed(4));
 }
-function closeRead(){document.getElementById("read").classList.remove("on");
-  document.body.classList.remove("reading")}
+
+function bothHTML(res){
+  if(!res.other) return "";
+  return '<div class="both'+(res.differs?' diff':'')+'">'+
+    '<span><b>'+VERSIONS[VER].label+'</b> '+res.mine+'</span>'+
+    '<span><b>'+OTHER.label+'</b> '+res.other+'</span>'+
+    (res.differs?'<em>the two plans disagree here</em>':'')+'</div>';
+}
+
+/* The zoning law at the point. Singapore's URA SPACE and New York's ZoLa both
+   do this and no Andhra authority does, so it is the one thing on the page
+   worth putting above the fold. */
+function lawHTML(R){
+  if(!R) return "";
+  var P=R.permit||[], Q=R.prohibit||[], li=function(a,n){
+    return a.slice(0,n).map(function(x){return '<span>'+x+'</span>'}).join("")+
+           (a.length>n?'<em>and '+(a.length-n)+' more in the schedule</em>':'') };
+  return '<div class="law">'+
+    '<div class="lh">What the zoning law allows here</div>'+
+    (R.headline?'<div class="lhd">'+R.headline+'</div>':'')+
+    '<div class="lg ok"><b>Permitted</b>'+li(P,4)+'</div>'+
+    '<div class="lg no"><b>Not permitted</b>'+li(Q,5)+'</div>'+
+    '<div class="lc">AP Common Zoning Regulations 2025, G.O. Ms. 216 dated '+
+    '22.10.2025. Summarised; the G.O. carries the full schedule.</div></div>';
+}
+/* When the answer came from beside the point rather than the point, say so. */
+function ringNote(res){
+  if(!res.ring) return "";
+  return " The point itself is line work or a label; this is the fill within about "+
+         Math.round(res.ring*idMetres()/10)*10+"\u2009m of it.";
+}
+function coordHTML(ll){
+  if(!ll) return "";
+  return "<code>"+ll[1].toFixed(5)+", "+ll[0].toFixed(5)+"</code> &plusmn;200 m"+
+    " &middot; <a href='https://www.google.com/maps/@"+ll[1].toFixed(5)+","+
+    ll[0].toFixed(5)+",16z' target='_blank' rel='noopener' style='color:var(--cy)'>maps</a>";
+}
+
+function renderRead(res){
+  var hit=res.hit;
+  document.getElementById("rSw").style.background=hit?"rgb("+hit.rgb.join(",")+")":"#333";
+  document.getElementById("rN").textContent=res.title||(hit?hit.name:"No zone colour here");
+  document.getElementById("rP").innerHTML=
+    (hit ? "Legend class <b>"+hit.raw+"</b>."+ringNote(res)+"<br>"
+         : "Boundary line work, a label, or outside the plan area.<br>")
+    + bothHTML(res) + lawHTML(res.rule) + coordHTML(res.ll);
+  document.getElementById("read").classList.add("on");
+  document.body.classList.add("reading");
+  /* The index sits top-left and the readout bottom-left, which only keeps them
+     apart while the readout is short. The zoning-law card made it tall enough
+     to reach, so measure the two instead of assuming: fold the index away only
+     when they would actually collide. */
+  var zp=document.getElementById("zpanel");
+  var need=document.getElementById("read").getBoundingClientRect().height + 210;
+  zp.classList.toggle("min", need > stage.getBoundingClientRect().height);
+}
+
+function closeRead(){
+  document.getElementById("read").classList.remove("on");
+  document.body.classList.remove("reading");
+  LAST=null;
+  if(MOBILE && document.getElementById("msbody")){ mEmpty(); mSnap(0) }
+}
 function fromHash(){
   var p=location.hash.slice(1).split(",");
   if(p.length<3)return;
@@ -1241,6 +1595,7 @@ function renderZones(){
   document.getElementById("zf").innerHTML = isoZone
     ? 'Showing <b>'+isoZone.name+'</b> alone. Tap it again to bring the plan back.'
     : 'Area in sq km, recovered from the sheet by colour. <b>&plusmn;43% median error</b> against VMRDA\'s own table, so read the ordering, not the totals.';
+  if(MOBILE) mZones();
 }
 
 var UNRELIABLE={"Transportation":1,"Industrial":1,"Recreational":1};
@@ -1338,7 +1693,7 @@ function toggleDrawer(){document.getElementById("drawer").classList.toggle("on")
    click on them also reached the map handlers: selecting a zone opened a
    "no zone colour here" readout instead. Anything inside a panel is UI. */
 ["pointerdown","pointermove","pointerup","click","wheel","dblclick"].forEach(function(t){
-  ["zpanel","read","drawer","chg"].forEach(function(id){
+  ["zpanel","read","drawer","chg","mshell"].forEach(function(id){
     var el=document.getElementById(id);
     /* Bubble phase, not capture. On capture the event is stopped before the
        button's own onclick ever runs, so the panel became inert. On bubble the
@@ -1348,7 +1703,7 @@ function toggleDrawer(){document.getElementById("drawer").classList.toggle("on")
 });
 
 function onUI(e){ return !!(e.target && e.target.closest &&
-  e.target.closest(".zpanel,.read,.drawer,.chg,.zoombox,.hint")) }
+  e.target.closest(".zpanel,.read,.drawer,.chg,.zoombox,.hint,.mshell,.mpane")) }
 
 stage.addEventListener("wheel",function(e){ if(onUI(e))return;
   e.preventDefault();
@@ -1407,6 +1762,13 @@ function drop(e){
 stage.addEventListener("pointerup",drop); stage.addEventListener("pointercancel",drop);
 function endDrag(){ if(Object.keys(ptrs).length)return; drag=false; seam=false; stage.classList.remove("grab") }
 stage.addEventListener("pointerup",endDrag); stage.addEventListener("pointercancel",endDrag);
+/* A finger lifted outside the stage never delivered its pointerup here, so its
+   id stayed in ptrs for good. Every later tap then looked like the second
+   finger of a pinch, moved stuck at 99, and the map quietly stopped answering
+   taps altogether. Listening on the window as well means a release anywhere
+   clears it. */
+addEventListener("pointerup",drop); addEventListener("pointercancel",drop);
+addEventListener("pointerup",endDrag); addEventListener("pointercancel",endDrag);
 
 stage.addEventListener("click",function(e){
   if(onUI(e))return;
@@ -1420,6 +1782,297 @@ addEventListener("keydown",function(e){
     document.getElementById("chg").classList.remove("on")}
   if(e.key==="1")setMode("plan"); if(e.key==="2")setMode("split"); if(e.key==="3")setMode("zone");
 });
+/* ==========================================================================
+   MOBILE SHELL
+   The map engine above is untouched. What follows is the phone's own way in
+   to it: a bottom sheet that holds the answer, a full-screen search, a
+   full-screen zone index, and a rail of four controls sized for a thumb.
+
+   The organising idea is that a phone is not being used to survey a plan. It
+   is being held by somebody standing somewhere, or thinking about somewhere,
+   who wants one thing: what does the plan say about that place, and what does
+   the law let you do there. So the sheet answers that question first and the
+   map is what the answer sits on.
+   ========================================================================== */
+
+/* ---- bottom sheet: three detents, dragged or tapped ---------------------- */
+var MS={det:0, drag:false, y0:0, h0:0, moved:0};
+
+function mDet(){
+  var H=stage.getBoundingClientRect().height;
+  return [Math.min(198,Math.round(H*0.25)), Math.round(H*0.54), Math.round(H*0.90)];
+}
+function mSetH(h){
+  var sh=document.getElementById("msheet"), sl=document.getElementById("mshell");
+  sh.style.height=h+"px";
+  sl.style.setProperty("--sh", h+"px");
+  sl.classList.toggle("full", h > stage.getBoundingClientRect().height*0.74);
+}
+/* Turned sideways the sheet stops being a sheet: it is a fixed side panel, so
+   there is nothing to snap and nothing to stand down for. */
+function mLand(){ return matchMedia("(max-width:900px) and (max-height:480px)").matches }
+function mSnap(i){
+  if(!document.getElementById("msheet")) return;
+  MS.det=Math.max(0,Math.min(2,i));
+  if(mLand()){
+    document.getElementById("mshell").classList.remove("full");
+    return;
+  }
+  document.getElementById("msheet").style.transition="";
+  mSetH(mDet()[MS.det]);
+}
+
+(function(){
+  var hd=document.getElementById("mhandle"), sh=document.getElementById("msheet");
+  if(!hd) return;
+  hd.addEventListener("pointerdown",function(e){
+    MS.drag=true; MS.moved=0; MS.y0=e.clientY;
+    MS.h0=sh.getBoundingClientRect().height;
+    sh.style.transition="none";
+    hd.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+  hd.addEventListener("pointermove",function(e){
+    if(!MS.drag) return;
+    var dy=e.clientY-MS.y0, d=mDet();
+    MS.moved=Math.max(MS.moved,Math.abs(dy));
+    mSetH(Math.max(62, Math.min(d[2]+26, MS.h0-dy)));
+    e.preventDefault();
+  });
+  function up(){
+    if(!MS.drag) return;
+    MS.drag=false; sh.style.transition="";
+    if(MS.moved<6){ mSnap((MS.det+1)%3); return }   /* a tap cycles */
+    var h=sh.getBoundingClientRect().height, d=mDet(), bi=0, bv=1e9;
+    d.forEach(function(v,i){ var q=Math.abs(v-h); if(q<bv){bv=q;bi=i} });
+    mSnap(bi);
+  }
+  hd.addEventListener("pointerup",up);
+  hd.addEventListener("pointercancel",up);
+})();
+
+/* Keep the read point in the strip of map the sheet has not covered. */
+function mEnsure(ix,iy){
+  var r=stage.getBoundingClientRect();
+  if(mLand()){
+    /* the panel takes the right edge, so the free map is a column not a strip */
+    var sw=document.getElementById("msheet").getBoundingClientRect().width;
+    var vis=r.width-sw, x=goal.x+ix*goal.s, y=goal.y+iy*goal.s;
+    if(vis<120) return;
+    if(x>vis-30 || x<30) goal.x += vis*0.5 - x;
+    if(y<70 || y>r.height-30) goal.y += r.height*0.55 - y;
+    clamp(); return;
+  }
+  var top=128, bot=r.height-mDet()[MS.det];   /* under the search, above the sheet */
+  if(bot-top < 90) return;
+  var y2=goal.y+iy*goal.s;
+  if(y2>bot-26 || y2<top+8){ goal.y += (top+(bot-top)*0.5) - y2; clamp() }
+}
+
+/* ---- what the sheet says ------------------------------------------------- */
+function mEmpty(){
+  var b=document.getElementById("msbody"); if(!b) return;
+  b.innerHTML=
+    '<div class="mempty">'+
+    '<div class="meh">What does the plan say about a place?</div>'+
+    '<div class="mep">Tap anywhere on the sheet to read its zone and what the '+
+      'zoning law permits there.</div>'+
+    '<button class="mbtn pri" onclick="mLocate()">Use where I am</button>'+
+    '<button class="mbtn" onclick="mPane(\'msearchp\',1)">Find a village or town</button>'+
+    '<div class="mprov">'+VERSIONS[VER].note+' Zones read back from the published '+
+      'picture by colour. Not a VMRDA record.</div>'+
+    '</div>';
+}
+
+function mAnswer(res){
+  var b=document.getElementById("msbody"); if(!b) return;
+  var hit=res.hit, h="";
+  if(res.title) h+='<div class="meyebrow">'+res.title+'</div>';
+  h+='<div class="mzone"><i style="background:'+
+       (hit?"rgb("+hit.rgb.join(",")+")":"#2a3446")+'"></i>'+
+     '<span>'+(hit?hit.name:"No zone colour")+'</span></div>'+
+     '<div class="msub">'+(hit
+        ? 'Legend class &ldquo;'+hit.raw+'&rdquo; on the '+VERSIONS[VER].label+' sheet.'+ringNote(res)
+        : 'Boundary line work, a label, or outside the plan area. Try a few metres away.')+
+     '</div>'+
+     bothHTML(res)+lawHTML(res.rule);
+  if(res.ll) h+='<a class="mmaps" href="https://www.google.com/maps/@'+
+      res.ll[1].toFixed(5)+','+res.ll[0].toFixed(5)+',16z" target="_blank" rel="noopener">'+
+      '<code>'+res.ll[1].toFixed(5)+', '+res.ll[0].toFixed(5)+'</code>'+
+      '<span>&plusmn;200 m &middot; open in Maps &rarr;</span></a>';
+  h+='<div class="mcav">Read back from the published picture by colour, not from '+
+     'VMRDA records. Not authoritative. Do not rely on this for any decision about '+
+     'a specific parcel.</div>';
+  b.innerHTML=h;
+  if(MS.det===0) mSnap(1);
+  mEnsure(res.ix,res.iy);
+}
+
+/* A zone picked from the index gets its own card, because the question there
+   is "where is this class and how much of it is there", not "what is here". */
+function mIso(){
+  var b=document.getElementById("msbody"); if(!b) return;
+  if(!isoZone){ mEmpty(); return }
+  var z=isoZone, HB=isoBox&&(isoBox.hot||isoBox);
+  var ext=HB? ((HB.x1-HB.x0)*GEO.s/1000).toFixed(0)+' &times; '+
+              ((HB.y1-HB.y0)*GEO.s/1000).toFixed(0)+' km' : null;
+  var conc=(isoBox&&isoBox.hot)? (isoBox.hot.share*100).toFixed(0)+'% of it' : null;
+  b.innerHTML=
+    '<div class="meyebrow">Showing this class alone</div>'+
+    '<div class="mzone"><i style="background:rgb('+z.rgb.join(",")+')"></i>'+
+      '<span>'+z.name+'</span></div>'+
+    '<div class="msub">'+z.grp+(z.prot?' &middot; a Protected Use Zone. Development is barred here.':'')+'</div>'+
+    '<dl class="mzdl">'+
+      '<dt>This class</dt><dd>'+(z.sqkm>=1?Math.round(z.sqkm).toLocaleString():z.sqkm)+' km&sup2;</dd>'+
+      '<dt>Group total</dt><dd>'+Math.round(z.grpkm).toLocaleString()+' km&sup2;</dd>'+
+      '<dt>Share of VMR</dt><dd>'+(z.grpkm/4873.38*100).toFixed(1)+'%</dd>'+
+      (conc?'<dt>Densest window</dt><dd>'+conc+'</dd>':'')+
+      (ext?'<dt>That window</dt><dd>'+ext+'</dd>':'')+
+      (z.pub?'<dt>VMRDA table</dt><dd>'+Math.round(z.pub).toLocaleString()+' km&sup2;</dd>':'')+
+    '</dl>'+
+    '<button class="mbtn pri" style="margin-top:14px" onclick="zoomToZone()">Fly to where it concentrates</button>'+
+    '<button class="mbtn" onclick="pickZone('+ZONES.indexOf(z)+')">Bring the whole plan back</button>'+
+    '<div class="mcav">Areas recovered from the sheet by colour, with 43% median '+
+      'error against VMRDA&rsquo;s own table. Read the ordering, not the totals.</div>';
+  if(MS.det===0) mSnap(1);
+}
+
+/* ---- full-screen panes --------------------------------------------------- */
+function mPane(id,on){
+  var el=document.getElementById(id); if(!el) return;
+  el.classList.toggle("on", !!on);
+  mMenu(0);
+  if(id==="msearchp"&&on){
+    var q=document.getElementById("mq");
+    mFind(); q.focus(); q.select();
+  }
+  if(id==="mzonep"&&on) mZones();
+}
+
+var mhits=[];
+function mFind(){
+  var q=(document.getElementById("mq").value||"").trim().toLowerCase();
+  var box=document.getElementById("mfres");
+  if(q.length<2){
+    mhits=[];
+    box.innerHTML='<div class="mnote">Type two letters or more. '+
+      (PLACES.length?PLACES.length.toLocaleString():"4,189")+
+      ' villages and towns, from OpenStreetMap rather than from the sheet, so a '+
+      'name resolves to a coordinate and the coordinate resolves to a point on '+
+      'whichever plan is showing.</div>';
+    return;
+  }
+  var starts=[], has=[];
+  for(var i=0;i<PLACES.length && starts.length+has.length<80;i++){
+    var n=PLACES[i].n.toLowerCase();
+    if(n.indexOf(q)===0) starts.push(PLACES[i]);
+    else if(n.indexOf(q)>0) has.push(PLACES[i]);
+  }
+  mhits=starts.concat(has).slice(0,40);
+  box.innerHTML=mhits.map(function(pl,i){
+    return '<button class="mrow" onclick="mGo('+i+')">'+
+      '<span class="rn">'+pl.n+'</span><span class="rt">'+(pl.t||"")+'</span></button>';
+  }).join("") || '<div class="mnote">Nothing by that name.</div>';
+}
+function mGo(i){
+  var pl=mhits[i]; if(!pl) return;
+  mPane("msearchp",0);
+  document.getElementById("mq").blur();
+  var r=stage.getBoundingClientRect(), q=ll2px(pl.lo,pl.la), f=fitScale();
+  goal.s=Math.min(f*26, Math.max(f*10, goal.s));
+  goal.x=r.width/2-q[0]*goal.s;
+  goal.y=r.height*0.40-q[1]*goal.s;
+  clamp();
+  identifyAt(q[0],q[1],pl.n);
+}
+
+function mZones(){
+  var el=document.getElementById("mzb"); if(!el) return;
+  el.innerHTML=ZONES.map(function(z,i){
+    var on=isoZone&&isoZone.raw===z.raw;
+    return '<button class="mrow'+(on?" on":"")+'" onclick="mPickZone('+i+')">'+
+      '<i class="sw" style="background:rgb('+z.rgb.join(",")+')"></i>'+
+      '<span class="rn">'+z.name+
+        (z.prot && z.name.indexOf("Protected")!==0 ? '<em>protected</em>' : '')+'</span>'+
+      '<span class="rt">'+(z.sqkm>=1?Math.round(z.sqkm).toLocaleString():z.sqkm)+' km&sup2;</span>'+
+      '</button>';
+  }).join("");
+}
+function mPickZone(i){
+  mPane("mzonep",0);
+  pickZone(i);          /* isolates or clears, and flies */
+  mIso();
+}
+
+/* ---- rail ---------------------------------------------------------------- */
+/* A hairline slider is the wrong control for a thumb, so satellite fade is
+   three states on one button instead, with the mix printed on it. */
+var MSAT=[0,0.45,0.85], msat=0;
+function mSat(){
+  msat=(msat+1)%3; satMix=MSAT[msat];
+  var sl=document.getElementById("satMix");
+  if(sl){ sl.value=Math.round(satMix*100);
+          document.getElementById("satPct").textContent=sl.value+"%" }
+  var b=document.getElementById("mbS"), u=document.getElementById("mbSv");
+  b.classList.toggle("on", satMix>0);
+  u.style.display=satMix>0?"":"none";
+  u.textContent=Math.round(satMix*100)+"%";
+  mToast(satMix>0 ? "Plan fading into satellite imagery, "+Math.round(satMix*100)+"%"
+                  : "Back to the plan");
+  draw();
+}
+
+function mLocate(){
+  if(!navigator.geolocation){ mToast("This browser will not share a location"); return }
+  var b=document.getElementById("mbLoc");
+  b.classList.add("on"); mToast("Finding where you are…");
+  navigator.geolocation.getCurrentPosition(function(pos){
+    b.classList.remove("on");
+    var q=ll2px(pos.coords.longitude, pos.coords.latitude);
+    if(q[0]<0||q[1]<0||q[0]>=IW||q[1]>=IH){
+      mToast("You are outside the VMR planning area"); return;
+    }
+    var r=stage.getBoundingClientRect(), f=fitScale();
+    goal.s=Math.min(f*30, Math.max(f*12, goal.s));
+    goal.x=r.width/2-q[0]*goal.s;
+    goal.y=r.height*0.40-q[1]*goal.s;
+    clamp();
+    identifyAt(q[0],q[1],"Where you are standing");
+  }, function(){
+    b.classList.remove("on");
+    mToast("Location not available");
+  }, {enableHighAccuracy:true, timeout:10000, maximumAge:30000});
+}
+
+function mMenu(on){
+  var el=document.getElementById("mmenu"); if(!el) return;
+  el.classList.toggle("on", on===undefined ? !el.classList.contains("on") : !!on);
+}
+document.addEventListener("pointerdown",function(e){
+  var el=document.getElementById("mmenu");
+  if(el && el.classList.contains("on") && !e.target.closest(".mmenu,.mmore")) mMenu(0);
+}, true);
+
+var mtT=0;
+function mToast(t){
+  var el=document.getElementById("mtoast"); if(!el) return;
+  el.textContent=t; el.classList.add("on");
+  clearTimeout(mtT);
+  mtT=setTimeout(function(){ el.classList.remove("on") }, 2600);
+}
+
+/* ---- boot ---------------------------------------------------------------- */
+function mBoot(){
+  document.getElementById("mvD").classList.toggle("on", VER==="draft");
+  document.getElementById("mvF").classList.toggle("on", VER==="final");
+  mZones(); mEmpty(); mSnap(0);
+}
+addEventListener("resize", function(){
+  var m=matchMedia("(max-width:760px)").matches;
+  if(m!==MOBILE){ MOBILE=m; if(m) mBoot(); }
+  else if(m) mSnap(MS.det);
+});
+
 </script>
 </body>
 </html>
