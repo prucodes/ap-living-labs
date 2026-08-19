@@ -202,18 +202,30 @@
     color:var(--cy);font-weight:600;padding:8px 11px;border-bottom:1px solid var(--line);
     background:rgba(99,216,234,.07)}
   .law .lhd{padding:9px 11px 0;font-size:12.3px;color:var(--ink);line-height:1.5}
-  .law .lg{padding:9px 11px 10px}
-  .law .lg+.lg{border-top:1px dashed var(--line)}
-  .law .lg>b{display:block;font-size:8.8px;letter-spacing:.14em;text-transform:uppercase;
-    margin-bottom:7px;font-weight:600}
+  .law .lg{padding:10px 12px 4px}
+  .law .lg.ok{background:rgba(111,207,151,.05)}
+  .law .lg.no{background:rgba(239,107,107,.045)}
+  .law .lg+.lg{border-top:1px solid var(--line)}
+  .law .lg>b{display:flex;align-items:center;gap:7px;font-size:8.8px;letter-spacing:.14em;
+    text-transform:uppercase;font-weight:600}
+  .law .lg>b u{text-decoration:none;font-family:var(--mono);font-size:9px;letter-spacing:.02em;
+    padding:1.5px 6px;border-radius:999px}
   .law .lg.ok>b{color:var(--ok)}
+  .law .lg.ok>b u{background:rgba(111,207,151,.17)}
   .law .lg.no>b{color:var(--bad)}
-  .law .lg span{display:block;position:relative;padding-left:18px;font-size:12.1px;
-    line-height:1.5;color:var(--dim);margin-bottom:5px}
-  .law .lg span::before{position:absolute;left:1px;top:0;font-size:11px;line-height:1.6}
-  .law .lg.ok span::before{content:"\2713";color:var(--ok)}
-  .law .lg.no span::before{content:"\2715";color:var(--bad)}
-  .law .lg em{display:block;font-style:normal;font-size:10.8px;color:var(--faint);padding-left:18px}
+  .law .lg.no>b u{background:rgba(239,107,107,.16)}
+  /* One use to a row, ruled apart, with the marker in the gutter so a wrapped
+     line still lines up under the first word rather than under the tick. */
+  .law .lg ul{list-style:none;margin:6px 0 0;padding:0}
+  .law .lg li{position:relative;padding:8px 0 8px 25px;font-size:12.3px;line-height:1.55;
+    color:var(--dim)}
+  .law .lg li+li{border-top:1px solid rgba(140,175,215,.10)}
+  .law .lg li::before{position:absolute;left:0;top:8px;width:17px;height:17px;
+    border-radius:50%;text-align:center;font-size:9.5px;line-height:17px;font-weight:700}
+  .law .lg.ok li::before{content:"\2713";color:var(--ok);background:rgba(111,207,151,.15);
+    box-shadow:inset 0 0 0 1px rgba(111,207,151,.32)}
+  .law .lg.no li::before{content:"\2715";color:var(--bad);background:rgba(239,107,107,.14);
+    box-shadow:inset 0 0 0 1px rgba(239,107,107,.32)}
   .law .lc{padding:8px 11px 9px;border-top:1px solid var(--line);
     font-size:10.4px;color:var(--faint);line-height:1.45}
   .read .rb code{font-family:var(--mono);font-size:11px;color:var(--cy)}
@@ -224,6 +236,10 @@
     text-transform:uppercase;display:inline-block;width:64px}
   .both.diff{border-color:rgba(240,168,96,.45);background:rgba(240,168,96,.09)}
   .both em{font-style:normal;color:var(--warn);font-size:10.5px;letter-spacing:.04em;margin-top:3px}
+  .both em.same{color:var(--faint)}
+  .both i{display:block;font-style:normal;font-size:10.6px;line-height:1.5;
+    color:var(--faint);margin-top:5px;padding-top:5px;
+    border-top:1px dashed rgba(240,168,96,.3)}
   .caveat{margin-top:9px;padding-top:9px;border-top:1px dashed var(--line);
     font-size:11.2px;color:var(--warn);line-height:1.5}
 
@@ -382,7 +398,9 @@
     /* both-plan block reads bigger here than on a laptop */
     .both{font-size:13px;padding:10px 11px;gap:5px}
     .both b{width:72px;font-size:8.8px}
-    .law .lg span{font-size:12.8px;padding-left:20px;margin-bottom:6px}
+    .law .lg li{font-size:13.6px;line-height:1.5;padding:11px 0 11px 29px}
+    .law .lg li::before{width:19px;height:19px;line-height:19px;font-size:10.5px;top:10px}
+    .law .lg>b{font-size:9.4px}
     .law .lhd{font-size:13px}
     .law .lh{font-size:9px}
 
@@ -918,6 +936,7 @@ Promise.all([
      produced a grey that read as Transportation. */
   idx.imageSmoothingEnabled=false;
   idx.drawImage(zone,0,0,idc.width,idc.height);
+  measureContent();
   ready=1; resize(); reset(true);
   document.getElementById("boot").classList.add("off");
   requestAnimationFrame(tick);
@@ -946,17 +965,83 @@ addEventListener("resize",resize);
 addEventListener("orientationchange",function(){setTimeout(resize,260)});
 if(window.ResizeObserver) new ResizeObserver(resize).observe(stage);
 
+/* Where the region actually is on the paper. The sheet has wide blank margins
+   and a lot of sea, so its geometric centre is not its subject: opening there
+   put a phone down on an empty corner. The settlement list is already loaded,
+   already georeferenced and covers exactly the planning area, so its extent is
+   a better answer than any pixel heuristic. Held as fractions of the raster so
+   it survives the swap from the display image to the tile pyramid. */
+var CONTENT=null, touched=false;
+/* The settlement list turned out to span the entire sheet, margins included,
+   so it says nothing about where the drawing is. The zoned pixels do. Bin them
+   by row and column and keep the range holding the middle 98.8% of the mass:
+   that drops the printed legend strip down the right edge and the sparse type
+   in the margins, while keeping the land and its coastline. Held as fractions
+   of the raster so it survives the swap to the tile pyramid. */
+function measureContent(){
+  var w=idc.width, h=idc.height;
+  if(!(w>0&&h>0)) return;
+  var d;
+  try { d=idx.getImageData(0,0,w,h).data } catch(e){ return }
+  var GX=256, GY=128, cx=new Float64Array(GX), cy=new Float64Array(GY), tot=0;
+  for(var y=0;y<h;y+=3) for(var x=0;x<w;x+=3){
+    var i=(y*w+x)*4;
+    if(d[i+3]<8) continue;
+    if(d[i]>238&&d[i+1]>238&&d[i+2]>238) continue;      /* blank paper */
+    if(!nearest(d[i],d[i+1],d[i+2])) continue;          /* line work or type */
+    cx[(x/w*GX)|0]++; cy[(y/h*GY)|0]++; tot++;
+  }
+  if(tot<400){ CONTENT=null; return }
+  function span(a,n){
+    var acc=0, s=0, e=n-1, i;
+    for(i=0;i<n;i++){ acc+=a[i]; if(acc>=tot*0.006){ s=i; break } }
+    acc=0;
+    for(i=n-1;i>=0;i--){ acc+=a[i]; if(acc>=tot*0.006){ e=i; break } }
+    return [s/n, (e+1)/n];
+  }
+  var sx=span(cx,GX), sy=span(cy,GY);
+  if(!(sx[1]>sx[0]&&sy[1]>sy[0])){ CONTENT=null; return }
+  CONTENT={fx0:sx[0], fy0:sy[0], fx1:sx[1], fy1:sy[1]};
+  if(!touched && ready){ reset(true); draw() }
+}
+/* The strip of map a phone can actually see, once the sheet has taken the
+   bottom and the search pill the top. */
+function mFree(){
+  var r=stage.getBoundingClientRect(), top=118;
+  return {top:top, h:Math.max(150, r.height-mDet()[0]-top), w:r.width};
+}
+function contentBox(){
+  return CONTENT ? {x0:CONTENT.fx0*IW, y0:CONTENT.fy0*IH,
+                    x1:CONTENT.fx1*IW, y1:CONTENT.fy1*IH} : null;
+}
+/* Where the top-left of the raster has to go for the REGION to sit centred in
+   the strip the panels leave. reset and clamp both ask this, because when they
+   each worked it out for themselves clamp re-centred the whole sheet and threw
+   away the framing reset had just chosen. */
+function mFrameXY(sc){
+  var B=contentBox(); if(!B) return null;
+  var f=mFree();
+  return {x: f.w/2 - (B.x0+B.x1)/2*sc,
+          y: f.top + f.h/2 - (B.y0+B.y1)/2*sc};
+}
 function fitScale(){
   var r=stage.getBoundingClientRect();
   if(!(r.width>0&&r.height>0&&IW>0&&IH>0)) return 0;
+  var B=(MOBILE && !mLand()) ? contentBox() : null;
+  if(B){
+    /* The zoned region measures 2.9:1. Contained in a portrait strip that is a
+       136px ribbon adrift in half a screen of nothing; covered, it fills the
+       screen but lands on an arbitrary quarter of the region. Take the middle:
+       enough scale that the map reads as a map, centred (in reset) on the
+       region's own middle rather than the paper's, so the opening view is the
+       coast and the city instead of a blank corner. */
+    var f=mFree(), bw=(B.x1-B.x0)*1.04, bh=(B.y1-B.y0)*1.04;
+    var contain=Math.min(f.w/bw, f.h/bh);
+    var fill=f.h/bh;
+    return contain + (fill-contain)*0.86;
+  }
   var contain=Math.min(r.width/IW, r.height/IH);
-  /* On a tall screen the sheet's 2.5:1 shape leaves two thirds of the display
-     empty. Cover part of the way instead, so the map actually fills the frame
-     and the reader pans, which is the normal way to hold a map on a phone. */
   if(r.height > r.width*1.3){
-    /* A 2.6:1 sheet inside a 0.5:1 screen leaves most of a phone empty if it is
-       merely contained. Go most of the way to cover so the map fills the frame
-       and the reader pans, which is how a map is held on a phone. */
     var cover=Math.max(r.width/IW, r.height/IH);
     return contain + (cover-contain)*0.78;
   }
@@ -965,7 +1050,9 @@ function fitScale(){
 function reset(now){
   var r=stage.getBoundingClientRect(), s=fitScale();
   if(s<=0) return;                       /* no viewport yet; resize() retries */
-  goal={s:s, x:(r.width-IW*s)/2, y:(r.height-IH*s)/2};
+  var fr=(MOBILE && !mLand()) ? mFrameXY(s) : null;
+  if(fr){ goal={s:s, x:fr.x, y:fr.y} }
+  else  { goal={s:s, x:(r.width-IW*s)/2, y:(r.height-IH*s)/2} }
   if(now) view={s:goal.s,x:goal.x,y:goal.y};
   closeRead();
 }
@@ -974,8 +1061,12 @@ function clamp(){
   goal.s=Math.max(f*0.85,Math.min(f*60,goal.s));
   var w=IW*goal.s,h=IH*goal.s;
   var mx=Math.min(0,r.width-w), my=Math.min(0,r.height-h);
-  goal.x=w<r.width?(r.width-w)/2:Math.max(mx,Math.min(0,goal.x));
-  goal.y=h<r.height?(r.height-h)/2:Math.max(my,Math.min(0,goal.y));
+  /* When the sheet is smaller than the frame there is nothing to pan, so it
+     gets parked. Park it on the region, in the strip the panels leave free,
+     rather than on the middle of the paper in the middle of the stage. */
+  var fr=(MOBILE&&!mLand())?mFrameXY(goal.s):null;
+  goal.x = w<r.width ? (fr?fr.x:(r.width-w)/2) : Math.max(mx,Math.min(0,goal.x));
+  goal.y = h<r.height ? (fr?fr.y:(r.height-h)/2) : Math.max(my,Math.min(0,goal.y));
 }
 function zoomAt(cx,cy,f){
   var ix=(cx-goal.x)/goal.s, iy=(cy-goal.y)/goal.s;
@@ -1065,50 +1156,67 @@ function draw(){
   }
 
   if(showTanks && GEO){
-    /* Circles got lost among the plan's own round features, so these are pins:
-       a teardrop anchored on the point, dark-haloed so they read over any fill,
-       with a hollow centre that says "water, absent" rather than "here is a
-       thing". Size is fixed in screen pixels, not scaled with zoom, so a small
-       tank is as findable as a large one. */
-    var P=22*dpr, seen=0;
+    /* These sit on top of somebody else's drawing, so they are annotation, not
+       furniture. Map-pin teardrops were far too loud for that: they carried a
+       white outline and a black halo apiece and, at 33 screen pixels tall over
+       145 sites, the sheet disappeared behind its own footnotes.
+
+       A thin ring reads as what is being said. The mark is the rim of a tank
+       with nothing inside it, drawn on the coordinate rather than hanging above
+       it, and it stays hollow unless radar found hard structure on the bed, in
+       which case it fills. Hollow is absence, filled is something built there.
+
+       Two sizes, because the same mark cannot serve both jobs: pulled back you
+       want to see the pattern, so they become plain dots; zoomed in you want to
+       read one, so the rim and its centre appear. */
+    /* This sheet already spends every hue: residential yellow, industrial
+       magenta, hills brown, commercial blue, and red hatching on top of that.
+       A red or amber ring drawn over it is not an annotation, it is one more
+       map symbol, and it disappears into the drawing. Colour cannot carry the
+       distinction here because the drawing got there first.
+
+       What the sheet has none of is a solid dark neutral. Everything printed on
+       it is a light-to-mid fill or thin black line work, so a small near-black
+       chip is a hole in the page: the eye finds it instantly at any zoom and
+       over any zone. The chip does the seeing; the colour inside it, which now
+       sits against black rather than against the map, does the telling.
+
+       Inside: a hollow ring is a basin with nothing in it, a filled dot is one
+       radar reads as hard structure. Red is dry at its wettest pass, amber is
+       partly dry. */
+    var f0=fitScale(), near=(f0>0 && view.s > f0*3.2), seen=0;
+    var CR=(near?8:4.3)*dpr;
     for(var i=0;i<TANKS.length;i++){
       var t=TANKS[i], p=ll2px(t.lo,t.la);
       var sx=x+p[0]*view.s*dpr, sy=y+p[1]*view.s*dpr;
-      if(sx<-60||sy<-80||sx>w+60||sy>h+60) continue;
+      if(sx<-20||sy<-20||sx>w+20||sy>h+20) continue;
       seen++;
-      /* red = no water at its wettest pass, amber = partly dry.
-         A white ring marks the few that radar reads as hard structure. */
-      var col=t.dry?"255,74,88":"255,176,87";
+      var col=t.dry?"255,86,88":"255,176,54";
       var isBuilt=t.sar==="built";
       ctx.save();
       ctx.translate(sx,sy);
-      /* drop shadow on the ground */
-      ctx.beginPath(); ctx.ellipse(0,1.5*dpr,P*0.30,P*0.11,0,0,7);
-      ctx.fillStyle="rgba(0,0,0,.45)"; ctx.fill();
-      /* teardrop: circle head over a point that lands on the coordinate */
-      ctx.beginPath();
-      ctx.moveTo(0,0);
-      ctx.quadraticCurveTo(-P*0.52,-P*0.62,-P*0.36,-P*0.98);
-      ctx.arc(0,-P*1.12,P*0.44,Math.PI*0.86,Math.PI*0.14,false);
-      ctx.quadraticCurveTo(P*0.52,-P*0.62,0,0);
-      ctx.closePath();
-      ctx.lineWidth=3.4*dpr; ctx.strokeStyle="rgba(0,0,0,.78)"; ctx.stroke();
-      ctx.fillStyle="rgba("+col+",.96)"; ctx.fill();
-      ctx.lineWidth=1.3*dpr; ctx.strokeStyle="rgba(255,255,255,.92)"; ctx.stroke();
-      /* hollow centre */
-      ctx.beginPath(); ctx.arc(0,-P*1.12,P*0.17,0,7);
-      ctx.fillStyle="rgba(12,16,24,.92)"; ctx.fill();
-      if(isBuilt){
-        ctx.beginPath(); ctx.arc(0,-P*1.12,P*0.72,0,7);
-        ctx.lineWidth=2*dpr; ctx.setLineDash([3.5*dpr,3.5*dpr]);
-        ctx.strokeStyle="rgba(255,255,255,.95)"; ctx.stroke(); ctx.setLineDash([]);
+      /* white keyline, so the chip separates from dark hills as well as from
+         pale farmland */
+      ctx.beginPath(); ctx.arc(0,0,CR+(near?1.5:1.1)*dpr,0,7);
+      ctx.fillStyle="rgba(255,255,255,.92)"; ctx.fill();
+      ctx.beginPath(); ctx.arc(0,0,CR,0,7);
+      ctx.fillStyle="rgba(9,13,20,.97)"; ctx.fill();
+      if(!near){
+        ctx.beginPath(); ctx.arc(0,0,CR-1.7*dpr,0,7);
+        ctx.fillStyle="rgb("+col+")"; ctx.fill();
+      } else if(isBuilt){
+        ctx.beginPath(); ctx.arc(0,0,CR-3.2*dpr,0,7);
+        ctx.fillStyle="rgb("+col+")"; ctx.fill();
+      } else {
+        ctx.beginPath(); ctx.arc(0,0,CR-3.4*dpr,0,7);
+        ctx.lineWidth=2.1*dpr; ctx.strokeStyle="rgb("+col+")"; ctx.stroke();
       }
       ctx.restore();
     }
     if(seen && !MOBILE){
       ctx.save();
       ctx.font=(11*dpr)+"px ui-monospace,Menlo,monospace";
-      ctx.fillStyle="rgba(255,74,88,.95)";
+      ctx.fillStyle="rgba(236,86,88,.95)";
       ctx.fillText(seen+" of "+TANKS.length+" checked water bodies in view", 14*dpr, h-16*dpr);
       ctx.restore();
     }
@@ -1187,9 +1295,23 @@ function zoneAtLL(o, lon, lat){
   var g=o.geo, th=g.deg*Math.PI/180, c=Math.cos(th), sn=Math.sin(th);
   var e=((lon-g.lon0)*g.kx-g.tE)/g.s, n=((lat-g.lat0)*g.ky-g.tN)/g.s;
   var x=Math.round((e*c+n*sn-g.cx)*ID_SCALE), y=Math.round((e*sn-n*c-g.cy)*ID_SCALE);
-  if(x<0||y<0||x>=o.w||y>=o.h) return "off that sheet";
+  if(x<0||y<0||x>=o.w||y>=o.h) return {name:"off that sheet", hit:null};
   var pr=probeAt(o.ctx, o.lookup, o.w, o.h, x, y);
-  return pr.hit ? pr.hit.name : "no zone colour";
+  return {name: pr.hit ? pr.hit.name : "no zone colour", hit: pr.hit};
+}
+
+/* The two sheets name the same land differently: the draft's "Mixed Use 1" is
+   the final's "Mixed Use", its "Forest" is "Protected Forest", its "Water
+   bodies" is "Protected Blue". Comparing the printed names therefore reported
+   a disagreement between two plans that agree, which is the one claim this
+   page must never get wrong. RULEKEY already maps every legend class from both
+   versions onto the regulatory class in G.O. 216, so compare that instead: the
+   question is whether the two plans put this land under different rules, not
+   whether they spell it the same way. */
+function normName(v){ return (v||"").toLowerCase().replace(/\s+/g," ").trim() }
+function ruleClassOf(h){
+  if(!h) return null;
+  return RULEKEY[h.raw] || RULEKEY[h.name] || normName(h.name);
 }
 
 var isoCv=document.createElement("canvas"), isoCtx=isoCv.getContext("2d");
@@ -1346,6 +1468,7 @@ function setVersion(v){
     idc.width=Math.round(IW*ID_SCALE); idc.height=Math.round(IH*ID_SCALE);
     idx.imageSmoothingEnabled=false;
     idx.drawImage(zone,0,0,idc.width,idc.height);
+    measureContent();
     buildSatAffine();
     if(here){                       /* put the same ground back under the centre */
       var q=ll2px(here[0],here[1]);
@@ -1446,15 +1569,19 @@ function identify(cx,cy,title){
                  Math.floor(idp[0]*ID_SCALE), Math.floor(idp[1]*ID_SCALE));
   var hit=pr.hit;
   var ll=GEO?px2ll(ix,iy):null;
-  var oz=(ll&&OTHER.ctx)?zoneAtLL(OTHER,ll[0],ll[1]):null;
+  var oq=(ll&&OTHER.ctx)?zoneAtLL(OTHER,ll[0],ll[1]):null;
+  var oz=oq?oq.name:null;
   var mine=hit?hit.name:"no zone colour";
   var rule=null;
   if(hit&&RULES){ var rk=RULEKEY[hit.raw]||RULEKEY[hit.name]; rule=rk?RULES.zones[rk]:null }
-  /* Only call it a disagreement when BOTH sheets actually read a class there.
-     "no zone colour" means line work or type under the probe, not a change. */
+  /* Only compare when BOTH sheets actually read a class there. "no zone colour"
+     means line work or type under the probe, not a change. */
+  var both = !!(oq && oq.hit && hit && !unread(oz) && !unread(mine));
+  var ka = both?ruleClassOf(hit):null, kb = both?ruleClassOf(oq.hit):null;
   LAST={ix:ix, iy:iy, hit:hit, title:title||null, ll:ll, other:oz, mine:mine,
         rule:rule, ring:pr.ring,
-        differs: !!(oz && !unread(oz) && !unread(mine) && oz!==mine)};
+        differs: !!(both && ka!==kb),
+        renamed: !!(both && ka===kb && normName(oz)!==normName(mine))};
   if(MOBILE) mAnswer(LAST); else renderRead(LAST);
   location.replace("#"+ix+","+iy+","+goal.s.toFixed(4));
 }
@@ -1464,22 +1591,36 @@ function bothHTML(res){
   return '<div class="both'+(res.differs?' diff':'')+'">'+
     '<span><b>'+VERSIONS[VER].label+'</b> '+res.mine+'</span>'+
     '<span><b>'+OTHER.label+'</b> '+res.other+'</span>'+
-    (res.differs?'<em>the two plans disagree here</em>':'')+'</div>';
+    (res.differs ? '<em>the two plans put this land under different rules</em>'+
+       '<i>Each sheet is placed on the ground to about 200 m, and most zone '+
+       'patches are smaller than that. At a single point this can be '+
+       'misalignment rather than a decision.</i>'
+     : res.renamed ? '<em class="same">different legend names, same class under G.O. 216</em>'
+     : '')+'</div>';
 }
 
 /* The zoning law at the point. Singapore's URA SPACE and New York's ZoLa both
    do this and no Andhra authority does, so it is the one thing on the page
    worth putting above the fold. */
+/* Every entry, not the first four. These lists top out at eight items, the
+   panel scrolls either way, and truncating the one thing a reader came for so
+   it could say "and 4 more in the schedule" was a tease rather than a saving.
+
+   The entries stay whole. Several of them read as comma lists of uses and
+   would split into neater bullets, but others carry qualifying clauses in the
+   same commas ("Farmhouse up to 5% plinth, G+1, on a plot of at least 0.5
+   acre"). Splitting those by punctuation would quietly restate a statutory
+   instrument, so the typography does the work instead. */
 function lawHTML(R){
   if(!R) return "";
-  var P=R.permit||[], Q=R.prohibit||[], li=function(a,n){
-    return a.slice(0,n).map(function(x){return '<span>'+x+'</span>'}).join("")+
-           (a.length>n?'<em>and '+(a.length-n)+' more in the schedule</em>':'') };
+  var P=R.permit||[], Q=R.prohibit||[];
+  var ul=function(a){ return '<ul>'+a.map(function(x){
+    return '<li>'+x+'</li>' }).join("")+'</ul>' };
   return '<div class="law">'+
     '<div class="lh">What the zoning law allows here</div>'+
     (R.headline?'<div class="lhd">'+R.headline+'</div>':'')+
-    '<div class="lg ok"><b>Permitted</b>'+li(P,4)+'</div>'+
-    '<div class="lg no"><b>Not permitted</b>'+li(Q,5)+'</div>'+
+    (P.length?'<div class="lg ok"><b>Permitted<u>'+P.length+'</u></b>'+ul(P)+'</div>':'')+
+    (Q.length?'<div class="lg no"><b>Not permitted<u>'+Q.length+'</u></b>'+ul(Q)+'</div>':'')+
     '<div class="lc">AP Common Zoning Regulations 2025, G.O. Ms. 216 dated '+
     '22.10.2025. Summarised; the G.O. carries the full schedule.</div></div>';
 }
@@ -1506,29 +1647,43 @@ function renderRead(res){
     + bothHTML(res) + lawHTML(res.rule) + coordHTML(res.ll);
   document.getElementById("read").classList.add("on");
   document.body.classList.add("reading");
-  /* The index sits top-left and the readout bottom-left, which only keeps them
-     apart while the readout is short. The zoning-law card made it tall enough
-     to reach, so measure the two instead of assuming: fold the index away only
-     when they would actually collide. */
+  /* The index sits top-left and the readout bottom-left, and a fixed cap kept
+     them apart only while the readout stayed short. The zoning-law card made it
+     tall enough to reach, so give the index exactly the room the readout leaves
+     and let its own list scroll inside that. Below the point where it could
+     show anything useful, fold it instead. */
   var zp=document.getElementById("zpanel");
-  var need=document.getElementById("read").getBoundingClientRect().height + 210;
-  zp.classList.toggle("min", need > stage.getBoundingClientRect().height);
+  var avail=stage.getBoundingClientRect().height
+            - document.getElementById("read").getBoundingClientRect().height - 36;
+  /* The panel's header, composition bar and footnote take about 190px before
+     a single zone row is drawn, so squeezing it below roughly 340 left a "Zone
+     index" showing no zones. Under that, fold it instead of crushing it. */
+  if(avail < 340){ zp.classList.add("min"); zp.style.maxHeight="" }
+  else { zp.classList.remove("min"); zp.style.maxHeight=avail+"px" }
 }
 
 function closeRead(){
   document.getElementById("read").classList.remove("on");
   document.body.classList.remove("reading");
+  document.getElementById("zpanel").style.maxHeight="";   /* give the room back */
   LAST=null;
   if(MOBILE && document.getElementById("msbody")){ mEmpty(); mSnap(0) }
 }
+/* identify() writes the point into the hash, but restoring it only moved the
+   view, so a shared link arrived on the right patch of paper with an empty
+   panel. Read the point back as well. */
 function fromHash(){
-  var p=location.hash.slice(1).split(",");
-  if(p.length<3)return;
+  var q=location.hash.slice(1).split(",");
+  if(q.length<3)return;
+  var ix=parseFloat(q[0]), iy=parseFloat(q[1]), sc=parseFloat(q[2]);
+  if(!isFinite(ix)||!isFinite(iy))return;
   var r=stage.getBoundingClientRect();
-  goal.s=parseFloat(p[2])||goal.s;
-  goal.x=r.width/2-parseFloat(p[0])*goal.s;
-  goal.y=r.height/2-parseFloat(p[1])*goal.s;
+  goal.s=isFinite(sc)&&sc>0?sc:goal.s;
+  goal.x=r.width/2-ix*goal.s;
+  goal.y=r.height*(MOBILE?0.40:0.5)-iy*goal.s;
   clamp();
+  view.s=goal.s; view.x=goal.x; view.y=goal.y;
+  identifyAt(ix,iy); draw();
 }
 
 function renderComposition(){
@@ -1551,7 +1706,15 @@ function renderComposition(){
 
 function toggleZ(){ document.getElementById("zpanel").classList.toggle("min") }
 
+/* The draft legend carries Mixed Use 1, 2 and 3 as separate colours, and the
+   grouping collapses all three to "Mixed use". In a list that reads as the
+   same zone printed three times with three different swatches and three
+   different areas. Where a grouped name collides, fall back to the legend's
+   own name for that entry. */
+var ZDUP={};
+function zoneLabel(z){ return (ZDUP[z.name]>1 && z.raw) ? z.raw : z.name }
 function renderZones(){
+  ZDUP={}; ZONES.forEach(function(z){ ZDUP[z.name]=(ZDUP[z.name]||0)+1 });
   var q=(document.getElementById("zq").value||"").toLowerCase();
   var rows=ZONES.map(function(z,i){return {z:z,i:i}})
     .filter(function(r){return !q || r.z.name.toLowerCase().indexOf(q)>=0
@@ -1560,7 +1723,7 @@ function renderZones(){
     var z=r.z, on=isoZone&&isoZone.raw===z.raw;
     return '<button class="zrow'+(on?" on":"")+'" onclick="pickZone('+r.i+')">'+
       '<i style="background:rgb('+z.rgb.join(",")+')"></i>'+
-      '<span class="zn">'+z.name+'</span>'+
+      '<span class="zn">'+zoneLabel(z)+'</span>'+
       (z.prot?'<span class="zp">PROTECTED</span>':'')+
       '<span class="za">'+(z.sqkm>=1?Math.round(z.sqkm).toLocaleString():z.sqkm)+'</span></button>';
   }).join("") || '<div style="padding:10px;color:var(--faint);font-size:12px">nothing matches</div>';
@@ -1581,7 +1744,7 @@ function renderZones(){
     var conc = (isoBox&&isoBox.hot) ? (isoBox.hot.share*100).toFixed(0)+'%' : null;
     var ll  = HB ? px2ll((HB.x0+HB.x1)/2,(HB.y0+HB.y1)/2) : null;
     dt.className="zdet on";
-    dt.innerHTML='<div class="dn">'+z.name+'</div><div class="dg">'+z.grp+'</div>'+
+    dt.innerHTML='<div class="dn">'+zoneLabel(z)+'</div><div class="dg">'+z.grp+'</div>'+
       '<dl><dt>This class</dt><dd>'+(z.sqkm>=1?Math.round(z.sqkm).toLocaleString():z.sqkm)+' km&sup2;</dd>'+
       '<dt>Group total</dt><dd>'+Math.round(z.grpkm).toLocaleString()+' km&sup2;</dd>'+
       '<dt>Share of VMR</dt><dd>'+share.toFixed(1)+'%</dd>'+
@@ -1718,6 +1881,7 @@ var ptrs={}, pinch0=0, s0=0, mx0=0, my0=0, drag=false, seam=false, lx=0, ly=0, m
    finger's own delta makes spreading them shove the map sideways. */
 stage.addEventListener("pointerdown",function(e){
   if(onUI(e))return;
+  touched=true;
   ptrs[e.pointerId]=[e.clientX,e.clientY];
   var k=Object.keys(ptrs);
   if(k.length===2){
@@ -1920,7 +2084,7 @@ function mIso(){
   b.innerHTML=
     '<div class="meyebrow">Showing this class alone</div>'+
     '<div class="mzone"><i style="background:rgb('+z.rgb.join(",")+')"></i>'+
-      '<span>'+z.name+'</span></div>'+
+      '<span>'+zoneLabel(z)+'</span></div>'+
     '<div class="msub">'+z.grp+(z.prot?' &middot; a Protected Use Zone. Development is barred here.':'')+'</div>'+
     '<dl class="mzdl">'+
       '<dt>This class</dt><dd>'+(z.sqkm>=1?Math.round(z.sqkm).toLocaleString():z.sqkm)+' km&sup2;</dd>'+
@@ -1988,11 +2152,12 @@ function mGo(i){
 
 function mZones(){
   var el=document.getElementById("mzb"); if(!el) return;
+  ZDUP={}; ZONES.forEach(function(z){ ZDUP[z.name]=(ZDUP[z.name]||0)+1 });
   el.innerHTML=ZONES.map(function(z,i){
     var on=isoZone&&isoZone.raw===z.raw;
     return '<button class="mrow'+(on?" on":"")+'" onclick="mPickZone('+i+')">'+
       '<i class="sw" style="background:rgb('+z.rgb.join(",")+')"></i>'+
-      '<span class="rn">'+z.name+
+      '<span class="rn">'+zoneLabel(z)+
         (z.prot && z.name.indexOf("Protected")!==0 ? '<em>protected</em>' : '')+'</span>'+
       '<span class="rt">'+(z.sqkm>=1?Math.round(z.sqkm).toLocaleString():z.sqkm)+' km&sup2;</span>'+
       '</button>';
