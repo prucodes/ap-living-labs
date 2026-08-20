@@ -1056,17 +1056,44 @@ function reset(now){
   if(now) view={s:goal.s,x:goal.x,y:goal.y};
   closeRead();
 }
+/* Two rules, intersected. The sheet may not be dragged off its own frame (the
+   old rule), and the drawn region may not be dragged out of sight either (the
+   new one). Without the second, the blank paper and the sea around the drawing
+   are pannable space: you could end up looking at an empty white corner with no
+   indication that the map was somewhere else entirely, which is exactly what a
+   mis-scaled fly-to did. At least half a screen of region now always remains,
+   so there is always something to steer by. */
 function clamp(){
   var r=stage.getBoundingClientRect(), f=fitScale();
   goal.s=Math.max(f*0.85,Math.min(f*60,goal.s));
-  var w=IW*goal.s,h=IH*goal.s;
-  var mx=Math.min(0,r.width-w), my=Math.min(0,r.height-h);
-  /* When the sheet is smaller than the frame there is nothing to pan, so it
-     gets parked. Park it on the region, in the strip the panels leave free,
-     rather than on the middle of the paper in the middle of the stage. */
-  var fr=(MOBILE&&!mLand())?mFrameXY(goal.s):null;
-  goal.x = w<r.width ? (fr?fr.x:(r.width-w)/2) : Math.max(mx,Math.min(0,goal.x));
-  goal.y = h<r.height ? (fr?fr.y:(r.height-h)/2) : Math.max(my,Math.min(0,goal.y));
+  var w=IW*goal.s, h=IH*goal.s;
+  var free=(MOBILE&&!mLand())?mFree():null;
+  var vt=free?free.top:0, vh=free?free.h:r.height, vw=r.width;
+  var fr=free?mFrameXY(goal.s):null;
+  var B=contentBox();
+
+  function pin(v, sheetLo, sheetHi, boxLo, boxHi){
+    var lo=Math.max(sheetLo, boxLo), hi=Math.min(sheetHi, boxHi);
+    return lo>hi ? (lo+hi)/2 : Math.max(lo, Math.min(hi, v));
+  }
+
+  if(w<=r.width){ goal.x = fr?fr.x:(r.width-w)/2 }
+  else if(B){
+    var cw=(B.x1-B.x0)*goal.s, mX=Math.min(vw*0.5, cw*0.5);
+    goal.x = pin(goal.x, r.width-w, 0, mX-B.x1*goal.s, vw-mX-B.x0*goal.s);
+  } else { goal.x = Math.max(Math.min(0,r.width-w), Math.min(0, goal.x)) }
+
+  /* Downward, the sheet only has to reach the bottom of the free strip rather
+     than the bottom of the stage: everything below that is behind the bottom
+     panel anyway. Without this a zone sitting on the sheet's own bottom edge
+     could never be lifted clear of the panel covering it. Upward the old bound
+     stands, because there is nothing over the top of the map to hide a gap. */
+  if(h<=r.height){ goal.y = fr?fr.y:(r.height-h)/2 }
+  else if(B){
+    var ch=(B.y1-B.y0)*goal.s, mY=Math.min(vh*0.5, ch*0.5);
+    goal.y = pin(goal.y, free ? vt+vh-h : r.height-h, 0,
+                 vt+mY-B.y1*goal.s, vt+vh-mY-B.y0*goal.s);
+  } else { goal.y = Math.max(Math.min(0,r.height-h), Math.min(0, goal.y)) }
 }
 function zoomAt(cx,cy,f){
   var ix=(cx-goal.x)/goal.s, iy=(cy-goal.y)/goal.s;
@@ -1106,7 +1133,12 @@ function draw(){
   /* Isolating: drain the colour out of the rest of the sheet rather than just
      dropping a black veil over it. The context stays legible, but only the
      selected zone still carries any hue, so it reads instantly. */
-  if(isoZone) ctx.filter="grayscale(1) brightness(.42) contrast(.78)";
+  /* Drained, not extinguished. At .42 the rest of the sheet went so dark that
+     the selected class floated in a void with no coastline, no roads and no
+     town names to place it against, which reads as the map having gone away.
+     Enough light to navigate by, still colourless so only the selection has
+     any hue. */
+  if(isoZone) ctx.filter="grayscale(1) brightness(.72) contrast(.82)";
   var A=ctx.globalAlpha;
   function planLayer(){
     if(TILES) drawTiles(x,y,A); else ctx.drawImage(plan,x,y,dw,dh);
@@ -1338,9 +1370,16 @@ function buildIso(){
   }
   isoCtx.putImageData(out,0,0);
   if(n===0) return;
-  var k=1/ID_SCALE;
-  isoBox={x0:x0*k,y0:y0*k,x1:(x1+1)*k,y1:(y1+1)*k,
-          cx:(sx/n)*k, cy:(sy/n)*k, px:n};
+  /* The mask is measured on the identify raster, which is ID_SCALE of the
+     DISPLAY image. Scaling back by 1/ID_SCALE therefore lands in display pixels
+     (10080 wide) while the view has long since moved to the tile pyramid (43200
+     wide). Every box was consequently 4.3x too small and pinned into the
+     top-left tenth of the sheet, which is where "fly to this zone" sent you.
+     Scale by the ratio the rasters actually stand in instead, so this holds
+     whichever image is loaded. */
+  var kx=IW/idc.width, ky=IH/idc.height;
+  isoBox={x0:x0*kx,y0:y0*ky,x1:(x1+1)*kx,y1:(y1+1)*ky,
+          cx:(sx/n)*kx, cy:(sy/n)*ky, px:n};
 
   /* Every class is scattered the length of the region, so its bounding box is
      always the whole sheet and zooming to it shows nothing. What a reader
@@ -1364,8 +1403,8 @@ function buildIso(){
     if(t2>bv){bv=t2;bi=gy2*GX+gx2}
   }
   var pgx=bi%GX, pgy=(bi/GX)|0;
-  isoBox.hot={x0:(pgx-1)*cw*k, y0:(pgy-1)*chh*k,
-              x1:(pgx+2)*cw*k, y1:(pgy+2)*chh*k,
+  isoBox.hot={x0:(pgx-1)*cw*kx, y0:(pgy-1)*chh*ky,
+              x1:(pgx+2)*cw*kx, y1:(pgy+2)*chh*ky,
               share: bv/n};
 }
 
@@ -1376,11 +1415,13 @@ function zoomToZone(){
   var r=stage.getBoundingClientRect(), pad=1.25;
   var B=isoBox.hot||isoBox;
   var bw=Math.max(B.x1-B.x0,120), bh=Math.max(B.y1-B.y0,120);
-  var s=Math.min(r.width/(bw*pad), r.height/(bh*pad));
+  var free=(MOBILE&&!mLand())?mFree():null;
+  var vw=r.width, vt=free?free.top:0, vh=free?free.h:r.height;
+  var s=Math.min(vw/(bw*pad), vh/(bh*pad));
   var f=fitScale(); if(!(f>0)) return;
   goal.s=Math.max(f*0.95, Math.min(f*40, s));
-  goal.x=r.width/2  - ((B.x0+B.x1)/2)*goal.s;
-  goal.y=r.height/2 - ((B.y0+B.y1)/2)*goal.s;
+  goal.x=vw/2      - ((B.x0+B.x1)/2)*goal.s;
+  goal.y=vt+vh/2   - ((B.y0+B.y1)/2)*goal.s;   /* above the sheet, not under it */
   clamp();
 }
 function pickZone(i){
@@ -2085,7 +2126,9 @@ function mIso(){
     '<div class="meyebrow">Showing this class alone</div>'+
     '<div class="mzone"><i style="background:rgb('+z.rgb.join(",")+')"></i>'+
       '<span>'+zoneLabel(z)+'</span></div>'+
-    '<div class="msub">'+z.grp+(z.prot?' &middot; a Protected Use Zone. Development is barred here.':'')+'</div>'+
+    '<div class="msub">'+
+      (z.grp && z.grp!==zoneLabel(z) ? z.grp : 'Legend class &ldquo;'+z.raw+'&rdquo;')+
+      (z.prot?' &middot; a Protected Use Zone. Development is barred here.':'')+'</div>'+
     '<dl class="mzdl">'+
       '<dt>This class</dt><dd>'+(z.sqkm>=1?Math.round(z.sqkm).toLocaleString():z.sqkm)+' km&sup2;</dd>'+
       '<dt>Group total</dt><dd>'+Math.round(z.grpkm).toLocaleString()+' km&sup2;</dd>'+
