@@ -278,6 +278,44 @@
     color:var(--faint);background:rgba(6,10,17,.92);
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
+  /* ---------- full-screen map ----------
+     Everything the page puts over the sheet is there to answer a question. When
+     the question is "let me just look at the plan", all of it is in the way. One
+     class strips the lot on both layouts, leaving the map, a way out, and a
+     single line naming whatever was last read. It also asks the browser for real
+     fullscreen where that exists, which is most Android and desktop; iPhone
+     Safari does not offer it, so the mode has to stand on its own without it. */
+  body.imm header, body.imm footer, body.imm .zpanel, body.imm .read,
+  body.imm .hint, body.imm .mtop, body.imm .mver, body.imm .mrail,
+  body.imm .mleg, body.imm .msheet, body.imm .mtoast, body.imm .mmenu{display:none!important}
+  body.imm .stage{box-shadow:none}
+
+  .immx{display:none;position:absolute;z-index:20;
+    top:calc(env(safe-area-inset-top,0px) + 12px);right:12px;
+    width:44px;height:44px;border-radius:14px;place-items:center;color:var(--dim);
+    background:rgba(10,16,26,.88);backdrop-filter:blur(18px) saturate(1.4);
+    border:1px solid var(--line2);box-shadow:0 12px 32px -14px rgba(0,0,0,.95)}
+  body.imm .immx{display:grid}
+  /* the zoom pair lives in the same corner, so it moves down under the exit */
+  body.imm .zoombox{top:calc(env(safe-area-inset-top,0px) + 68px)}
+  .immx:hover{color:var(--ink);border-color:var(--cy)}
+
+  /* The one thing worth keeping visible: what you just tapped. Tapping it
+     leaves the mode and opens the full reading. */
+  .immread{display:none;position:absolute;z-index:20;left:12px;
+    bottom:calc(env(safe-area-inset-bottom,0px) + 14px);
+    max-width:calc(100% - 24px);align-items:center;gap:10px;
+    padding:10px 14px;border-radius:14px;text-align:left;
+    background:rgba(10,16,26,.9);backdrop-filter:blur(18px) saturate(1.4);
+    border:1px solid var(--line2);box-shadow:0 12px 32px -14px rgba(0,0,0,.95)}
+  body.imm .immread.on{display:flex}
+  .immread i{width:16px;height:16px;border-radius:5px;flex:none;
+    border:1px solid rgba(255,255,255,.3)}
+  .immread span{font-size:14px;color:var(--ink);overflow:hidden;
+    text-overflow:ellipsis;white-space:nowrap}
+  .immread em{font-style:normal;font-family:var(--mono);font-size:8.6px;
+    letter-spacing:.13em;text-transform:uppercase;color:var(--cy);flex:none}
+
   .boot{position:absolute;inset:0;z-index:9;display:grid;place-items:center;
     background:var(--bg);transition:opacity .4s}
   .boot.off{opacity:0;pointer-events:none}
@@ -571,12 +609,25 @@
       oninput="satMix=this.value/100;document.getElementById('satPct').textContent=this.value+'%';draw()">
     <b id="satPct">0%</b>
   </label>
+  <button class="ico" onclick="toggleImm(true)" title="Full screen map">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M3 9V3h6M21 9V3h-6M3 15v6h6M21 15v6h-6"
+        stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   <button class="ico" onclick="reset()" title="Reset view">&#10226;</button>
   <button class="ico" onclick="toggleDrawer()" title="What this plan can and cannot answer">?</button>
 </header>
 
 <div class="stage" id="stage">
   <canvas id="cv"></canvas>
+
+  <button class="immx" id="immx" onclick="toggleImm(false)" aria-label="Leave full screen">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M9 3v6H3M15 3v6h6M9 21v-6H3M15 21v-6h6"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <button class="immread" id="immread" onclick="immOpen()">
+    <i></i><span></span><em>detail</em>
+  </button>
 
   <div class="zoombox">
     <button onclick="zoomBy(1.5)">+</button>
@@ -761,6 +812,10 @@
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M12 2.8s6.1 6.6 6.1 10.6a6.1 6.1 0 1 1-12.2 0C5.9 9.4 12 2.8 12 2.8Z"
             stroke="currentColor" stroke-width="1.85" stroke-linejoin="round"/></svg></button>
+      <button id="mbX" onclick="toggleImm(true)" aria-label="Full screen map">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M3 9V3h6M21 9V3h-6M3 15v6h6M21 15v6h-6"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <button id="mbS" onclick="mSat()" aria-label="Fade to satellite">
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <circle cx="12" cy="12" r="8.4" stroke="currentColor" stroke-width="1.85"/>
@@ -1074,8 +1129,12 @@ function measureContent(){
 }
 /* The strip of map a phone can actually see, once the sheet has taken the
    bottom and the search pill the top. */
+function immOn(){ return document.body.classList.contains("imm") }
 function mFree(){
-  var r=stage.getBoundingClientRect(), top=118;
+  var r=stage.getBoundingClientRect();
+  /* nothing is over the map in full screen, so the whole stage is free */
+  if(immOn()) return {top:14, h:Math.max(150, r.height-28), w:r.width};
+  var top=118;
   return {top:top, h:Math.max(150, r.height-mDet()[0]-top), w:r.width};
 }
 function contentBox(){
@@ -1709,7 +1768,9 @@ function identify(cx,cy,title){
         rule:rule, ring:pr.ring,
         differs: !!(both && ka!==kb),
         renamed: !!(both && ka===kb && normName(oz)!==normName(mine))};
-  if(MOBILE) mAnswer(LAST); else renderRead(LAST);
+  if(immOn()) immAnswer(LAST);
+  else if(MOBILE) mAnswer(LAST);
+  else renderRead(LAST);
   location.replace("#"+ix+","+iy+","+goal.s.toFixed(4));
 }
 
@@ -1790,6 +1851,8 @@ function renderRead(res){
 }
 
 function closeRead(){
+  var ir=document.getElementById("immread");
+  if(ir) ir.classList.remove("on");
   document.getElementById("read").classList.remove("on");
   document.body.classList.remove("reading");
   document.getElementById("zpanel").style.maxHeight="";   /* give the room back */
@@ -1978,12 +2041,78 @@ function renderChanged(){
 
 function toggleDrawer(){document.getElementById("drawer").classList.toggle("on")}
 
+/* ---- full-screen map ----------------------------------------------------- */
+/* Hiding the panels changes how much of the stage the map may use, so the view
+   has to be re-framed around the same ground rather than left where it was:
+   otherwise entering the mode appears to shift the map sideways. Zoom travels
+   as a multiple of fit, position as lon/lat, the same two invariants the
+   version switch uses. */
+function reframe(change){
+  var r=stage.getBoundingClientRect();
+  var here = GEO ? px2ll((r.width/2-view.x)/view.s, (r.height/2-view.y)/view.s) : null;
+  var f0=fitScale(), mul = f0>0 ? view.s/f0 : 1;
+  change();
+  var f1=fitScale();
+  if(here && f1>0){
+    goal.s=f1*mul;
+    var q=ll2px(here[0],here[1]);
+    var fr=(MOBILE&&!mLand())?mFree():null;
+    goal.x=r.width/2-q[0]*goal.s;
+    goal.y=(fr? fr.top+fr.h/2 : r.height/2)-q[1]*goal.s;
+    clamp(); view.s=goal.s; view.x=goal.x; view.y=goal.y;
+  }
+  draw();
+}
+
+function toggleImm(on){
+  var want = (on===undefined) ? !immOn() : !!on;
+  if(want===immOn()) return;
+  reframe(function(){ document.body.classList.toggle("imm", want) });
+  /* Readings taken in full screen went to the chip, so coming back out left the
+     panel showing whatever had been read BEFORE entering: a card that disagreed
+     with the marker on the map. Whichever way the mode goes, the surface that is
+     now visible gets the current reading. */
+  if(LAST){
+    if(want) immAnswer(LAST);
+    else if(MOBILE) mAnswer(LAST);
+    else renderRead(LAST);
+  }
+  if(!want && MOBILE && !LAST) mSnap(MS.det);
+  /* Real fullscreen on top where the platform has it. Best effort: iPhone
+     Safari has no Element.requestFullscreen, and the mode works without it. */
+  try{
+    if(want && !document.fullscreenElement && document.documentElement.requestFullscreen)
+      document.documentElement.requestFullscreen().catch(function(){});
+    if(!want && document.fullscreenElement && document.exitFullscreen)
+      document.exitFullscreen().catch(function(){});
+  }catch(e){}
+}
+/* Leaving fullscreen by a system gesture or Esc must leave the mode with it,
+   or the chrome stays hidden with no obvious way back. */
+addEventListener("fullscreenchange",function(){
+  if(!document.fullscreenElement && immOn()) toggleImm(false);
+});
+
+function immAnswer(res){
+  var el=document.getElementById("immread"); if(!el) return;
+  var hit=res.hit;
+  el.querySelector("i").style.background =
+    hit ? "rgb("+hit.rgb.join(",")+")" : "#2a3446";
+  el.querySelector("span").textContent =
+    (res.title ? res.title+" \u00b7 " : "") + (hit ? hit.name : "No zone colour");
+  el.classList.add("on");
+}
+function immOpen(){
+  toggleImm(false);           /* which re-renders the reading on the way out */
+  if(MOBILE && LAST) mSnap(1);
+}
+
 /* ---- input -------------------------------------------------------------- */
 /* The zone index, the readout and the drawer are children of .stage, so every
    click on them also reached the map handlers: selecting a zone opened a
    "no zone colour here" readout instead. Anything inside a panel is UI. */
 ["pointerdown","pointermove","pointerup","click","wheel","dblclick"].forEach(function(t){
-  ["zpanel","read","drawer","chg","mshell"].forEach(function(id){
+  ["zpanel","read","drawer","chg","mshell","immx","immread"].forEach(function(id){
     var el=document.getElementById(id);
     /* Bubble phase, not capture. On capture the event is stopped before the
        button's own onclick ever runs, so the panel became inert. On bubble the
@@ -1993,7 +2122,7 @@ function toggleDrawer(){document.getElementById("drawer").classList.toggle("on")
 });
 
 function onUI(e){ return !!(e.target && e.target.closest &&
-  e.target.closest(".zpanel,.read,.drawer,.chg,.zoombox,.hint,.mshell,.mpane")) }
+  e.target.closest(".zpanel,.read,.drawer,.chg,.zoombox,.hint,.mshell,.mpane,.immx,.immread")) }
 
 stage.addEventListener("wheel",function(e){ if(onUI(e))return;
   e.preventDefault();
@@ -2069,7 +2198,10 @@ stage.addEventListener("click",function(e){
 });
 
 addEventListener("keydown",function(e){
-  if(e.key==="Escape"){closeRead();document.getElementById("drawer").classList.remove("on");
+  if(e.key==="f"||e.key==="F"){ toggleImm(); return }
+  if(e.key==="Escape"){
+    if(immOn()){ toggleImm(false); return }
+    closeRead();document.getElementById("drawer").classList.remove("on");
     document.getElementById("chg").classList.remove("on")}
   if(e.key==="1")setMode("plan"); if(e.key==="2")setMode("split"); if(e.key==="3")setMode("zone");
 });
@@ -2144,6 +2276,7 @@ function mSnap(i){
 
 /* Keep the read point in the strip of map the sheet has not covered. */
 function mEnsure(ix,iy){
+  if(immOn()) return;          /* the tap is already where the reader is looking */
   var r=stage.getBoundingClientRect();
   if(mLand()){
     /* the panel takes the right edge, so the free map is a column not a strip */
