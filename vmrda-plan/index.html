@@ -317,6 +317,61 @@
   .immread em{font-style:normal;font-family:var(--mono);font-size:8.6px;
     letter-spacing:.13em;text-transform:uppercase;color:var(--cy);flex:none}
 
+  /* ---------- what may be built where ---------- */
+  .uq{width:100%;height:42px;border-radius:11px;padding:0 13px;margin-bottom:12px;
+    background:rgba(255,255,255,.06);border:1px solid var(--line2);color:var(--ink);
+    font:inherit;font-size:14.5px;outline:none}
+  .uq:focus{border-color:var(--cy)}
+  .uchips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+  .uchips button{border:1px solid var(--line);border-radius:999px;padding:5px 11px;
+    font-size:12px;color:var(--dim);background:rgba(255,255,255,.03)}
+  .uchips button:hover{border-color:var(--cy);color:var(--cy)}
+  .ugrp{margin-bottom:16px}
+  .ugrp>b{display:flex;align-items:center;gap:7px;font-size:9px;letter-spacing:.14em;
+    text-transform:uppercase;font-weight:600;margin-bottom:8px}
+  .ugrp.ok>b{color:var(--ok)} .ugrp.no>b{color:var(--bad)}
+  .ugrp>b u{text-decoration:none;font-family:var(--mono);font-size:9px;padding:1.5px 6px;
+    border-radius:999px}
+  .ugrp.ok>b u{background:rgba(111,207,151,.17)} .ugrp.no>b u{background:rgba(239,107,107,.16)}
+  .urow{display:block;width:100%;text-align:left;border:1px solid var(--line);
+    border-radius:10px;padding:11px 12px;margin-bottom:7px;background:rgba(255,255,255,.03)}
+  .urow:hover{border-color:var(--line2)}
+  .urow i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:7px;
+    vertical-align:-1px;border:1px solid rgba(255,255,255,.28)}
+  .urow .uz{font-size:13px;font-weight:600;color:var(--ink)}
+  .urow .ut{display:block;margin-top:5px;font-size:12.3px;line-height:1.5;color:var(--dim)}
+  .usep mark,.urow mark,.uhere mark{background:rgba(99,216,234,.28);color:var(--ink);
+    border-radius:2px;padding:0 2px}
+  #usep mark{background:rgba(99,216,234,.28);color:var(--ink)}
+  .uhere{border:1px solid var(--line2);border-radius:11px;padding:12px 13px;margin-bottom:15px;
+    background:rgba(99,216,234,.06)}
+  .uhere b{display:block;font-family:var(--mono);font-size:8.6px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--cy);margin-bottom:6px}
+  .uhere span{font-size:13px;color:var(--ink);line-height:1.5}
+  .unote{font-size:11.4px;color:var(--warn);line-height:1.55;
+    border-top:1px dashed var(--line);padding-top:11px;margin-top:4px}
+
+  /* ---------- measure ---------- */
+  .measbar{position:absolute;z-index:12;left:50%;transform:translateX(-50%);
+    top:calc(env(safe-area-inset-top,0px) + 12px);
+    display:none;align-items:center;gap:12px;padding:9px 12px 9px 15px;border-radius:14px;
+    background:rgba(10,16,26,.92);backdrop-filter:blur(18px) saturate(1.4);
+    border:1px solid var(--cy);box-shadow:0 12px 32px -14px rgba(0,0,0,.95);
+    white-space:nowrap;max-width:calc(100vw - 24px)}
+  body.measuring .measbar{display:flex}
+  .measbar .mv{font-family:var(--mono);font-size:13px;color:var(--cy);
+    font-variant-numeric:tabular-nums}
+  .measbar .mt{font-size:11.5px;color:var(--faint)}
+  .measbar button{border:1px solid var(--line2);border-radius:9px;padding:5px 10px;
+    font-size:12px;color:var(--dim)}
+  .measbar button:hover{border-color:var(--cy);color:var(--cy)}
+  body.measuring .stage{cursor:crosshair}
+  @media (max-width:760px){
+    body.measuring .mtop,body.measuring .mver{opacity:0;pointer-events:none}
+    .measbar{top:calc(env(safe-area-inset-top,0px) + 10px)}
+    .measbar .mt{display:none}
+  }
+
   .boot{position:absolute;inset:0;z-index:9;display:grid;place-items:center;
     background:var(--bg);transition:opacity .4s}
   .boot.off{opacity:0;pointer-events:none}
@@ -612,6 +667,16 @@
       oninput="satMix=this.value/100;document.getElementById('satPct').textContent=this.value+'%';draw()">
     <b id="satPct">0%</b>
   </label>
+  <button class="ico wide" onclick="toggleUse(true)" title="Search the zoning schedule by use">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M4 6h16M4 12h10M4 18h7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      <circle cx="18" cy="17" r="3.4" stroke="currentColor" stroke-width="2"/>
+      <path d="m21 20 1.6 1.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <span>What&#8217;s allowed</span></button>
+  <button class="ico" onclick="toggleMeas(true)" title="Measure distance and area">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M2.5 15.5 8.5 21.5 21.5 8.5 15.5 2.5z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/>
+      <path d="M11 6.5 13 8.5M8 9.5 10 11.5M5.5 12.5 7.5 14.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
   <button class="ico" onclick="toggleImm(true)" title="Full screen map">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M3 9V3h6M21 9V3h-6M3 15v6h6M21 15v6h-6"
@@ -669,6 +734,24 @@
   </div>
 
   <div class="hint" id="hint">Scroll to zoom &middot; drag to pan &middot; click any area to read its zone</div>
+
+  <div class="measbar" id="measbar">
+    <span class="mv" id="measV">0 m</span>
+    <span class="mt" id="measT">Tap points along what you want to measure</span>
+    <button onclick="measClear()">Clear</button>
+    <button onclick="toggleMeas(false)">Done</button>
+  </div>
+
+  <div class="chg" id="usep">
+    <div class="ch"><b>What may be built where</b>
+      <button onclick="toggleUse(false)">&times;</button></div>
+    <div class="cb">
+      <input class="uq" id="uq" placeholder="warehouse, hotel, school, farmhouse&hellip;"
+        autocomplete="off" oninput="renderUse()">
+      <div class="uchips" id="uchips"></div>
+      <div id="ubody"></div>
+    </div>
+  </div>
 
   <div class="drawer" id="drawer">
     <div class="dh"><b>What this plan can and cannot answer</b>
@@ -798,6 +881,9 @@
         <i>Certain, directional, and what cannot be said</i></button>
       <button onclick="mMenu(0);toggleDrawer()">What this plan can and cannot answer
         <i>The recovery test, and where it fails</i></button>
+      <button onclick="mMenu(0);toggleUse(true)">What may be built where
+        <i>Search the zoning schedule by use</i></button>
+      <button onclick="mMenu(0);toggleMeas(true)">Measure distance and area</button>
       <button onclick="mMenu(0);reset()">Show the whole region again</button>
     </div>
 
@@ -1455,6 +1541,7 @@ function draw(){
     }
   }
   drawMark(x,y,w,h);
+  drawMeas(x,y,w,h);
 }
 
 /* Nothing on the sheet said which point the panel was answering about, which
@@ -2188,6 +2275,203 @@ function renderChanged(){
 
 function toggleDrawer(){document.getElementById("drawer").classList.toggle("on")}
 
+/* ---- what may be built where --------------------------------------------
+   The Dutch environment portal lets you ask what is allowed at an address and
+   walks you to an answer. The same question is worth asking backwards on a plan
+   nobody can search: given a use, where in the region does the schedule allow
+   it. This searches the WORDS of G.O. 216 as summarised, quotes the entry it
+   matched verbatim, and says plainly that silence in the schedule is not
+   permission. It invents nothing. */
+var USETERMS=["house","apartment","shop","hotel","restaurant","school","hospital",
+              "warehouse","industry","farmhouse","petrol","cinema","park","office"];
+var RULEZONES=null;
+function ruleZoneIndex(){
+  if(RULEZONES) return RULEZONES;
+  RULEZONES={};
+  ZONES.forEach(function(z,i){
+    var k=RULEKEY[z.raw]||RULEKEY[z.name];
+    if(!k) return;
+    (RULEZONES[k]=RULEZONES[k]||[]).push({i:i, z:z});
+  });
+  return RULEZONES;
+}
+/* Plain substring matching failed the first thing anyone would type: the
+   schedule says "warehousing" and "industries", a reader asks for "warehouse"
+   and "industry". Both sides are reduced to a crude stem before comparing, so
+   the query meets the text halfway without either being rewritten on screen. */
+function stem(w){
+  /* At most one suffix comes off. Applying the rules in sequence let
+     "warehousing" lose "ing" to give "warehous" and then lose the "s" as well,
+     landing on "warehou" while "warehouse" stopped at "warehous", so the two
+     never met and the commonest search on the page returned nothing. */
+  w=w.toLowerCase();
+  if(w.length>5 && /ing$/.test(w)) return w.slice(0,-3);
+  if(w.length>4 && /(es|ed)$/.test(w)) return w.slice(0,-2);
+  if(w.length>3 && /s$/.test(w))  return w.slice(0,-1);
+  if(w.length>4 && /y$/.test(w))  return w.slice(0,-1)+"i";
+  if(w.length>4 && /e$/.test(w))  return w.slice(0,-1);
+  return w;
+}
+function stemText(t){
+  return t.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean).map(stem).join(" ");
+}
+function useHit(text, term){
+  var q=stemText(term); return !!q && stemText(text).indexOf(q)>=0;
+}
+function mark(text, term){
+  var q0=stemText(term).split(" ")[0];
+  if(!q0) return text;
+  return text.replace(/[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*/g, function(w){
+    return stem(w).indexOf(q0)===0 ? "<mark>"+w+"</mark>" : w;
+  });
+}
+function toggleUse(on){
+  var el=document.getElementById("usep");
+  var want = on===undefined ? !el.classList.contains("on") : !!on;
+  el.classList.toggle("on", want);
+  if(want){
+    RULEZONES=null; renderUse();
+    /* The panel starts translated off-screen, so focusing its input asks the
+       browser to scroll it into view. .stage hides its overflow but still has a
+       scroll area, and scrolling it drags every absolutely positioned panel
+       along: the closed drawer slid in from the right and covered this one.
+       Focus without scrolling, and put the stage back if anything else moves it. */
+    var q=document.getElementById("uq");
+    try{ q.focus({preventScroll:true}) }catch(e){ q.focus() }
+    keepStagePut();
+  }
+}
+/* Nothing should ever scroll the stage: it is a canvas viewport, not a document. */
+function keepStagePut(){ if(stage.scrollLeft||stage.scrollTop){ stage.scrollLeft=0; stage.scrollTop=0 } }
+stage.addEventListener("scroll", keepStagePut);
+function useTerm(t){ document.getElementById("uq").value=t; renderUse() }
+function renderUse(){
+  var term=(document.getElementById("uq").value||"").toLowerCase().trim();
+  document.getElementById("uchips").innerHTML=USETERMS.map(function(t){
+    return '<button onclick="useTerm(\''+t+'\')">'+t+'</button>' }).join("");
+  var body=document.getElementById("ubody");
+  if(!RULES){ body.innerHTML='<p class="sub">The zoning schedule is not loaded.</p>'; return }
+  if(term.length<3){
+    body.innerHTML='<p class="sub">Type a use, or pick one above. This searches the '+
+      'permitted and prohibited lists of the AP Common Zoning Regulations 2025 '+
+      '(G.O. Ms. 216) as summarised on this page, and shows the entry it matched.</p>';
+    return;
+  }
+  var idx=ruleZoneIndex(), hitsP=[], hitsQ=[];
+  Object.keys(RULES.zones).forEach(function(k){
+    var Z=RULES.zones[k];
+    (Z.permit||[]).forEach(function(x){ if(useHit(x,term)) hitsP.push({k:k,text:x}) });
+    (Z.prohibit||[]).forEach(function(x){ if(useHit(x,term)) hitsQ.push({k:k,text:x}) });
+  });
+  var h="";
+  /* answer for the point already being read, first */
+  if(LAST && LAST.rule){
+    var rk=RULEKEY[LAST.hit.raw]||RULEKEY[LAST.hit.name];
+    var mp=(LAST.rule.permit||[]).filter(function(x){return useHit(x,term)});
+    var mq=(LAST.rule.prohibit||[]).filter(function(x){return useHit(x,term)});
+    h+='<div class="uhere"><b>At the point you last read &middot; '+LAST.hit.name+'</b><span>'+
+      (mq.length ? '<span style="color:var(--bad)">Not permitted.</span> '+mark(mq[0],term)
+       : mp.length ? '<span style="color:var(--ok)">Permitted.</span> '+mark(mp[0],term)
+       : 'The schedule for this zone does not mention it either way.')+'</span></div>';
+  }
+  function group(list, cls, label){
+    if(!list.length) return "";
+    var out='<div class="ugrp '+cls+'"><b>'+label+'<u>'+list.length+'</u></b>';
+    list.forEach(function(hit){
+      var zs=(idx[hit.k]||[]);
+      var sw=zs.length ? '<i style="background:rgb('+zs[0].z.rgb.join(",")+')"></i>' : '';
+      var go=zs.length ? ' onclick="useGo('+zs[0].i+')"' : '';
+      out+='<button class="urow"'+go+'>'+sw+'<span class="uz">'+hit.k+'</span>'+
+           '<span class="ut">'+mark(hit.text,term)+'</span></button>';
+    });
+    return out+'</div>';
+  }
+  h+=group(hitsP,"ok","Permitted in")+group(hitsQ,"no","Not permitted in");
+  if(!hitsP.length && !hitsQ.length)
+    h+='<p class="sub">No entry in the summarised schedule uses that word.</p>';
+  h+='<div class="unote">This searches the words of a summary. A use the schedule '+
+     'does not name is not thereby allowed or barred, and zone boundaries here carry '+
+     '&plusmn;200 m. Read G.O. Ms. 216 before relying on any of it.</div>';
+  body.innerHTML=h;
+}
+function useGo(i){ toggleUse(false); pickZone(i); if(MOBILE) mIso(); }
+
+/* ---- measure ------------------------------------------------------------
+   Distances come off the sheet's own scale, so they do not carry the +/-200 m
+   that placing the sheet on the ground does: that error moves everything
+   together and largely cancels between two points on the same sheet. */
+var meas={on:false, pts:[]};
+function toggleMeas(on){
+  var want = on===undefined ? !meas.on : !!on;
+  meas.on=want;
+  document.body.classList.toggle("measuring", want);
+  if(!want) meas.pts=[];
+  measRender(); draw();
+  if(want && MOBILE) mToast("Tap points along what you want to measure");
+}
+function measClear(){ meas.pts=[]; measRender(); draw() }
+function measLocal(ll){
+  var la0=meas.pts.length?meas.pts[0][1]:ll[1];
+  return [(ll[0])*111320*Math.cos(la0*Math.PI/180), ll[1]*110540];
+}
+function measStats(){
+  var P=meas.pts;
+  if(P.length<2) return {d:0,a:0};
+  var pts=P.map(measLocal), d=0;
+  for(var i=1;i<pts.length;i++)
+    d+=Math.hypot(pts[i][0]-pts[i-1][0], pts[i][1]-pts[i-1][1]);
+  var a=0;
+  if(pts.length>2){
+    for(var j=0;j<pts.length;j++){
+      var k=(j+1)%pts.length;
+      a+=pts[j][0]*pts[k][1]-pts[k][0]*pts[j][1];
+    }
+    a=Math.abs(a)/2;
+  }
+  return {d:d, a:a};
+}
+function fmtLen(m){ return m>=1000 ? (m/1000).toFixed(2)+" km" : Math.round(m)+" m" }
+function fmtArea(m2){
+  if(m2>=1e6) return (m2/1e6).toFixed(2)+" km\u00b2";
+  if(m2>=10000) return (m2/10000).toFixed(2)+" ha";
+  return Math.round(m2)+" m\u00b2";
+}
+function measRender(){
+  var st=measStats(), v=document.getElementById("measV"), t=document.getElementById("measT");
+  if(!v) return;
+  v.textContent = meas.pts.length<2 ? "0 m"
+    : fmtLen(st.d) + (st.a>0 ? "  \u00b7  "+fmtArea(st.a) : "");
+  t.textContent = meas.pts.length<2 ? "Tap points along what you want to measure"
+    : meas.pts.length===2 ? "Tap again to close a shape and get area"
+    : "Along the line, and the area it encloses";
+}
+function drawMeas(x,y,w,h){
+  if(!meas.on || !meas.pts.length || !GEO) return;
+  var pts=meas.pts.map(function(ll){
+    var q=ll2px(ll[0],ll[1]);
+    return [x+q[0]*view.s*dpr, y+q[1]*view.s*dpr];
+  });
+  ctx.save();
+  if(pts.length>2){
+    ctx.beginPath(); ctx.moveTo(pts[0][0],pts[0][1]);
+    for(var i=1;i<pts.length;i++) ctx.lineTo(pts[i][0],pts[i][1]);
+    ctx.closePath();
+    ctx.fillStyle="rgba(99,216,234,.16)"; ctx.fill();
+  }
+  if(pts.length>1){
+    ctx.beginPath(); ctx.moveTo(pts[0][0],pts[0][1]);
+    for(var j=1;j<pts.length;j++) ctx.lineTo(pts[j][0],pts[j][1]);
+    ctx.lineWidth=4.5*dpr; ctx.strokeStyle="rgba(9,13,20,.55)"; ctx.stroke();
+    ctx.lineWidth=2.2*dpr; ctx.strokeStyle="rgba(99,216,234,.98)"; ctx.stroke();
+  }
+  pts.forEach(function(p){
+    ctx.beginPath(); ctx.arc(p[0],p[1],5.5*dpr,0,7);
+    ctx.fillStyle="rgba(9,13,20,.9)"; ctx.fill();
+    ctx.lineWidth=2*dpr; ctx.strokeStyle="rgba(99,216,234,.98)"; ctx.stroke();
+  });
+  ctx.restore();
+}
+
 /* ---- full-screen map ----------------------------------------------------- */
 /* Hiding the panels changes how much of the stage the map may use, so the view
    has to be re-framed around the same ground rather than left where it was:
@@ -2259,7 +2543,7 @@ function immOpen(){
    click on them also reached the map handlers: selecting a zone opened a
    "no zone colour here" readout instead. Anything inside a panel is UI. */
 ["pointerdown","pointermove","pointerup","click","wheel","dblclick"].forEach(function(t){
-  ["zpanel","read","drawer","chg","mshell","immx","immread"].forEach(function(id){
+  ["zpanel","read","drawer","chg","usep","measbar","mshell","immx","immread"].forEach(function(id){
     var el=document.getElementById(id);
     /* Bubble phase, not capture. On capture the event is stopped before the
        button's own onclick ever runs, so the panel became inert. On bubble the
@@ -2269,7 +2553,7 @@ function immOpen(){
 });
 
 function onUI(e){ return !!(e.target && e.target.closest &&
-  e.target.closest(".zpanel,.read,.drawer,.chg,.zoombox,.hint,.mshell,.mpane,.immx,.immread")) }
+  e.target.closest(".zpanel,.read,.drawer,.chg,.zoombox,.hint,.mshell,.mpane,.immx,.immread,.measbar")) }
 
 stage.addEventListener("wheel",function(e){ if(onUI(e))return;
   e.preventDefault();
@@ -2341,12 +2625,22 @@ stage.addEventListener("click",function(e){
   if(onUI(e))return;
   if(moved>6)return;
   var r=stage.getBoundingClientRect();
+  if(meas.on){
+    var ix=(e.clientX-r.left-view.x)/view.s, iy=(e.clientY-r.top-view.y)/view.s;
+    if(!isFinite(ix)||!isFinite(iy)||!GEO) return;
+    meas.pts.push(px2ll(ix,iy));
+    measRender(); draw();
+    return;
+  }
   identify(e.clientX-r.left, e.clientY-r.top);
 });
 
 addEventListener("keydown",function(e){
   if(e.key==="f"||e.key==="F"){ toggleImm(); return }
+  if(e.key==="m"||e.key==="M"){ toggleMeas(); return }
   if(e.key==="Escape"){
+    if(meas.on){ toggleMeas(false); return }
+    if(document.getElementById("usep").classList.contains("on")){ toggleUse(false); return }
     if(immOn()){ toggleImm(false); return }
     closeRead();document.getElementById("drawer").classList.remove("on");
     document.getElementById("chg").classList.remove("on")}
@@ -2523,7 +2817,9 @@ function mPane(id,on){
   mMenu(0);
   if(id==="msearchp"&&on){
     var q=document.getElementById("mq");
-    mFind(); q.focus(); q.select();
+    mFind();
+    try{ q.focus({preventScroll:true}) }catch(e){ q.focus() }
+    q.select();
   }
   if(id==="mzonep"&&on) mZones();
 }
