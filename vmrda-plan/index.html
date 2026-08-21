@@ -14,6 +14,23 @@
     --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   }
   html,body{margin:0;height:100%;height:100dvh}
+  /* Telugu needs a Telugu face ahead of the Latin stack; every platform this
+     runs on ships one, so no webfont is loaded. */
+  html[lang="te"] body,html[lang="te"] button,html[lang="te"] input{
+    font-family:"Noto Sans Telugu","Kohinoor Telugu","Gautami","Telugu Sangam MN",
+      ui-sans-serif,-apple-system,system-ui,sans-serif}
+  html[lang="te"] .law .lg li,html[lang="te"] .msub,html[lang="te"] .mep{line-height:1.65}
+  /* Telugu is a conjunct script: Latin letter-spacing and uppercasing pull the
+     glyph clusters apart and do nothing useful. The small-caps label treatment
+     is dropped for it rather than applied badly. */
+  html[lang="te"] .lh,html[lang="te"] .meyebrow,html[lang="te"] .sl,
+  html[lang="te"] .both b,html[lang="te"] .ugrp>b,html[lang="te"] .law .lg>b,
+  html[lang="te"] .mlh b,html[lang="te"] .zh span,html[lang="te"] .mrow .rn em,
+  html[lang="te"] .zdet .dg,html[lang="te"] .uhere b{
+    letter-spacing:normal;text-transform:none;font-size:11px}
+  .langrow{display:flex;gap:0;border-top:1px solid var(--line)}
+  .langrow button{flex:1;text-align:center!important;padding:13px 8px!important}
+  .langrow button.on{background:rgba(99,216,234,.16);color:var(--cy)}
   body{background:var(--bg);color:var(--ink);overflow:hidden;
     display:flex;flex-direction:column;
     font:14px/1.5 ui-sans-serif,-apple-system,"SF Pro Text",Inter,system-ui,sans-serif;
@@ -755,7 +772,7 @@
   </div>
 
   <div class="chg" id="usep">
-    <div class="ch"><b>What may be built where</b>
+    <div class="ch"><b data-i18n="What may be built where">What may be built where</b>
       <button onclick="toggleUse(false)">&times;</button></div>
     <div class="cb">
       <input class="uq" id="uq" placeholder="warehouse, hotel, school, farmhouse&hellip;"
@@ -876,16 +893,16 @@
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.2"/>
           <path d="m20 20-3.6-3.6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
-        <span>Find a village or town</span></button>
+        <span data-i18n="Find a village or town">Find a village or town</span></button>
       <button class="mmore" onclick="mMenu()" aria-label="More">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <circle cx="5" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="19" cy="12" r="1.9"/></svg></button>
     </div>
 
     <div class="mver">
-      <button id="mvD" onclick="setVersion('draft')">Draft 2021</button>
-      <button id="mvF" onclick="setVersion('final')">Final 2026</button>
-      <button id="mvC" onclick="toggleCmp()">Compare</button>
+      <button id="mvD" onclick="setVersion('draft')" data-i18n="Draft 2021">Draft 2021</button>
+      <button id="mvF" onclick="setVersion('final')" data-i18n="Final 2026">Final 2026</button>
+      <button id="mvC" onclick="toggleCmp()" data-i18n="Compare">Compare</button>
     </div>
 
     <div class="mmenu" id="mmenu">
@@ -893,10 +910,14 @@
         <i>Certain, directional, and what cannot be said</i></button>
       <button onclick="mMenu(0);toggleDrawer()">What this plan can and cannot answer
         <i>The recovery test, and where it fails</i></button>
-      <button onclick="mMenu(0);toggleUse(true)">What may be built where
-        <i>Search the zoning schedule by use</i></button>
-      <button onclick="mMenu(0);toggleMeas(true)">Measure distance and area</button>
-      <button onclick="mMenu(0);reset()">Show the whole region again</button>
+      <button onclick="mMenu(0);toggleUse(true)"><span data-i18n="What may be built where">What may be built where</span>
+        <i data-i18n="Search the zoning schedule by use">Search the zoning schedule by use</i></button>
+      <button onclick="mMenu(0);toggleMeas(true)"><span data-i18n="Measure distance and area">Measure distance and area</span></button>
+      <button onclick="mMenu(0);reset()"><span data-i18n="Show the whole region again">Show the whole region again</span></button>
+      <div class="langrow">
+        <button id="langEn" class="on" onclick="setLang('en')">English</button>
+        <button id="langTe" onclick="setLang('te')">&#3108;&#3142;&#3122;&#3137;&#3095;&#3137;</button>
+      </div>
     </div>
 
     <div class="mrail">
@@ -928,7 +949,7 @@
     <div class="mleg" id="mleg">
       <button class="mlh" onclick="mLegToggle()" aria-label="Legend">
         <span class="mlchips" id="mlchips"></span>
-        <b>Legend</b><i>&#9662;</i>
+        <b data-i18n="Legend">Legend</b><i>&#9662;</i>
       </button>
       <div class="mlb" id="mlb"></div>
       <button class="mlall" id="mlall" onclick="mPane('mzonep',1)"></button>
@@ -954,14 +975,14 @@
     <input id="mq" placeholder="Find a village or town" autocomplete="off"
       autocapitalize="words" oninput="mFind()"
       onkeydown="if(event.key==='Enter'){event.preventDefault();mGo(0)}">
-    <button class="mx" onclick="mPane('msearchp',0)">Cancel</button>
+    <button class="mx" onclick="mPane('msearchp',0)" data-i18n="Cancel">Cancel</button>
   </div>
   <div class="mpb" id="mfres"></div>
 </div>
 
 <div class="mpane" id="mzonep">
-  <div class="mph"><b>Zone index</b>
-    <button class="mx" onclick="mPane('mzonep',0)">Done</button></div>
+  <div class="mph"><b data-i18n="Zone index">Zone index</b>
+    <button class="mx" onclick="mPane('mzonep',0)" data-i18n="Done">Done</button></div>
   <div class="mpb" id="mzb"></div>
 </div>
 
@@ -983,6 +1004,27 @@ var ZONES = V0.zones_list;
 var CLASSDIFF = [{"k": "Affordable Housing Zone", "d": "not present", "f": "new class", "why": "A land use category that did not exist in the 2021 draft."}, {"k": "Industrial", "d": "existing / proposed", "f": "Green & White / Red & Orange", "why": "Re-cut along CPCB pollution categories. It now decides which class of industry may be sited where, not merely whether industry exists yet."}, {"k": "Mixed Use", "d": "3 sub-classes", "f": "1", "why": "Mixed Use 1, 2 and 3 collapsed into a single zone."}, {"k": "Public & Semi-Public", "d": "6 sub-classes", "f": "1", "why": "Government, educational, health, religious, crematorium and proposed facility merged into one."}, {"k": "Protected Green", "d": "not present", "f": "new class", "why": "A protected category separate from Forest."}, {"k": "Protected zones", "d": "ungrouped", "f": "Development Restricted Zones", "why": "Grouped under a heading that states the restriction on its face."}, {"k": "Kambalakonda ESZ", "d": "not named", "f": "named on the legend", "why": "Eco-Sensitive Zone / NAOB Buffer / Zoological Park called out explicitly."}];
 var SHIFT = {"note": "shares of each plan's own recovered area, not absolute sq km: the two sheets classify different fractions of their paper, so only shares are comparable. Colour recovery carried 43% median error on the draft, so read the direction and the ordering.", "draft_recovered_sqkm": 3943.4, "final_recovered_sqkm": 3683.5, "rows": [{"cls": "Agriculture", "draft_pct": 43.2, "final_pct": 40.6, "shift": -2.6}, {"cls": "Residential", "draft_pct": 11.6, "final_pct": 17.1, "shift": 5.5}, {"cls": "Mixed use", "draft_pct": 3.7, "final_pct": 8.8, "shift": 5.1}, {"cls": "Protected water", "draft_pct": 6.2, "final_pct": 8.4, "shift": 2.3}, {"cls": "Protected forest", "draft_pct": 7.1, "final_pct": 7.8, "shift": 0.7}, {"cls": "Protected hills", "draft_pct": 8.2, "final_pct": 6.8, "shift": -1.4}, {"cls": "Protected other", "draft_pct": 6.0, "final_pct": 4.5, "shift": -1.5}, {"cls": "Transportation", "draft_pct": 8.8, "final_pct": 2.8, "shift": -6.0}, {"cls": "Public & semi-public", "draft_pct": 0.8, "final_pct": 1.1, "shift": 0.3}, {"cls": "Industrial", "draft_pct": 3.5, "final_pct": 1.1, "shift": -2.4}, {"cls": "Special area", "draft_pct": 0.6, "final_pct": 0.8, "shift": 0.2}, {"cls": "Commercial", "draft_pct": 0.0, "final_pct": 0.2, "shift": 0.2}, {"cls": "Recreational", "draft_pct": 0.4, "final_pct": 0.0, "shift": -0.4}]};
 var RULES = {"source": "AP Common Zoning Regulations 2025, G.O. Ms. No. 216 dated 22.10.2025, Section V. The Revised Master Plan 2041 legend states it is read with this same G.O. Summaries of the notified activity lists; read the G.O. for the exhaustive text.", "zones": {"Residential": {"permit": ["All residential buildings, apartments, group housing, shop-cum-residences, townships", "Hostels, boarding and guest houses, service apartments, staff quarters", "Post offices, police and fire stations, government and local-body offices, electric sub-stations", "Playgrounds, parks, libraries, gardens, gymnasia, yoga and health clinics", "Tiffin centres, restaurants, bakeries, banks and ATMs", "Play schools through junior colleges"], "prohibit": ["Blue, Green, Orange and Red category industries", "Bars, pubs, banquet halls, lodges", "Petrol, gas and diesel filling stations", "Cinemas, multiplexes, malls, large commercial establishments", "Hospitals over 20 beds; hospitals for contagious diseases", "Warehousing, cold storage, wholesale mandis, junk yards, slaughter houses", "Dairy, poultry, fish farms, hatcheries, piggeries", "Truck and bus terminals, goods and logistics hubs"]}, "Commercial": {"permit": ["Shops, retail, offices, business establishments", "Hotels, restaurants, banquet halls", "Cinemas, malls, entertainment", "Banks, professional offices"], "prohibit": ["Red and Orange category industries", "Hazardous and obnoxious uses", "Activities creating public nuisance"]}, "Mixed use": {"permit": ["Everything permitted in Residential, Commercial, Public & Semi-Public and Transportation", "Industries except Red and Orange category", "Subject to the road width in the building rules"], "prohibit": ["Red and Orange category industries"]}, "Public & semi-public": {"permit": ["Government and institutional buildings", "Educational, health, religious and cultural facilities", "Utilities and civic amenities"], "prohibit": ["Private residential and commercial development beyond the notified use", "Industry"]}, "Industrial": {"permit": ["Work Centre zone: Green and White category industries", "Red and Orange category industries only in the belt zoned for them", "Warehousing, logistics and allied uses"], "prohibit": ["Residential development within the industrial use", "Category of industry other than the one the belt is zoned for"]}, "Recreational": {"permit": ["Parks, playgrounds, gardens, sports facilities", "Open space and green recreation"], "prohibit": ["Permanent building beyond recreational amenities", "Residential, commercial and industrial use"]}, "Transportation": {"permit": ["Roads, rail, metro, terminals and transport infrastructure", "Associated utilities"], "prohibit": ["Development unrelated to transport"]}, "Agriculture": {"permit": ["All agriculture and horticulture", "Farmhouse up to 5% plinth, G+1, on a plot of at least 0.5 acre", "Food processing and agro-based industry with proper access", "White, Green and Blue category industry with change-of-land-use charges", "Solar and wind stations, cold storage, warehousing of local produce"], "prohibit": ["Heavy, noxious, hazardous and extractive industries", "Any obnoxious or nuisance activity", "On notified forest land, only afforestation is permitted"]}, "Special area": {"permit": ["Heritage buildings, monuments, precincts and archaeological sites, under the Heritage Regulations", "Defence and military land, per the defence manual"], "prohibit": ["Residential", "Commercial", "Industrial", "Mining and excavation"]}, "Protected water": {"headline": "No construction is permitted in the water-spread.", "permit": ["Fishing, boating and picnics along the banks", "Open jetties, house boats, fishing platforms, rain shelters and snack bars, each under 100 sq m"], "prohibit": ["Residential", "Commercial", "Industrial", "Public and Semi-Public", "Transportation", "Mining and excavation"]}, "Protected forest": {"headline": "No development except agriculture, horticulture and forestry.", "permit": ["Agriculture, horticulture, forestry", "Parks, botanical gardens, picnic spots", "Electrical sub-stations and communication towers"], "prohibit": ["Residential, commercial, industrial development", "Any built development beyond the above"]}, "Protected hills": {"headline": "Development restricted zone.", "permit": ["Afforestation and conservation uses"], "prohibit": ["Residential, commercial and industrial development", "Quarrying, mining and excavation of the hillside"]}, "Protected other": {"headline": "Eco-sensitive, CRZ and green protected zone.", "permit": ["Uses consistent with the Eco-Sensitive Zone and CRZ guidelines of MoEF&CC"], "prohibit": ["Residential, commercial and industrial development", "Anything the CRZ notification bars"]}}};
+var TE = {"_note": "Telugu for the surfaces a resident actually reads: the answer card, the zoning schedule, zone names and the controls. The long analytical panels stay in English for now. The English summary and G.O. Ms. 216 remain authoritative; this is an aid to reading, not a legal text.", "ui": {"Find a village or town": "గ్రామం లేదా పట్టణం వెతకండి", "Draft 2021": "ముసాయిదా 2021", "Final 2026": "తుది 2026", "Compare": "పోల్చండి", "Legend": "సూచిక", "Cancel": "రద్దు", "Done": "పూర్తయింది", "Clear": "తొలగించు", "Zone index": "జోన్ల జాబితా", "What does the plan say about a place?": "ఒక ప్రాంతం గురించి ప్రణాళిక ఏమి చెబుతోంది?", "Tap anywhere on the sheet to read its zone and what the zoning law permits there.": "పటంలో ఎక్కడైనా తాకితే ఆ చోటి జోన్ ఏమిటో, అక్కడ జోనింగ్ చట్టం దేనికి అనుమతిస్తుందో తెలుస్తుంది.", "Use where I am": "నేను ఉన్న చోటు వాడు", "Finding where you are…": "మీరు ఎక్కడ ఉన్నారో చూస్తున్నాం…", "Where you are standing": "మీరు నిలబడిన చోటు", "You are outside the VMR planning area": "మీరు VMR ప్రణాళిక ప్రాంతం వెలుపల ఉన్నారు", "Location not available": "స్థానం అందుబాటులో లేదు", "No zone colour": "జోన్ రంగు లేదు", "Legend class": "సూచిక తరగతి", "Boundary line work, a label, or outside the plan area. Try a few metres away.": "ఇది సరిహద్దు గీత, ఒక పేరు, లేదా ప్రణాళిక ప్రాంతం వెలుపలి చోటు. కొన్ని మీటర్ల దూరంలో ప్రయత్నించండి.", "The point itself is line work or a label; this is the fill within about": "ఈ బిందువు వద్ద గీత లేదా పేరు ఉంది; ఇది దాదాపు", "of it.": "లోపల ఉన్న రంగు.", "What the zoning law allows here": "ఇక్కడ జోనింగ్ చట్టం ఏమి అనుమతిస్తుంది", "Permitted": "అనుమతించినవి", "Not permitted": "అనుమతి లేనివి", "the two plans put this land under different rules": "ఈ భూమిపై రెండు ప్రణాళికలు వేర్వేరు నియమాలు విధిస్తున్నాయి", "different legend names, same class under G.O. 216": "సూచికలో పేర్లు వేరు, కానీ G.O. 216 ప్రకారం తరగతి ఒక్కటే", "Each sheet is placed on the ground to about 200 m, and most zone patches are smaller than that. At a single point this can be misalignment rather than a decision.": "ప్రతి పటాన్ని భూమిపై సుమారు 200 మీటర్ల ఖచ్చితత్వంతో అమర్చాం, చాలా జోన్ ముక్కలు అంతకన్నా చిన్నవి. కాబట్టి ఒకే బిందువు వద్ద ఇది నిర్ణయం కాకుండా అమరిక తేడా కావచ్చు.", "open in Maps": "మ్యాప్స్‌లో తెరవండి", "Read back from the published picture by colour, not from VMRDA records. Not authoritative. Do not rely on this for any decision about a specific parcel.": "ఇది VMRDA రికార్డుల నుండి కాదు, ప్రచురించిన చిత్రంలోని రంగుల నుండి చదివినది. అధికారికం కాదు. ఏదైనా నిర్దిష్ట స్థలం గురించి నిర్ణయానికి దీన్ని ఆధారం చేసుకోవద్దు.", "Showing this class alone": "ఈ తరగతిని మాత్రమే చూపుతోంది", "This class": "ఈ తరగతి", "Group total": "సమూహం మొత్తం", "Share of VMR": "VMRలో వాటా", "Densest window": "అత్యధిక సాంద్రత ఉన్న ప్రాంతం", "That window": "ఆ ప్రాంతం కొలత", "Fly to where it concentrates": "ఇది ఎక్కువగా ఉన్న చోటికి వెళ్లండి", "Bring the whole plan back": "మొత్తం ప్రణాళికను తిరిగి చూపు", "a Protected Use Zone. Development is barred here.": "ఇది రక్షిత వినియోగ జోన్. ఇక్కడ అభివృద్ధి నిషేధం.", "What may be built where": "ఎక్కడ ఏమి నిర్మించవచ్చు", "Search the zoning schedule by use": "వినియోగం ఆధారంగా జోనింగ్ పట్టికను వెతకండి", "Measure distance and area": "దూరం, విస్తీర్ణం కొలవండి", "Show the whole region again": "మొత్తం ప్రాంతాన్ని మళ్లీ చూపు", "What left the plan": "ప్రణాళిక నుండి తొలగిన భూమి", "Full screen map": "పూర్తి తెర పటం", "Tap points along what you want to measure": "కొలవాలనుకున్న దారి వెంట బిందువులు తాకండి", "Across the region": "ఈ ప్రాంతం అంతటా", "Permitted in": "వీటిలో అనుమతి ఉంది", "Not permitted in": "వీటిలో అనుమతి లేదు", "At the point you last read": "మీరు చివరగా చూసిన బిందువు వద్ద", "The schedule for this zone does not mention it either way.": "ఈ జోన్ పట్టికలో దీని ప్రస్తావన లేదు.", "No entry in the summarised schedule uses that word.": "సంక్షిప్త పట్టికలో ఏ అంశంలోనూ ఆ పదం లేదు.", "Barred": "నిషేధం", "Qualified": "షరతులతో", "Silent": "ప్రస్తావన లేదు", "Language": "భాష", "English": "English", "Telugu": "తెలుగు", "Telugu is an aid to reading. The English summary and G.O. Ms. 216 remain the authority.": "తెలుగు చదవడానికి సహాయం మాత్రమే. ఇంగ్లిష్ సారాంశం, G.O. Ms. 216 మాత్రమే అధికారికం.", "The long analysis panels are in English only for now.": "పెద్ద విశ్లేషణ ప్యానెల్‌లు ప్రస్తుతానికి ఇంగ్లిష్‌లోనే ఉన్నాయి.", "Legend class {c} on the {v} sheet.": "{v} పటంలో సూచిక తరగతి {c}."}, "zone": {"Residential": "నివాస", "Commercial": "వాణిజ్య", "Mixed Use": "మిశ్రమ వినియోగం", "Mixed use": "మిశ్రమ వినియోగం", "Mixed Use 1": "మిశ్రమ వినియోగం 1", "Mixed Use 2": "మిశ్రమ వినియోగం 2", "Mixed Use 3": "మిశ్రమ వినియోగం 3", "Industrial": "పారిశ్రామిక", "Industrial Work Centre": "పారిశ్రామిక పని కేంద్రం", "Industrial Red & Orange": "పారిశ్రామిక (ఎరుపు, నారింజ తరగతి)", "Industrial existing": "ప్రస్తుత పరిశ్రమలు", "Industrial proposed": "ప్రతిపాదిత పరిశ్రమలు", "Agriculture": "వ్యవసాయం", "Transportation": "రవాణా", "Transportation existing": "ప్రస్తుత రవాణా", "Transportation proposed": "ప్రతిపాదిత రవాణా", "Recreational": "వినోద", "Parks": "ఉద్యానవనాలు", "Recreational proposed": "ప్రతిపాదిత వినోద", "Public & Semi Public": "ప్రజా, అర్ధ-ప్రజా", "Public & semi-public": "ప్రజా, అర్ధ-ప్రజా", "Government": "ప్రభుత్వ", "Government facilities": "ప్రభుత్వ సదుపాయాలు", "Educational": "విద్యా", "Health": "ఆరోగ్య", "Religious": "మత సంబంధ", "Facility proposed": "ప్రతిపాదిత సదుపాయం", "Public utilities": "ప్రజా సేవలు", "Public utilities (proposed)": "ప్రతిపాదిత ప్రజా సేవలు", "Utilities existing": "ప్రస్తుత సేవలు", "Utilities proposed": "ప్రతిపాదిత సేవలు", "Special Area": "ప్రత్యేక ప్రాంతం", "Special area": "ప్రత్యేక ప్రాంతం", "Affordable Housing": "సరసమైన గృహనిర్మాణం", "Water body": "జలాశయం", "Water bodies": "జలాశయాలు", "Protected Blue": "రక్షిత జలాశయాలు", "Forest": "అటవీ", "Protected Forest": "రక్షిత అటవీ", "Hills": "కొండలు", "Protected Hills": "రక్షిత కొండలు", "Protected Green": "రక్షిత హరిత ప్రాంతం", "Protected Kambalakonda ESZ": "రక్షిత కంబాలకొండ పర్యావరణ సున్నిత ప్రాంతం", "Eco-sensitive": "పర్యావరణ సున్నిత", "Eco-sensitive / park": "పర్యావరణ సున్నిత / ఉద్యానవనం", "Accreted land": "కొత్తగా ఏర్పడిన భూమి", "Industrial (proposed)": "ప్రతిపాదిత పారిశ్రామిక", "Transportation (proposed)": "ప్రతిపాదిత రవాణా", "Recreational (proposed)": "ప్రతిపాదిత వినోద", "Facility (proposed)": "ప్రతిపాదిత సదుపాయం"}, "rulekey": {"Residential": "నివాస", "Commercial": "వాణిజ్య", "Mixed use": "మిశ్రమ వినియోగం", "Public & semi-public": "ప్రజా, అర్ధ-ప్రజా", "Industrial": "పారిశ్రామిక", "Recreational": "వినోద", "Transportation": "రవాణా", "Agriculture": "వ్యవసాయం", "Special area": "ప్రత్యేక ప్రాంతం", "Protected water": "రక్షిత జలాశయాలు", "Protected forest": "రక్షిత అటవీ", "Protected hills": "రక్షిత కొండలు", "Protected other": "ఇతర రక్షిత ప్రాంతాలు"}, "rule": {"All residential buildings, apartments, group housing, shop-cum-residences, townships": "అన్ని నివాస భవనాలు, అపార్ట్‌మెంట్లు, గ్రూప్ హౌసింగ్, దుకాణం-కమ్-నివాసం, టౌన్‌షిప్‌లు", "Hostels, boarding and guest houses, service apartments, staff quarters": "హాస్టళ్లు, బోర్డింగ్, అతిథి గృహాలు, సర్వీస్ అపార్ట్‌మెంట్లు, సిబ్బంది క్వార్టర్లు", "Post offices, police and fire stations, government and local-body offices, electric sub-stations": "పోస్టాఫీసులు, పోలీస్, అగ్నిమాపక కేంద్రాలు, ప్రభుత్వ, స్థానిక సంస్థల కార్యాలయాలు, విద్యుత్ సబ్-స్టేషన్లు", "Playgrounds, parks, libraries, gardens, gymnasia, yoga and health clinics": "ఆటస్థలాలు, ఉద్యానవనాలు, గ్రంథాలయాలు, తోటలు, వ్యాయామశాలలు, యోగా, ఆరోగ్య కేంద్రాలు", "Tiffin centres, restaurants, bakeries, banks and ATMs": "టిఫిన్ కేంద్రాలు, హోటళ్లు, బేకరీలు, బ్యాంకులు, ATMలు", "Play schools through junior colleges": "ప్లే స్కూళ్ల నుండి జూనియర్ కళాశాలల వరకు", "Blue, Green, Orange and Red category industries": "నీలం, ఆకుపచ్చ, నారింజ, ఎరుపు తరగతి పరిశ్రమలు", "Bars, pubs, banquet halls, lodges": "బార్లు, పబ్‌లు, విందు మందిరాలు, లాడ్జీలు", "Petrol, gas and diesel filling stations": "పెట్రోల్, గ్యాస్, డీజిల్ నింపే కేంద్రాలు", "Cinemas, multiplexes, malls, large commercial establishments": "సినిమా హాళ్లు, మల్టీప్లెక్స్‌లు, మాల్స్, పెద్ద వాణిజ్య సంస్థలు", "Hospitals over 20 beds; hospitals for contagious diseases": "20 పడకలకు మించిన ఆసుపత్రులు; అంటువ్యాధుల ఆసుపత్రులు", "Warehousing, cold storage, wholesale mandis, junk yards, slaughter houses": "గిడ్డంగులు, శీతల గిడ్డంగులు, హోల్‌సేల్ మండీలు, తుక్కు కేంద్రాలు, కబేళాలు", "Dairy, poultry, fish farms, hatcheries, piggeries": "పాడి, కోళ్ల, చేపల పెంపకం, హేచరీలు, పంది పెంపకం", "Truck and bus terminals, goods and logistics hubs": "ట్రక్, బస్ టెర్మినళ్లు, సరుకు రవాణా కేంద్రాలు", "Shops, retail, offices, business establishments": "దుకాణాలు, రిటైల్, కార్యాలయాలు, వ్యాపార సంస్థలు", "Hotels, restaurants, banquet halls": "హోటళ్లు, రెస్టారెంట్లు, విందు మందిరాలు", "Cinemas, malls, entertainment": "సినిమా హాళ్లు, మాల్స్, వినోద కేంద్రాలు", "Banks, professional offices": "బ్యాంకులు, వృత్తిపరమైన కార్యాలయాలు", "Red and Orange category industries": "ఎరుపు, నారింజ తరగతి పరిశ్రమలు", "Hazardous and obnoxious uses": "ప్రమాదకర, హానికర వినియోగాలు", "Activities creating public nuisance": "ప్రజలకు ఇబ్బంది కలిగించే కార్యకలాపాలు", "Everything permitted in Residential, Commercial, Public & Semi-Public and Transportation": "నివాస, వాణిజ్య, ప్రజా-అర్ధప్రజా, రవాణా జోన్లలో అనుమతించిన అన్నీ", "Industries except Red and Orange category": "ఎరుపు, నారింజ తరగతి తప్ప మిగతా పరిశ్రమలు", "Subject to the road width in the building rules": "భవన నిబంధనల్లోని రహదారి వెడల్పు షరతుకు లోబడి", "Government and institutional buildings": "ప్రభుత్వ, సంస్థాగత భవనాలు", "Educational, health, religious and cultural facilities": "విద్య, ఆరోగ్యం, మతపరమైన, సాంస్కృతిక సదుపాయాలు", "Utilities and civic amenities": "ప్రజా సేవలు, పౌర సదుపాయాలు", "Private residential and commercial development beyond the notified use": "నోటిఫై చేసిన వినియోగానికి మించి ప్రైవేట్ నివాస, వాణిజ్య అభివృద్ధి", "Industry": "పరిశ్రమ", "Work Centre zone: Green and White category industries": "పని కేంద్ర జోన్: ఆకుపచ్చ, తెలుపు తరగతి పరిశ్రమలు", "Red and Orange category industries only in the belt zoned for them": "ఎరుపు, నారింజ తరగతి పరిశ్రమలు వాటికి కేటాయించిన బెల్ట్‌లో మాత్రమే", "Warehousing, logistics and allied uses": "గిడ్డంగులు, సరుకు రవాణా, అనుబంధ వినియోగాలు", "Residential development within the industrial use": "పారిశ్రామిక వినియోగం లోపల నివాస అభివృద్ధి", "Category of industry other than the one the belt is zoned for": "బెల్ట్‌కు కేటాయించిన తరగతి కాకుండా వేరే తరగతి పరిశ్రమ", "Parks, playgrounds, gardens, sports facilities": "ఉద్యానవనాలు, ఆటస్థలాలు, తోటలు, క్రీడా సదుపాయాలు", "Open space and green recreation": "ఖాళీ స్థలం, హరిత వినోదం", "Permanent building beyond recreational amenities": "వినోద సదుపాయాలకు మించి శాశ్వత భవనం", "Residential, commercial and industrial use": "నివాస, వాణిజ్య, పారిశ్రామిక వినియోగం", "Roads, rail, metro, terminals and transport infrastructure": "రహదారులు, రైలు, మెట్రో, టెర్మినళ్లు, రవాణా మౌలిక సదుపాయాలు", "Associated utilities": "అనుబంధ సేవలు", "Development unrelated to transport": "రవాణాకు సంబంధం లేని అభివృద్ధి", "All agriculture and horticulture": "అన్ని వ్యవసాయ, ఉద్యాన కార్యకలాపాలు", "Farmhouse up to 5% plinth, G+1, on a plot of at least 0.5 acre": "కనీసం 0.5 ఎకరం స్థలంలో, 5% ప్లింత్ వరకు, G+1 ఫామ్‌హౌస్", "Food processing and agro-based industry with proper access": "సరైన రహదారి సదుపాయం ఉంటే ఆహార శుద్ధి, వ్యవసాయ ఆధారిత పరిశ్రమ", "White, Green and Blue category industry with change-of-land-use charges": "భూ వినియోగ మార్పు రుసుము చెల్లిస్తే తెలుపు, ఆకుపచ్చ, నీలం తరగతి పరిశ్రమ", "Solar and wind stations, cold storage, warehousing of local produce": "సౌర, పవన విద్యుత్ కేంద్రాలు, శీతల గిడ్డంగులు, స్థానిక ఉత్పత్తుల నిల్వ", "Heavy, noxious, hazardous and extractive industries": "భారీ, హానికర, ప్రమాదకర, తవ్వకం పరిశ్రమలు", "Any obnoxious or nuisance activity": "హానికరమైన లేదా ఇబ్బంది కలిగించే ఏ కార్యకలాపమైనా", "On notified forest land, only afforestation is permitted": "నోటిఫై చేసిన అటవీ భూమిలో అడవుల పెంపకం మాత్రమే అనుమతి", "Heritage buildings, monuments, precincts and archaeological sites, under the Heritage Regulations": "వారసత్వ నిబంధనల ప్రకారం వారసత్వ భవనాలు, స్మారకాలు, పరిసరాలు, పురావస్తు ప్రదేశాలు", "Defence and military land, per the defence manual": "రక్షణ మాన్యువల్ ప్రకారం రక్షణ, సైనిక భూమి", "Residential": "నివాస వినియోగం", "Commercial": "వాణిజ్య వినియోగం", "Industrial": "పారిశ్రామిక వినియోగం", "Mining and excavation": "గనుల తవ్వకం, మట్టి తవ్వకం", "Fishing, boating and picnics along the banks": "గట్ల వెంబడి చేపల వేట, పడవ ప్రయాణం, విహారం", "Open jetties, house boats, fishing platforms, rain shelters and snack bars, each under 100 sq m": "బహిరంగ జెట్టీలు, హౌస్ బోట్లు, చేపల వేదికలు, వర్షపు ఆశ్రయాలు, చిరుతిండి దుకాణాలు, ఒక్కొక్కటి 100 చ.మీ. లోపు", "Public and Semi-Public": "ప్రజా, అర్ధ-ప్రజా వినియోగం", "Transportation": "రవాణా వినియోగం", "Agriculture, horticulture, forestry": "వ్యవసాయం, ఉద్యానవనం, అటవీ పెంపకం", "Parks, botanical gardens, picnic spots": "ఉద్యానవనాలు, వృక్షశాస్త్ర తోటలు, విహార ప్రదేశాలు", "Electrical sub-stations and communication towers": "విద్యుత్ సబ్-స్టేషన్లు, సమాచార టవర్లు", "Residential, commercial, industrial development": "నివాస, వాణిజ్య, పారిశ్రామిక అభివృద్ధి", "Any built development beyond the above": "పైవి కాకుండా ఏ నిర్మాణ అభివృద్ధి అయినా", "Afforestation and conservation uses": "అడవుల పెంపకం, పరిరక్షణ వినియోగాలు", "Residential, commercial and industrial development": "నివాస, వాణిజ్య, పారిశ్రామిక అభివృద్ధి", "Quarrying, mining and excavation of the hillside": "కొండ ప్రాంతంలో క్వారీ, గనులు, తవ్వకం", "Uses consistent with the Eco-Sensitive Zone and CRZ guidelines of MoEF&CC": "MoEF&CC పర్యావరణ సున్నిత జోన్, CRZ మార్గదర్శకాలకు అనుగుణమైన వినియోగాలు", "Anything the CRZ notification bars": "CRZ నోటిఫికేషన్ నిషేధించిన ఏదైనా"}};
+
+/* Telugu covers what a resident reads: the answer card, the zoning schedule,
+   the zone names and the controls. The long analytical panels stay in English
+   for now rather than be half-translated. Lookups are keyed on the English
+   source string, so anything without a translation falls through to English
+   instead of showing a missing-key placeholder. */
+var LANG="en";
+try{ LANG=localStorage.getItem("vmrLang")||"en" }catch(e){}
+function tdict(d,s){ return (LANG==="te" && TE && TE[d] && TE[d][s]) ? TE[d][s] : s }
+function t(s){ return tdict("ui",s) }
+function tz(s){ return tdict("zone",s) }
+function trk(s){ return tdict("rulekey",s) }
+function tru(s){ return tdict("rule",s) }
+/* Word order is not translatable string by string. Telugu puts the postposition
+   after the noun, so "Legend class X on the Y sheet" cannot be assembled from
+   fragments without coming out backwards. Sentences that mix values take a
+   whole-sentence template instead. */
+function tf(key, vals){
+  return t(key).replace(/\{(\w+)\}/g, function(_,k){ return vals[k]!=null?vals[k]:"" });
+}
 /* recovered legend class -> rules key in G.O. 216 */
 var RULEKEY={
  "Residential":"Residential","Affordable Housing":"Residential",
@@ -1223,6 +1265,7 @@ Promise.all([
   renderComposition();
   renderZones();
   syncVersionUI();
+  applyLang();
   if(MOBILE) mBoot();
   loadTiles(VERSIONS[VER]); loadOther();
   if(location.hash.length>3) fromHash();
@@ -2023,13 +2066,11 @@ function identify(cx,cy,title){
 function bothHTML(res){
   if(!res.other) return "";
   return '<div class="both'+(res.differs?' diff':'')+'">'+
-    '<span><b>'+VERSIONS[VER].label+'</b> '+res.mine+'</span>'+
-    '<span><b>'+OTHER.label+'</b> '+res.other+'</span>'+
-    (res.differs ? '<em>the two plans put this land under different rules</em>'+
-       '<i>Each sheet is placed on the ground to about 200 m, and most zone '+
-       'patches are smaller than that. At a single point this can be '+
-       'misalignment rather than a decision.</i>'
-     : res.renamed ? '<em class="same">different legend names, same class under G.O. 216</em>'
+    '<span><b>'+t(VERSIONS[VER].label)+'</b> '+tz(res.mine)+'</span>'+
+    '<span><b>'+t(OTHER.label)+'</b> '+tz(res.other)+'</span>'+
+    (res.differs ? '<em>'+t("the two plans put this land under different rules")+'</em>'+
+       '<i>'+t("Each sheet is placed on the ground to about 200 m, and most zone patches are smaller than that. At a single point this can be misalignment rather than a decision.")+'</i>'
+     : res.renamed ? '<em class="same">'+t("different legend names, same class under G.O. 216")+'</em>'
      : '')+'</div>';
 }
 
@@ -2049,20 +2090,22 @@ function lawHTML(R){
   if(!R) return "";
   var P=R.permit||[], Q=R.prohibit||[];
   var ul=function(a){ return '<ul>'+a.map(function(x){
-    return '<li>'+x+'</li>' }).join("")+'</ul>' };
+    return '<li>'+tru(x)+'</li>' }).join("")+'</ul>' };
   return '<div class="law">'+
-    '<div class="lh">What the zoning law allows here</div>'+
+    '<div class="lh">'+t("What the zoning law allows here")+'</div>'+
     (R.headline?'<div class="lhd">'+R.headline+'</div>':'')+
-    (P.length?'<div class="lg ok"><b>Permitted<u>'+P.length+'</u></b>'+ul(P)+'</div>':'')+
-    (Q.length?'<div class="lg no"><b>Not permitted<u>'+Q.length+'</u></b>'+ul(Q)+'</div>':'')+
+    (P.length?'<div class="lg ok"><b>'+t("Permitted")+'<u>'+P.length+'</u></b>'+ul(P)+'</div>':'')+
+    (Q.length?'<div class="lg no"><b>'+t("Not permitted")+'<u>'+Q.length+'</u></b>'+ul(Q)+'</div>':'')+
     '<div class="lc">AP Common Zoning Regulations 2025, G.O. Ms. 216 dated '+
-    '22.10.2025. Summarised; the G.O. carries the full schedule.</div></div>';
+    '22.10.2025. Summarised; the G.O. carries the full schedule.'+
+    (LANG==="te" ? '<br>'+t("Telugu is an aid to reading. The English summary and G.O. Ms. 216 remain the authority.") : '')+
+    '</div></div>';
 }
 /* When the answer came from beside the point rather than the point, say so. */
 function ringNote(res){
   if(!res.ring) return "";
-  return " The point itself is line work or a label; this is the fill within about "+
-         Math.round(res.ring*idMetres()/10)*10+"\u2009m of it.";
+  return " "+t("The point itself is line work or a label; this is the fill within about")+" "+
+         Math.round(res.ring*idMetres()/10)*10+"\u2009m "+t("of it.");
 }
 function coordHTML(ll){
   if(!ll) return "";
@@ -2148,7 +2191,7 @@ function toggleZ(){ document.getElementById("zpanel").classList.toggle("min") }
    different areas. Where a grouped name collides, fall back to the legend's
    own name for that entry. */
 var ZDUP={};
-function zoneLabel(z){ return (ZDUP[z.name]>1 && z.raw) ? z.raw : z.name }
+function zoneLabel(z){ return tz((ZDUP[z.name]>1 && z.raw) ? z.raw : z.name) }
 function renderZones(){
   ZDUP={}; ZONES.forEach(function(z){ ZDUP[z.name]=(ZDUP[z.name]||0)+1 });
   var q=(document.getElementById("zq").value||"").toLowerCase();
@@ -2182,12 +2225,12 @@ function renderZones(){
     dt.className="zdet on";
     dt.innerHTML='<div class="dn">'+zoneLabel(z)+'</div><div class="dg">'+z.grp+'</div>'+
       '<dl><dt>This class</dt><dd>'+(z.sqkm>=1?Math.round(z.sqkm).toLocaleString():z.sqkm)+' km&sup2;</dd>'+
-      '<dt>Group total</dt><dd>'+Math.round(z.grpkm).toLocaleString()+' km&sup2;</dd>'+
-      '<dt>Share of VMR</dt><dd>'+share.toFixed(1)+'%</dd>'+
-      (conc?'<dt>Densest in</dt><dd>'+conc+' of it</dd>':'')+
-      (ext?'<dt>That window</dt><dd>'+ext+'</dd>':'')+
+      '<dt>'+t("Group total")+'</dt><dd>'+Math.round(z.grpkm).toLocaleString()+' km&sup2;</dd>'+
+      '<dt>'+t("Share of VMR")+'</dt><dd>'+share.toFixed(1)+'%</dd>'+
+      (conc?'<dt>'+t("Densest window")+'</dt><dd>'+conc+' of it</dd>':'')+
+      (ext?'<dt>'+t("That window")+'</dt><dd>'+ext+'</dd>':'')+
       (ll?'<dt>Centred</dt><dd>'+ll[1].toFixed(3)+', '+ll[0].toFixed(3)+'</dd>':'')+cmp+'</dl>'+
-      '<button class="zgo" onclick="zoomToZone()">Fly to where it concentrates</button>'+
+      '<button class="zgo" onclick="zoomToZone()">'+t("Fly to where it concentrates")+'</button>'+
       (z.prot?'<div class="pr">&#9670; Protected Use Zone. Development is barred here.</div>':'');
   } else { dt.className="zdet"; }
 
@@ -2836,11 +2879,10 @@ function mEmpty(){
         'with <b>different legends</b>, so a change of colour is not by itself a '+
         'change of zoning. Tap a point and the panel compares what each plan '+
         'actually permits there.</div>'
-      : '<div class="meh">What does the plan say about a place?</div>'+
-        '<div class="mep">Tap anywhere on the sheet to read its zone and what the '+
-        'zoning law permits there.</div>')+
-    '<button class="mbtn pri" onclick="mLocate()">Use where I am</button>'+
-    '<button class="mbtn" onclick="mPane(\'msearchp\',1)">Find a village or town</button>'+
+      : '<div class="meh">'+t("What does the plan say about a place?")+'</div>'+
+        '<div class="mep">'+t("Tap anywhere on the sheet to read its zone and what the zoning law permits there.")+'</div>')+
+    '<button class="mbtn pri" onclick="mLocate()">'+t("Use where I am")+'</button>'+
+    '<button class="mbtn" onclick="mPane(\'msearchp\',1)">'+t("Find a village or town")+'</button>'+
     '<div class="mprov">'+VERSIONS[VER].note+' Zones read back from the published '+
       'picture by colour. Not a VMRDA record.</div>'+
     '</div>';
@@ -2852,19 +2894,18 @@ function mAnswer(res){
   if(res.title) h+='<div class="meyebrow">'+res.title+'</div>';
   h+='<div class="mzone"><i style="background:'+
        (hit?"rgb("+hit.rgb.join(",")+")":"#2a3446")+'"></i>'+
-     '<span>'+(hit?hit.name:"No zone colour")+'</span></div>'+
+     '<span>'+(hit?tz(hit.name):t("No zone colour"))+'</span></div>'+
      '<div class="msub">'+(hit
-        ? 'Legend class &ldquo;'+hit.raw+'&rdquo; on the '+VERSIONS[VER].label+' sheet.'+ringNote(res)
-        : 'Boundary line work, a label, or outside the plan area. Try a few metres away.')+
+        ? tf("Legend class {c} on the {v} sheet.",
+             {c:'&ldquo;'+tz(hit.raw)+'&rdquo;', v:t(VERSIONS[VER].label)})+ringNote(res)
+        : t("Boundary line work, a label, or outside the plan area. Try a few metres away."))+
      '</div>'+
      bothHTML(res)+lawHTML(res.rule);
   if(res.ll) h+='<a class="mmaps" href="https://www.google.com/maps/@'+
       res.ll[1].toFixed(5)+','+res.ll[0].toFixed(5)+',16z" target="_blank" rel="noopener">'+
       '<code>'+res.ll[1].toFixed(5)+', '+res.ll[0].toFixed(5)+'</code>'+
-      '<span>&plusmn;200 m &middot; open in Maps &rarr;</span></a>';
-  h+='<div class="mcav">Read back from the published picture by colour, not from '+
-     'VMRDA records. Not authoritative. Do not rely on this for any decision about '+
-     'a specific parcel.</div>';
+      '<span>&plusmn;200 m &middot; '+t("open in Maps")+' &rarr;</span></a>';
+  h+='<div class="mcav">'+t("Read back from the published picture by colour, not from VMRDA records. Not authoritative. Do not rely on this for any decision about a specific parcel.")+'</div>';
   b.innerHTML=h;
   if(MS.det===0) mSnap(1);
   mEnsure(res.ix,res.iy);
@@ -2880,22 +2921,22 @@ function mIso(){
               ((HB.y1-HB.y0)*GEO.s/1000).toFixed(0)+' km' : null;
   var conc=(isoBox&&isoBox.hot)? (isoBox.hot.share*100).toFixed(0)+'% of it' : null;
   b.innerHTML=
-    '<div class="meyebrow">Showing this class alone</div>'+
+    '<div class="meyebrow">'+t("Showing this class alone")+'</div>'+
     '<div class="mzone"><i style="background:rgb('+z.rgb.join(",")+')"></i>'+
       '<span>'+zoneLabel(z)+'</span></div>'+
     '<div class="msub">'+
       (z.grp && z.grp!==zoneLabel(z) ? z.grp : 'Legend class &ldquo;'+z.raw+'&rdquo;')+
-      (z.prot?' &middot; a Protected Use Zone. Development is barred here.':'')+'</div>'+
+      (z.prot?' &middot; '+t("a Protected Use Zone. Development is barred here."):'')+'</div>'+
     '<dl class="mzdl">'+
-      '<dt>This class</dt><dd>'+(z.sqkm>=1?Math.round(z.sqkm).toLocaleString():z.sqkm)+' km&sup2;</dd>'+
-      '<dt>Group total</dt><dd>'+Math.round(z.grpkm).toLocaleString()+' km&sup2;</dd>'+
-      '<dt>Share of VMR</dt><dd>'+(z.grpkm/VERSIONS[VER].area*100).toFixed(1)+'%</dd>'+
-      (conc?'<dt>Densest window</dt><dd>'+conc+'</dd>':'')+
-      (ext?'<dt>That window</dt><dd>'+ext+'</dd>':'')+
+      '<dt>'+t("This class")+'</dt><dd>'+(z.sqkm>=1?Math.round(z.sqkm).toLocaleString():z.sqkm)+' km&sup2;</dd>'+
+      '<dt>'+t("Group total")+'</dt><dd>'+Math.round(z.grpkm).toLocaleString()+' km&sup2;</dd>'+
+      '<dt>'+t("Share of VMR")+'</dt><dd>'+(z.grpkm/VERSIONS[VER].area*100).toFixed(1)+'%</dd>'+
+      (conc?'<dt>'+t("Densest window")+'</dt><dd>'+conc+'</dd>':'')+
+      (ext?'<dt>'+t("That window")+'</dt><dd>'+ext+'</dd>':'')+
       (z.pub?'<dt>VMRDA table</dt><dd>'+Math.round(z.pub).toLocaleString()+' km&sup2;</dd>':'')+
     '</dl>'+
-    '<button class="mbtn pri" style="margin-top:14px" onclick="zoomToZone()">Fly to where it concentrates</button>'+
-    '<button class="mbtn" onclick="pickZone('+ZONES.indexOf(z)+')">Bring the whole plan back</button>'+
+    '<button class="mbtn pri" style="margin-top:14px" onclick="zoomToZone()">'+t("Fly to where it concentrates")+'</button>'+
+    '<button class="mbtn" onclick="pickZone('+ZONES.indexOf(z)+')">'+t("Bring the whole plan back")+'</button>'+
     '<div class="mcav">Areas recovered from the sheet by colour, with 43% median '+
       'error against VMRDA&rsquo;s own table. Read the ordering, not the totals.</div>';
   if(MS.det===0) mSnap(1);
@@ -3027,6 +3068,32 @@ function mLocate(){
     b.classList.remove("on");
     mToast("Location not available");
   }, {enableHighAccuracy:true, timeout:10000, maximumAge:30000});
+}
+
+/* One switch, in the menu that already exists, remembered between visits.
+   Everything that renders from JS is rebuilt; the static labels are carried by
+   data-i18n so the markup keeps its English source as the lookup key. */
+function setLang(l){
+  LANG=l;
+  try{ localStorage.setItem("vmrLang",l) }catch(e){}
+  document.documentElement.lang = (l==="te") ? "te" : "en";
+  applyLang();
+  renderZones();
+  if(MOBILE){ mZones(); mLegend() }
+  if(LAST){ if(immOn()) immAnswer(LAST); else if(MOBILE) mAnswer(LAST); else renderRead(LAST) }
+  else if(MOBILE){ if(isoZone) mIso(); else mEmpty() }
+  if(document.getElementById("usep").classList.contains("on")) renderUse();
+  draw();
+}
+function applyLang(){
+  [].forEach.call(document.querySelectorAll("[data-i18n]"), function(el){
+    el.textContent=t(el.getAttribute("data-i18n"));
+  });
+  var q=document.getElementById("mq"); if(q) q.placeholder=t("Find a village or town");
+  ["langEn","langTe"].forEach(function(id,i){
+    var b=document.getElementById(id);
+    if(b) b.classList.toggle("on", LANG===(i?"te":"en"));
+  });
 }
 
 function mMenu(on){
