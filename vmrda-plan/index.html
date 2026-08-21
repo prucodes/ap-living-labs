@@ -44,6 +44,7 @@
   @media (max-width:720px){ .find{flex:1 1 120px} }
   .vseg{margin-left:auto}
   .vseg button.on{background:rgba(224,184,114,.18);color:var(--gold)}
+  #vCmp.on,#mvC.on{background:rgba(99,216,234,.18);color:var(--cy)}
   .seg{margin-left:8px;display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;flex:none}
   .seg button{padding:6px 12px;font-size:12px;color:var(--dim);white-space:nowrap}
   .seg button.on{background:rgba(99,216,234,.15);color:var(--cy)}
@@ -420,7 +421,8 @@
     /* the state before anything is picked: an offer, not an empty panel */
     .mempty .meh{font-size:19.5px;font-weight:650;letter-spacing:-.018em;margin:2px 0 7px;
       line-height:1.25}
-    .mempty .mep{font-size:13.2px;color:var(--dim);line-height:1.55;margin-bottom:15px}
+      .mempty .mep{font-size:13.2px;color:var(--dim);line-height:1.55;margin-bottom:15px}
+    .mempty .mep b{color:var(--warn);font-weight:600}
     .mbtn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;height:52px;
       border-radius:15px;border:1px solid var(--line2);color:var(--ink);font-size:14.6px;
       background:rgba(255,255,255,.045);margin-bottom:9px}
@@ -585,6 +587,7 @@
   <div class="seg vseg">
     <button id="vDraft" onclick="setVersion('draft')">Draft 2021</button>
     <button id="vFinal" onclick="setVersion('final')">Final 2026</button>
+    <button id="vCmp" onclick="toggleCmp()" title="Both plans either side of a seam">Compare</button>
   </div>
   <div class="seg">
     <button id="mPlan" class="on" onclick="setMode('plan')">Plan</button>
@@ -665,7 +668,7 @@
     <div class="cb" id="cbody"></div>
   </div>
 
-  <div class="hint">Scroll to zoom &middot; drag to pan &middot; click any area to read its zone</div>
+  <div class="hint" id="hint">Scroll to zoom &middot; drag to pan &middot; click any area to read its zone</div>
 
   <div class="drawer" id="drawer">
     <div class="dh"><b>What this plan can and cannot answer</b>
@@ -787,6 +790,7 @@
     <div class="mver">
       <button id="mvD" onclick="setVersion('draft')">Draft 2021</button>
       <button id="mvF" onclick="setVersion('final')">Final 2026</button>
+      <button id="mvC" onclick="toggleCmp()">Compare</button>
     </div>
 
     <div class="mmenu" id="mmenu">
@@ -1006,6 +1010,7 @@ function buildSatAffine(){
           c:(y[0]-o[0])/H, d:(y[1]-o[1])/H, e:o[0], f:o[1]};
 }
 var showTanks = false;
+var cmp = false;            /* draft and final either side of a draggable seam */
 
 /* Inverse of the georeference: lon/lat back to a pixel on this cropped image.
    E = s(x c + y sn) + tE ; N = s(x sn - y c) + tN, so x = e c + n sn and
@@ -1016,13 +1021,67 @@ function ll2px(lo, la){
   var n = ((la - GEO.lat0) * GEO.ky - GEO.tN) / GEO.s;
   return [e * c + n * sn - GEO.cx, e * sn - n * c - GEO.cy];
 }
-function px2ll(x, y){
-  var th = GEO.deg * Math.PI / 180, c = Math.cos(th), sn = Math.sin(th);
-  var X = x + GEO.cx, Y = y + GEO.cy;
-  var E = GEO.s * (X * c + Y * sn) + GEO.tE;
-  var N = GEO.s * (X * sn - Y * c) + GEO.tN;
-  return [GEO.lon0 + E / GEO.kx, GEO.lat0 + N / GEO.ky];
+function px2llG(g, x, y){
+  var th = g.deg * Math.PI / 180, c = Math.cos(th), sn = Math.sin(th);
+  var X = x + g.cx, Y = y + g.cy;
+  var E = g.s * (X * c + Y * sn) + g.tE;
+  var N = g.s * (X * sn - Y * c) + g.tN;
+  return [g.lon0 + E / g.kx, g.lat0 + N / g.ky];
 }
+function px2ll(x, y){ return px2llG(GEO, x, y) }
+
+/* The two sheets are different rasters at different scales with their own
+   georeferences, so one cannot simply be drawn over the other. Both are affine
+   in lon/lat though, so the composition of one sheet's forward transform with
+   the other's inverse is a single affine, and the other plan can be painted
+   straight into this one's frame with one canvas transform. Solved from three
+   corners, the same way the satellite mosaic is placed. */
+var othAff=null, zoneAff=null;
+/* Images report naturalWidth, canvases report width, and the isolate mask is a
+   canvas. Guarding on naturalWidth alone made drawRaster return without drawing
+   it, so selecting a class highlighted nothing. */
+function imgW(im){ return im ? (im.naturalWidth || im.width || 0) : 0 }
+function imgH(im){ return im ? (im.naturalHeight || im.height || 0) : 0 }
+function affFor(g, img){
+  if(!g || !imgW(img) || !GEO) return null;
+  var W=imgW(img), H=imgH(img);
+  function q(ox,oy){ var ll=px2llG(g,ox,oy); return ll2px(ll[0],ll[1]) }
+  var o=q(0,0), ax=q(W,0), ay=q(0,H);
+  if(!isFinite(o[0])||!isFinite(ax[0])||!isFinite(ay[0])) return null;
+  return {a:(ax[0]-o[0])/W, b:(ax[1]-o[1])/W,
+          c:(ay[0]-o[0])/H, d:(ay[1]-o[1])/H, e:o[0], f:o[1]};
+}
+function affTimes(A,fx,fy){
+  return A ? {a:A.a*fx, b:A.b*fx, c:A.c*fy, d:A.d*fy, e:A.e, f:A.f} : null;
+}
+/* Every low-resolution overlay was drawn by stretching it across IW x IH, on
+   the assumption that the display raster covers exactly the ground the tile
+   pyramid covers. It does not. The final sheet's display raster is 9,838 px
+   spanning 49,001 pyramid pixels of a 54,000 pixel sheet, so the zones view,
+   the split view and the isolate highlight were all stretched 10% wide against
+   the plan underneath them. Place each raster by its own georeference instead.
+   (Identify was never affected: it goes ground -> display pixel through IDGEO
+   and never touches IW.) */
+function buildRasterAffines(){
+  zoneAff = affFor(VERSIONS[VER].geo, zone);
+  othAff  = affFor(OTHER.geo, OTHER.img);
+}
+function drawRaster(img, aff, x, y){
+  if(!imgW(img)) return;
+  if(!aff){ ctx.drawImage(img, x, y, IW*view.s*dpr, IH*view.s*dpr); return }
+  var k=view.s*dpr;
+  ctx.save();
+  ctx.imageSmoothingEnabled=false;
+  ctx.setTransform(aff.a*k, aff.b*k, aff.c*k, aff.d*k, x+aff.e*k, y+aff.f*k);
+  ctx.drawImage(img,0,0);
+  ctx.restore();
+  ctx.setTransform(1,0,0,1,0,0);
+}
+function idcAff(){
+  if(!zoneAff || !imgW(zone) || !idc.width) return null;
+  return affTimes(zoneAff, imgW(zone)/idc.width, imgH(zone)/idc.height);
+}
+function buildOtherAffine(){ buildRasterAffines() }
 
 var cv=document.getElementById("cv"), ctx=cv.getContext("2d",{alpha:false});
 var stage=document.getElementById("stage");
@@ -1059,6 +1118,7 @@ Promise.all([
   idx.imageSmoothingEnabled=false;
   idx.drawImage(zone,0,0,idc.width,idc.height);
   measureContent();
+  buildRasterAffines();
   ready=1; resize(); reset(true);
   document.getElementById("boot").classList.add("off");
   requestAnimationFrame(tick);
@@ -1282,17 +1342,19 @@ function draw(){
   function planLayer(){
     if(TILES) drawTiles(x,y,A); else ctx.drawImage(plan,x,y,dw,dh);
   }
-  if(mode==="zone"){ ctx.drawImage(zone,x,y,dw,dh); }
+  if(cmp && OTHER.img && othAff){ drawCompare(x,y,dw,dh,w,h); }
+  else if(mode==="zone"){ drawRaster(zone, zoneAff, x, y); }
   else if(mode==="split"){
     planLayer();
     ctx.save(); ctx.beginPath(); ctx.rect(w*split,0,w-w*split,h); ctx.clip();
-    ctx.drawImage(zone,x,y,dw,dh); ctx.restore();
+    drawRaster(zone, zoneAff, x, y); ctx.restore();
     ctx.fillStyle="rgba(99,216,234,.85)"; ctx.fillRect(w*split-1*dpr,0,2*dpr,h);
   } else { planLayer(); }
   ctx.filter="none";
   ctx.globalAlpha=1;
 
   if(isoZone && isoCv.width){
+    var iAff=idcAff();
     ctx.save();
     ctx.imageSmoothingEnabled=false;
     /* Three passes: a wide soft bloom, a tighter one, then the mask itself at
@@ -1300,10 +1362,10 @@ function draw(){
        small polygons off a busy sheet. */
     ctx.globalCompositeOperation="lighter";
     ctx.shadowColor="rgba("+isoZone.rgb.join(",")+",.95)";
-    ctx.globalAlpha=.55; ctx.shadowBlur=26; ctx.drawImage(isoCv,x,y,dw,dh);
-    ctx.globalAlpha=.75; ctx.shadowBlur=10; ctx.drawImage(isoCv,x,y,dw,dh);
+    ctx.globalAlpha=.55; ctx.shadowBlur=26; drawRaster(isoCv,iAff,x,y);
+    ctx.globalAlpha=.75; ctx.shadowBlur=10; drawRaster(isoCv,iAff,x,y);
     ctx.globalCompositeOperation="source-over";
-    ctx.globalAlpha=1;  ctx.shadowBlur=0;  ctx.drawImage(isoCv,x,y,dw,dh);
+    ctx.globalAlpha=1;  ctx.shadowBlur=0;  drawRaster(isoCv,iAff,x,y);
     ctx.restore();
 
     /* corner brackets round the class extent, so the eye is told where to look */
@@ -1417,6 +1479,84 @@ function drawMark(x,y,w,h){
   ctx.restore();
 }
 
+/* Both plans, one ground, one seam. Classified zone rasters on both sides
+   rather than the printed sheets: the sheets differ in draughting style as much
+   as in content, and flat colour is what makes a boundary move visible. */
+function cmpPill(text, edge, rightAlign, cy){
+  ctx.save();
+  ctx.font="600 "+(11.5*dpr)+"px ui-sans-serif,-apple-system,'SF Pro Text',system-ui,sans-serif";
+  var tw=ctx.measureText(text).width, padx=10*dpr, hgt=25*dpr;
+  var wpill=tw+padx*2, bx=rightAlign ? edge-wpill : edge;
+  var r=7*dpr, by=cy-hgt/2;
+  ctx.beginPath();
+  ctx.moveTo(bx+r,by); ctx.arcTo(bx+wpill,by,bx+wpill,by+hgt,r);
+  ctx.arcTo(bx+wpill,by+hgt,bx,by+hgt,r); ctx.arcTo(bx,by+hgt,bx,by,r);
+  ctx.arcTo(bx,by,bx+wpill,by,r); ctx.closePath();
+  ctx.fillStyle="rgba(9,13,20,.86)"; ctx.fill();
+  ctx.lineWidth=1*dpr; ctx.strokeStyle="rgba(255,255,255,.28)"; ctx.stroke();
+  ctx.fillStyle="rgba(255,255,255,.95)"; ctx.textBaseline="middle";
+  ctx.fillText(text, bx+padx, cy+0.5*dpr);
+  ctx.restore();
+}
+function drawCompare(x,y,dw,dh,w,h){
+  var sx=Math.round(w*split);
+  ctx.save(); ctx.beginPath(); ctx.rect(0,0,sx,h); ctx.clip();
+  drawRaster(zone, zoneAff, x, y);
+  ctx.restore();
+
+  ctx.save(); ctx.beginPath(); ctx.rect(sx,0,w-sx,h); ctx.clip();
+  drawRaster(OTHER.img, othAff, x, y);
+  ctx.restore();
+
+  /* the seam, dark-edged so it holds over both palettes */
+  ctx.fillStyle="rgba(9,13,20,.5)"; ctx.fillRect(sx-2.5*dpr,0,5*dpr,h);
+  ctx.fillStyle="rgba(255,255,255,.92)"; ctx.fillRect(sx-1.5*dpr,0,3*dpr,h);
+  /* The grab handle and the two labels belong in the strip of map that is
+     actually visible, not the middle of the canvas: on a phone the middle of
+     the canvas is behind the bottom sheet. */
+  var band=(MOBILE && !mLand()) ? mFree() : null;
+  var cy = band ? (band.top + band.h*0.52)*dpr : h*0.5;
+  var py = band ? (band.top + 30)*dpr : h*0.12;
+  ctx.beginPath(); ctx.arc(sx,cy,16*dpr,0,7);
+  ctx.fillStyle="rgba(9,13,20,.88)"; ctx.fill();
+  ctx.lineWidth=2*dpr; ctx.strokeStyle="rgba(255,255,255,.92)"; ctx.stroke();
+  ctx.lineWidth=2*dpr; ctx.lineCap="round"; ctx.strokeStyle="rgba(255,255,255,.95)";
+  [[-1,-5],[1,5]].forEach(function(d){
+    ctx.beginPath();
+    ctx.moveTo(sx+d[1]*dpr+d[0]*3*dpr, cy-4*dpr);
+    ctx.lineTo(sx+d[1]*dpr, cy);
+    ctx.lineTo(sx+d[1]*dpr+d[0]*3*dpr, cy+4*dpr);
+    ctx.stroke();
+  });
+  cmpPill(VERSIONS[VER].label, sx-14*dpr, true,  py);
+  cmpPill(OTHER.label,         sx+14*dpr, false, py);
+}
+
+function toggleCmp(){
+  if(!cmp && !(OTHER.img && othAff)){
+    if(MOBILE) mToast("The other plan is still loading");
+    return;
+  }
+  cmp=!cmp;
+  if(cmp && (split<0.08||split>0.92)) split=0.5;
+  syncCmpUI();
+  draw();
+  if(MOBILE) mToast(cmp
+    ? VERSIONS[VER].label+" left, "+OTHER.label+" right. Zone classes, not parcels."
+    : "Back to one plan");
+}
+function syncCmpUI(){
+  ["vCmp","mvC"].forEach(function(id){
+    var b=document.getElementById(id);
+    if(b) b.classList.toggle("on", cmp);
+  });
+  var h=document.getElementById("hint");
+  if(h) h.innerHTML = cmp
+    ? "Drag the seam &middot; the two sheets use different legends, so click a point to compare the rules"
+    : "Scroll to zoom &middot; drag to pan &middot; click any area to read its zone";
+  if(MOBILE && !LAST) mEmpty();
+}
+
 function toggleTanks(){
   showTanks=!showTanks;
   document.getElementById("tBtn").style.color=showTanks?"#ef6b6b":"";
@@ -1452,6 +1592,7 @@ function loadOther(){
     c2.drawImage(im,0,0,cnv.width,cnv.height);
     OTHER={img:im, ctx:c2, geo:V.geo, lookup:V.lookup, ver:ov,
            label:V.label, w:cnv.width, h:cnv.height, px:V.px};
+    buildOtherAffine();
     /* The comparison only becomes answerable now. Refresh a reading that is
        already on screen rather than leaving it one plan short. */
     if(LAST && LAST.ll){
@@ -1516,9 +1657,12 @@ function buildIso(){
      top-left tenth of the sheet, which is where "fly to this zone" sent you.
      Scale by the ratio the rasters actually stand in instead, so this holds
      whichever image is loaded. */
-  var kx=IW/idc.width, ky=IH/idc.height;
-  isoBox={x0:x0*kx,y0:y0*ky,x1:(x1+1)*kx,y1:(y1+1)*ky,
-          cx:(sx/n)*kx, cy:(sy/n)*ky, px:n};
+  /* idc pixels -> current raster pixels, through the display raster's own
+     placement rather than through the pyramid's width. */
+  var A=idcAff() || {a:IW/idc.width, b:0, c:0, d:IH/idc.height, e:0, f:0};
+  var kx=A.a, ky=A.d, ox=A.e, oy=A.f;
+  isoBox={x0:ox+x0*kx, y0:oy+y0*ky, x1:ox+(x1+1)*kx, y1:oy+(y1+1)*ky,
+          cx:ox+(sx/n)*kx, cy:oy+(sy/n)*ky, px:n};
 
   /* Every class is scattered the length of the region, so its bounding box is
      always the whole sheet and zooming to it shows nothing. What a reader
@@ -1542,8 +1686,8 @@ function buildIso(){
     if(t2>bv){bv=t2;bi=gy2*GX+gx2}
   }
   var pgx=bi%GX, pgy=(bi/GX)|0;
-  isoBox.hot={x0:(pgx-1)*cw*kx, y0:(pgy-1)*chh*ky,
-              x1:(pgx+2)*cw*kx, y1:(pgy+2)*chh*ky,
+  isoBox.hot={x0:ox+(pgx-1)*cw*kx, y0:oy+(pgy-1)*chh*ky,
+              x1:ox+(pgx+2)*cw*kx, y1:oy+(pgy+2)*chh*ky,
               share: bv/n};
 }
 
@@ -1617,6 +1761,7 @@ function loadTiles(V){
       view.s=goal.s; view.x=goal.x; view.y=goal.y;
     } else { reset(true); }
     PENDVIEW=null;
+    buildRasterAffines();   /* GEO.s just changed under both */
     draw(); doReloc();
   }).catch(function(){ TILES=null; PENDVIEW=null; doReloc() });
 }
@@ -1649,6 +1794,7 @@ function setVersion(v){
     idx.imageSmoothingEnabled=false;
     idx.drawImage(zone,0,0,idc.width,idc.height);
     measureContent();
+    buildRasterAffines();
     buildSatAffine();
     if(here){                       /* put the same ground back under the centre */
       var q=ll2px(here[0],here[1]);
@@ -1661,6 +1807,7 @@ function setVersion(v){
   }
   np_.onload=done; nz.onload=done; np_.src=V.plan; nz.src=V.zones;
   syncVersionUI();
+  syncCmpUI();
 }
 
 /* One place that says which plan is showing, so the markup does not carry a
@@ -2147,8 +2294,8 @@ stage.addEventListener("pointerdown",function(e){
     drag=false; moved=99; stage.classList.remove("grab"); return;
   }
   var rr=stage.getBoundingClientRect();
-  seam = mode==="split" &&
-         Math.abs((e.clientX-rr.left)/rr.width - split) < 0.05;
+  seam = (cmp || mode==="split") &&
+         Math.abs((e.clientX-rr.left)/rr.width - split) < 0.06;
   drag=true; moved=0; lx=e.clientX; ly=e.clientY;
   stage.classList.add("grab"); stage.setPointerCapture(e.pointerId);
 });
@@ -2298,9 +2445,15 @@ function mEmpty(){
   var b=document.getElementById("msbody"); if(!b) return;
   b.innerHTML=
     '<div class="mempty">'+
-    '<div class="meh">What does the plan say about a place?</div>'+
-    '<div class="mep">Tap anywhere on the sheet to read its zone and what the '+
-      'zoning law permits there.</div>'+
+    (cmp
+      ? '<div class="meh">'+VERSIONS[VER].label+' against '+OTHER.label+'</div>'+
+        '<div class="mep">Drag the seam across a place. The two sheets are drawn '+
+        'with <b>different legends</b>, so a change of colour is not by itself a '+
+        'change of zoning. Tap a point and the panel compares what each plan '+
+        'actually permits there.</div>'
+      : '<div class="meh">What does the plan say about a place?</div>'+
+        '<div class="mep">Tap anywhere on the sheet to read its zone and what the '+
+        'zoning law permits there.</div>')+
     '<button class="mbtn pri" onclick="mLocate()">Use where I am</button>'+
     '<button class="mbtn" onclick="mPane(\'msearchp\',1)">Find a village or town</button>'+
     '<div class="mprov">'+VERSIONS[VER].note+' Zones read back from the published '+
