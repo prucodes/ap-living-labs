@@ -343,6 +343,18 @@
   .usep mark,.urow mark,.uhere mark{background:rgba(99,216,234,.28);color:var(--ink);
     border-radius:2px;padding:0 2px}
   #usep mark{background:rgba(99,216,234,.28);color:var(--ink)}
+  .ustat{border:1px solid var(--line2);border-radius:11px;padding:13px 14px;margin-bottom:14px;
+    background:rgba(255,255,255,.035)}
+  .ustat .sl{font-family:var(--mono);font-size:8.6px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--faint);margin-bottom:9px}
+  .ustat .sbar{display:flex;height:10px;border-radius:5px;overflow:hidden;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);margin-bottom:9px}
+  .ustat .sbar i{height:100%}
+  .ustat .sk{display:flex;flex-wrap:wrap;gap:5px 14px;font-size:12px;color:var(--dim)}
+  .ustat .sk span{display:flex;align-items:center;gap:6px}
+  .ustat .sk u{width:9px;height:9px;border-radius:2px;text-decoration:none}
+  .ustat b{color:var(--ink);font-weight:640}
+  .ustat .sn{font-size:13.4px;color:var(--ink);line-height:1.55;margin-bottom:10px}
   .uhere{border:1px solid var(--line2);border-radius:11px;padding:12px 13px;margin-bottom:15px;
     background:rgba(99,216,234,.06)}
   .uhere b{display:block;font-family:var(--mono);font-size:8.6px;letter-spacing:.14em;
@@ -2352,7 +2364,8 @@ function renderUse(){
   var body=document.getElementById("ubody");
   if(!RULES){ body.innerHTML='<p class="sub">The zoning schedule is not loaded.</p>'; return }
   if(term.length<3){
-    body.innerHTML='<p class="sub">Type a use, or pick one above. This searches the '+
+    body.innerHTML=statHTML(null)+
+      '<p class="sub">Type a use, or pick one above. This searches the '+
       'permitted and prohibited lists of the AP Common Zoning Regulations 2025 '+
       '(G.O. Ms. 216) as summarised on this page, and shows the entry it matched.</p>';
     return;
@@ -2363,7 +2376,7 @@ function renderUse(){
     (Z.permit||[]).forEach(function(x){ if(useHit(x,term)) hitsP.push({k:k,text:x}) });
     (Z.prohibit||[]).forEach(function(x){ if(useHit(x,term)) hitsQ.push({k:k,text:x}) });
   });
-  var h="";
+  var h=statHTML(term);
   /* answer for the point already being read, first */
   if(LAST && LAST.rule){
     var rk=RULEKEY[LAST.hit.raw]||RULEKEY[LAST.hit.name];
@@ -2391,10 +2404,88 @@ function renderUse(){
     h+='<p class="sub">No entry in the summarised schedule uses that word.</p>';
   h+='<div class="unote">This searches the words of a summary. A use the schedule '+
      'does not name is not thereby allowed or barred, and zone boundaries here carry '+
-     '&plusmn;200 m. Read G.O. Ms. 216 before relying on any of it.</div>';
+     '&plusmn;200 m. Shares are of area recovered from the sheet by colour, which misses '+
+     'VMRDA&rsquo;s own table by a median of 43%, so read them as orders of magnitude and '+
+     'not as measurements. Read G.O. Ms. 216 before relying on any of it.</div>';
   body.innerHTML=h;
 }
 function useGo(i){ toggleUse(false); pickZone(i); if(MOBILE) mIso(); }
+
+/* The National Zoning Atlas's contribution is not the lookup, it is the
+   aggregate: "single-family is allowed by right on 95% of residential land".
+   The same claim is available here without any new data, because every legend
+   class already carries a recovered area and a rules key. What it costs is a
+   caveat that has to travel with it: those areas miss VMRDA's own table by a
+   median of 43%, so the shares are orders of magnitude and not measurements. */
+function areaByRuleKey(){
+  var t={}, tot=0;
+  ZONES.forEach(function(z){
+    var k=RULEKEY[z.raw]||RULEKEY[z.name];
+    tot+=z.sqkm;
+    if(k) t[k]=(t[k]||0)+z.sqkm;
+  });
+  return {byKey:t, total:tot};
+}
+/* A zone can name the same use on both of its lists, because the schedule
+   qualifies it: Agriculture allows White, Green and Blue category industry and
+   bars the heavy and noxious kinds. Counting those zones under both headings
+   made the shares sum to 147% for "industry" and would have drawn a bar wider
+   than the bar. Every zone lands in exactly one bucket instead, and the
+   qualified bucket is the interesting one: it is where the schedule has an
+   answer but not a one-word answer. */
+function useShare(term){
+  var A=areaByRuleKey(), out={permit:0, both:0, prohibit:0, silent:0, total:A.total};
+  Object.keys(A.byKey).forEach(function(k){
+    var Z=RULES.zones[k], km=A.byKey[k];
+    if(!Z){ out.silent+=km; return }
+    var p=(Z.permit||[]).some(function(x){return useHit(x,term)});
+    var q=(Z.prohibit||[]).some(function(x){return useHit(x,term)});
+    if(p&&q) out.both+=km; else if(p) out.permit+=km; else if(q) out.prohibit+=km;
+    else out.silent+=km;
+  });
+  return out;
+}
+function protectedShare(){
+  var prot=0, tot=0;
+  ZONES.forEach(function(z){ tot+=z.sqkm; if(z.prot) prot+=z.sqkm });
+  return {prot:prot, tot:tot};
+}
+function statHTML(term){
+  var pc=function(v,t){ return t>0 ? Math.round(100*v/t) : 0 };
+  /* a class smaller than a percent of the region is not "nowhere" */
+  var pcs=function(v,t){ var r=pc(v,t); return (r===0 && v>0) ? "under 1" : String(r) };
+  if(!term){
+    var s=protectedShare();
+    if(!(s.tot>0)) return "";
+    return '<div class="ustat"><div class="sl">Across the '+VERSIONS[VER].label+' sheet</div>'+
+      '<div class="sn"><b>'+pc(s.prot,s.tot)+'%</b> of the recovered plan area sits in a '+
+      'Protected Use Zone, where the schedule bars development outright. The other <b>'+
+      (100-pc(s.prot,s.tot))+'%</b> is governed by what follows.</div>'+
+      '<div class="sbar"><i style="width:'+pc(s.prot,s.tot)+'%;background:#5fc88c"></i>'+
+      '<i style="width:'+(100-pc(s.prot,s.tot))+'%;background:rgba(140,175,215,.3)"></i></div>'+
+      '<div class="sk"><span><u style="background:#5fc88c"></u>Development restricted</span>'+
+      '<span><u style="background:rgba(140,175,215,.45)"></u>Everything else</span></div></div>';
+  }
+  var u=useShare(term);
+  if(!(u.total>0) || (!u.permit && !u.prohibit && !u.both)) return "";
+  var P=pc(u.permit,u.total), B=pc(u.both,u.total),
+      Q=pc(u.prohibit,u.total), S=pc(u.silent,u.total);
+  var seg=function(w,c){ return w>0 ? '<i style="width:'+w+'%;background:'+c+'"></i>' : '' };
+  var key=function(c,label,v){ return v>0 ?
+    '<span><u style="background:'+c+'"></u>'+label+' '+pcs(v,u.total)+'%</span>' : '' };
+  return '<div class="ustat"><div class="sl">Across the region</div>'+
+    '<div class="sn">Permitted outright across <b>'+pcs(u.permit,u.total)+'%</b> of the '+
+    'recovered plan area'+
+    (u.both ? ', permitted in some forms and barred in others across <b>'+
+      pcs(u.both,u.total)+'%</b>' : '')+
+    ', barred across <b>'+pcs(u.prohibit,u.total)+'%</b>. On the rest the schedule is '+
+    'silent, which is not the same as allowed.</div>'+
+    '<div class="sbar">'+seg(P,"#5fc88c")+seg(B,"#e0a24e")+seg(Q,"#e4544f")+
+      seg(S,"rgba(140,175,215,.3)")+'</div>'+
+    '<div class="sk">'+key("#5fc88c","Permitted",u.permit)+
+      key("#e0a24e","Qualified",u.both)+key("#e4544f","Barred",u.prohibit)+
+      key("rgba(140,175,215,.45)","Silent",u.silent)+'</div></div>';
+}
 
 /* ---- measure ------------------------------------------------------------
    Distances come off the sheet's own scale, so they do not carry the +/-200 m
