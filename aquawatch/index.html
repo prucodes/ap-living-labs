@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head>
+<head><style id="antiflash">html,body{background:#050e18 !important}</style>
 <meta name="robots" content="noindex,nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -622,7 +622,7 @@
 </div>
 
 <main>
-  <aside class="queue" id="queue">
+  <aside class="queue hide" id="queue">
     <div class="q-head"><h2>Alert queue</h2><span class="n">5 open</span></div>
     <div class="q-filters" id="qfilters">
       <button class="fchip on" data-f="all">All <b>5</b></button>
@@ -2960,8 +2960,7 @@ function syncLayoutMode(){
   if(m===MOBILE)return;
   MOBILE=m;
   if(!MOBILE&&!WALL){
-    document.getElementById("queue").classList.remove("hide");
-    document.getElementById("bQ").classList.add("on");
+    /* queue stays closed on first load */
     var d=document.getElementById("detail");
     if(selected||selPond){d.classList.remove("hide");document.getElementById("bD").classList.add("on")}
   }
