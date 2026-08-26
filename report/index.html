@@ -89,7 +89,7 @@
     <ul class="gates">
       <li class="gate"><span class="tick">&#10003;</span><div><div class="g1">Outbound egress reaches the satellite source</div><div class="g2">Range reads to Microsoft Planetary Computer and Azure blob, intact</div></div><span class="val">passed</span></li>
       <li class="gate"><span class="tick">&#10003;</span><div><div class="g1">Detection reproduces the validated result</div><div class="g2">Kolleru belt, to the decimal, on-cluster vs laptop</div></div><span class="val">15,761.9 ha</span></li>
-      <li class="gate"><span class="tick">&#10003;</span><div><div class="g1">Neural model trains on the L40S GPU</div><div class="g2">U-Net, 1.08M parameters, end to end</div></div><span class="val">1.36 min</span></li>
+      <li class="gate"><span class="tick">&#10003;</span><div><div class="g1">Neural model trains on the L40S GPU</div><div class="g2">U-Net, 7.7M params, full-decade 75k-tile set</div></div><span class="val">F1 ~0.90</span></li>
       <li class="gate"><span class="tick">&#10003;</span><div><div class="g1">Container built and app served from the cluster</div><div class="g2">Image pushed to the internal registry, live behind a route</div></div><span class="val">deployed</span></li>
     </ul>
   </section>
@@ -361,13 +361,13 @@
   </section>
 
   <section>
-    <h2>Running next</h2>
-    <p class="sub">Full scope: the multi-year trend, which is where the encroachment story lives.</p>
+    <h2>Where it stands</h2>
+    <p class="sub">The heavy runs are done and running live. What is left needs data from the state side.</p>
     <div class="next">
-      <div class="ncard"><p class="k">Multi-year</p><p><b>2017 to 2026.</b> The change over a decade, not one snapshot. This is the real deliverable and the heavy run.</p></div>
-      <div class="ncard"><p class="k">Belt coverage</p><p><b>Tighter boxes.</b> Extend inland for freshwater ponds and fix the south, so no aquaculture is missed.</p></div>
-      <div class="ncard"><p class="k">Validation</p><p><b>Ground truth.</b> Check the ~115,900 ha against reference data before it is quoted as final.</p></div>
-      <div class="ncard"><p class="k">Model</p><p><b>Train at scale.</b> The statewide labels are what let the U-Net beat the rules, not just match them.</p></div>
+      <div class="ncard"><p class="k">Decade &mdash; done</p><p><b>2017 to 2026 on the cluster.</b> The trend above is a real ten-year radar series, up about 29%, not a single snapshot.</p></div>
+      <div class="ncard"><p class="k">Model &mdash; done &amp; live</p><p><b>Trained at scale.</b> A U-Net on 75,000 tiles reaches F1 ~0.90 on belts it never saw, and now re-runs weekly on each new satellite pass.</p></div>
+      <div class="ncard"><p class="k">Validation &mdash; next</p><p><b>Ground truth.</b> Check the extent against reference imagery before it is quoted as final for enforcement.</p></div>
+      <div class="ncard"><p class="k">Compliance &mdash; next</p><p><b>Connect the register.</b> With the APSADA farm licences and protected-zone boundaries, the tool flags unpermitted ponds, not just detects them.</p></div>
     </div>
   </section>
 
