@@ -615,8 +615,8 @@
     <input type="range" id="tlRange" min="2018" max="2026" step="1" value="2026" aria-label="Season">
     <div class="tlticks" id="tlTicks"></div>
   </div>
-  <div class="tlnew"><b id="tlNew">0</b><span>ha new this season</span></div>
-  <div class="tlenc"><b id="tlEnc">0</b><span>ha inside sanctuary</span></div>
+  
+  
   <div class="tlkeys" title="Keyboard: arrows scrub seasons, space plays, I intelligence, W wall mode">
     <kbd>&larr;</kbd><kbd>&rarr;</kbd><span>scrub</span><kbd>space</kbd><span>play</span><kbd>W</kbd><span>wall</span>
   </div>
@@ -1853,8 +1853,8 @@ function setSeason(y,quiet){
   document.getElementById("kPro").textContent="12";
   document.getElementById("tlYear").textContent=SEASON_Y;
   document.getElementById("tlSeason").textContent=(SEASON_Y%2)?"Rabi":"Kharif";
-  document.getElementById("tlNew").textContent=SEASON_Y<=2018?"—":fmt(Math.round(s.nw*0.49));
-  document.getElementById("tlEnc").textContent=fmt(Math.round(s.pro*0.49));
+  
+  
   var r=document.getElementById("tlRange");
   r.value=SEASON_Y;
   drawTimelineChart();
@@ -2692,18 +2692,12 @@ function drawLabels(){
       if(x<-80||x>w+80||y<-40||y>h+40)return;
       /* belt cards quote extent too — a pond count is not defensible at 10 m */
       var t1=teluguOn?(TEPLACE[c.short]||c.short):c.short;
-      var t2=fmt(Math.round(c.true_*0.49))+(teluguOn?(" "+TE_PONDS):(NARROW?" ha":" ha mapped"));
-      var t3=fmt(Math.round((c.cu+c.cp)*0.49))+(teluguOn?(" "+TE_NOREC):" ha not on register");
       var t4=(c.real_ha?("◉ "+fmt(c.real_ha)+" ha · "+(c.val?"validated":(c.under?"under-count":"detected"))):"");
       var fT=(10*S).toFixed(1), fS=(9.5*S).toFixed(1), fXs=(9*S).toFixed(1);
       lctx.font="700 "+fT+"px ui-monospace,Menlo,monospace";
       var tw=Math.max(lctx.measureText(t1).width,MINW);
-      lctx.font=fS+"px -apple-system,sans-serif";
-      tw=Math.max(tw,lctx.measureText(t2).width);
-      if(!NARROW){lctx.font=fXs+"px -apple-system,sans-serif";
-                  tw=Math.max(tw,lctx.measureText(t3).width);
-                  if(t4)tw=Math.max(tw,lctx.measureText(t4).width)}
-      var bw=tw+PAD*2, bh=NARROW?33:(t4?64:50);
+      if(t4){lctx.font=fXs+"px -apple-system,sans-serif";tw=Math.max(tw,lctx.measureText(t4).width);}
+      var bw=tw+PAD*2, bh=NARROW?(t4?28:20):(t4?40:28);
       var GAP=NARROW?9:12;
       /* try several placements before giving up, so a busy corner does not
          silently delete a cluster the way a single fixed position would */
@@ -2731,21 +2725,8 @@ function drawLabels(){
       lctx.fill();lctx.stroke();
       lctx.textAlign="left";
       lctx.font="700 "+fT+"px ui-monospace,Menlo,monospace";
-      lctx.fillStyle="#b5f1ff";lctx.fillText(t1,bx+PAD,by+(NARROW?13:15));
-      lctx.font=fS+"px -apple-system,sans-serif";
-      lctx.fillStyle="rgba(150,178,198,.9)";lctx.fillText(t2,bx+PAD,by+(NARROW?25:27));
-      /* stacked status bar */
-      var barW=bw-PAD*2,barX=bx+PAD,barY=by+(NARROW?30:32),barH=NARROW?4:5;
-      var wm=barW*c.pm,wu=barW*c.pu,wp=barW*c.pp;
-      lctx.fillStyle="#4fc3e8";lctx.fillRect(barX,barY,wm,barH);
-      lctx.fillStyle="#ffb454";lctx.fillRect(barX+wm,barY,wu,barH);
-      lctx.fillStyle="#ff6154";lctx.fillRect(barX+wm+wu,barY,wp,barH);
-      if(!NARROW){
-        lctx.font=fXs+"px -apple-system,sans-serif";
-        lctx.fillStyle=(c.fracU>0.5?"#ff9b90":"#ffce8f");
-        lctx.fillText(t3,barX,by+48);
-        if(t4){lctx.fillStyle="#7ad3bf";lctx.fillText(t4,barX,by+61);}
-      }
+      lctx.fillStyle="#b5f1ff";lctx.fillText(t1,bx+PAD,by+(NARROW?12:14));
+      if(t4){lctx.font=fXs+"px -apple-system,sans-serif";lctx.fillStyle="#7ad3bf";lctx.fillText(t4,bx+PAD,by+(NARROW?24:29));}
       /* leader line only if the card actually sits above its anchor */
       if(by+bh<y-2&&Math.abs(x-(bx+bw/2))<bw*0.75){
         lctx.strokeStyle="rgba(127,228,255,.35)";
