@@ -600,9 +600,9 @@
 
 <div class="kpis">
   <div class="kpi cy"><span class="v" id="kDet">131,573</span><span class="l">hectares mapped statewide</span><span class="ksp" id="sDet"></span></div>
-  <div class="kpi"><span class="v" id="kMat">76.2%</span><span class="l">matched to registry</span><span class="ksp" id="sMat"></span></div>
-  <div class="kpi am"><span class="v" id="kUnm">28,946</span><span class="l">hectares not on register</span><span class="ksp" id="sUnm"></span></div>
-  <div class="kpi rd"><span class="v" id="kPro">2,274</span><span class="l">hectares inside protected zones</span><span class="ksp" id="sPro"></span></div>
+  <div class="kpi"><span class="v" id="kMat">+29%</span><span class="l">growth since 2017</span><span class="ksp" id="sMat"></span></div>
+  <div class="kpi"><span class="v" id="kUnm">60</span><span class="l">coastal belts scanned</span><span class="ksp" id="sUnm"></span></div>
+  <div class="kpi"><span class="v" id="kPro">12</span><span class="l">districts covered</span><span class="ksp" id="sPro"></span></div>
 </div>
 
 <!-- ===== season timeline: scrub the archive ===== -->
@@ -1847,9 +1847,10 @@ function setSeason(y,quiet){
      block structure. A pond count is not defensible and is not claimed. */
   var HA=0.49;                                   /* median digitised pond, OSM */
   document.getElementById("kDet").textContent=fmt(Math.round(s.det*HA));
-  document.getElementById("kMat").textContent=s.mat.toFixed(1)+"%";
-  document.getElementById("kUnm").textContent=fmt(Math.round(s.unm*HA));
-  document.getElementById("kPro").textContent=fmt(Math.round(s.pro*HA));
+  var _g=(REAL_HA[SEASON_Y]&&REAL_HA[2017])?((REAL_HA[SEASON_Y]/REAL_HA[2017]-1)*100):0;
+  document.getElementById("kMat").textContent=(_g>=0?"+":"")+_g.toFixed(0)+"%";
+  document.getElementById("kUnm").textContent="60";
+  document.getElementById("kPro").textContent="12";
   document.getElementById("tlYear").textContent=SEASON_Y;
   document.getElementById("tlSeason").textContent=(SEASON_Y%2)?"Rabi":"Kharif";
   document.getElementById("tlNew").textContent=SEASON_Y<=2018?"—":fmt(Math.round(s.nw*0.49));
@@ -1867,7 +1868,7 @@ function drawKpiSparks(){
   var det=[],mat=[],unm=[],pro=[];
   for(var y=2018;y<=SEASON_Y;y++){var q=seasonScaled(y);
     det.push(q.det);mat.push(q.mat);unm.push(q.unm);pro.push(q.pro)}
-  var sets=[["sDet",det,"#9adcf5"],["sMat",mat,"#cfe4f2"],["sUnm",unm,"#e8a959"],["sPro",pro,"#ef7266"]];
+  var sets=[["sDet",det,"#9adcf5"]];
   sets.forEach(function(s){
     var el=document.getElementById(s[0]); if(!el)return;
     el.innerHTML=(s[1].length<2)?"":ispark(s[1],s[2]);
