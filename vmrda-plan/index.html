@@ -869,6 +869,53 @@
     .evidence-detail img{max-height:45mm}.report-end{font-size:9px}
   }
 
+  /* Permit Preflight: proposal preparation against the existing summary. */
+  .pf-entry{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;margin:12px 0;padding:12px 13px;border:1px solid #85b4a84d;border-radius:9px;background:#223632;color:#d1e3db;text-align:left}
+  .pf-entry small{display:block;font-size:10px;color:#a7bdb6;margin-top:3px}.pf-entry b{font-size:12px;font-weight:600}
+  .pf-dialog{width:min(1040px,calc(100vw - 48px));max-width:none;max-height:calc(100dvh - 48px);padding:0;border:1px solid #546e69;border-radius:18px;background:#132129;color:#e8efeb;box-shadow:0 28px 100px #0008;overflow:auto;overscroll-behavior:contain}
+  .pf-dialog::backdrop{background:#061013bb;backdrop-filter:blur(6px)}
+  .pf-dialog[open]{animation:panel-in .22s ease-out}
+  .pf-head{display:flex;align-items:center;justify-content:space-between;padding:19px 25px;border-bottom:1px solid #a7c6ba26;gap:14px;position:sticky;top:0;background:#132129;z-index:1}
+  .pf-head h2{font-size:16px;letter-spacing:-.02em;font-weight:550;margin:0}.pf-head small{display:block;font-size:11px;color:#a7bdb6;margin-top:3px}
+  .pf-head button{width:44px;height:44px;border:1px solid #a7c6ba30;border-radius:10px;font-size:24px;flex:none}
+  .pf-grid{display:grid;grid-template-columns:345px minmax(0,1fr)}
+  .pf-form{padding:25px;border-right:1px solid #a7c6ba26;min-width:0}
+  .pf-kicker{font:10px var(--mono);letter-spacing:.1em;color:#a7c6ba;text-transform:uppercase;margin:0 0 10px}
+  .pf-form h3{font-size:27px;font-weight:500;letter-spacing:-.04em;line-height:1.15;margin:0 0 13px}
+  .pf-lead{font-size:12px;line-height:1.65;color:#bac9c7;margin:0 0 22px}
+  .pf-form label{display:block;font-size:12px;font-weight:550;margin:16px 0 6px}
+  .pf-form input{width:100%;min-height:44px;border:1px solid #a7c6ba44;border-radius:8px;padding:10px 11px;background:#0e1b22;color:#eef3ef;font:14px system-ui;box-shadow:none}
+  .pf-form input:focus{outline:2px solid #b0d2bf;outline-offset:2px}
+  .pf-coords{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .pf-help{font-size:11px;color:#9fb5b0;line-height:1.55;margin:8px 0 0}
+  .pf-link{font-size:12px;color:#cfdfd3;text-decoration:underline;text-underline-offset:4px;min-height:44px;padding:5px 0}
+  .pf-extra{border-top:1px solid #a7c6ba26;margin-top:20px;padding-top:14px}.pf-extra summary{font-size:12px;color:#c9d9d0;cursor:pointer;min-height:30px}
+  .pf-submit{margin-top:22px;width:100%;min-height:46px;border-radius:8px;background:#c9d9c9;color:#21382e;font-size:13px;font-weight:600}
+  .pf-submit:hover{background:#deeadc}.pf-submit:disabled{opacity:.6;cursor:wait}
+  .pf-error{color:#f1c3ad;font-size:12px;line-height:1.5}.pf-error:empty{display:none}
+  .pf-output{padding:25px;min-width:0;background:#101d24}
+  .pf-edit{display:none}.pf-result{animation:panel-in .24s ease-out}.pf-check summary:hover{color:#e3eddf;background:#a7c6ba08}.pf-head button:hover,.pf-actions button:last-child:hover{border-color:#b0d2bf;background:#2c443d}
+  .pf-empty{padding:24px 8px}.pf-empty h3{font-size:22px;font-weight:500;margin:18px 0 12px;letter-spacing:-.02em}.pf-empty p{font-size:13px;line-height:1.7;color:#b5c7c0}
+  .pf-mapmark{width:48px;height:48px;border:1px solid #91b6a85c;border-radius:12px;display:grid;place-items:center;color:#c6d8c6;font-size:24px}
+  .pf-empty ol{padding-left:21px;color:#a3bcb3;font-size:12px;line-height:2}
+  .pf-result-heading{margin:0 0 10px;font-size:22px;font-weight:520;letter-spacing:-.025em;line-height:1.2}
+  .pf-status{display:inline-flex;align-items:center;padding:5px 8px;border:1px solid #baa57a66;background:#baa57a14;border-radius:5px;color:#dccda9;font:10px var(--mono);margin-bottom:12px}
+  .pf-meta{font-size:11px;color:#abc0b8;line-height:1.65;margin:0 0 16px;overflow-wrap:anywhere}
+  .pf-meta b{color:#e3ece4;font-weight:550}.pf-notice{padding:12px 13px;border-left:2px solid #b9a67b;background:#b9a67b10;font-size:12px;line-height:1.65;color:#c9cfbf;margin:0 0 20px}
+  .pf-result h4{font-size:12px;font-weight:600;margin:20px 0 9px;color:#dbe6de}
+  .pf-result p{font-size:12px;line-height:1.65}.pf-result a{color:#b4d9c7;text-underline-offset:3px}
+  .pf-match{border:1px solid #a6c5b833;border-radius:9px;padding:12px;margin:8px 0}.pf-match b{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#b3c9be}.pf-match ul{margin:7px 0 0;padding-left:17px;font-size:12px;line-height:1.65}.pf-match li+li{margin-top:8px}
+  .pf-check{border-top:1px solid #a6c5b830;padding:0}.pf-check summary{display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;list-style:none;min-height:52px;padding:10px 0;font-size:12px;line-height:1.4}
+  .pf-check summary::-webkit-details-marker{display:none}.pf-check summary>span:last-child{font:10px var(--mono);color:#afbab2;white-space:nowrap}.pf-check summary>span:last-child:after{content:' +';color:#a6c6b2}.pf-check[open] summary>span:last-child:after{content:' −'}
+  .pf-check p{margin:0 0 10px;color:#b4c4bc}.pf-check b{font-weight:600;color:#d8e3da}
+  .pf-note-label{display:block;font-size:12px;margin:20px 0 7px;color:#cadcd0}.pf-note{width:100%;min-height:85px;padding:10px;border:1px solid #a7c6ba44;border-radius:8px;background:#13272b;color:#e0ebe4;font:12px/1.6 system-ui;resize:vertical}
+  .pf-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:17px}.pf-actions button{min-height:44px;border:1px solid #9ebbab55;border-radius:8px;padding:9px 12px;background:#233a33;color:#dce8db;font-size:12px}.pf-actions button:first-child{background:#c9d9c9;color:#21382e}
+  .pf-foot{font-size:10px;line-height:1.6;color:#8eaaa0;margin:15px 0 0}.pf-sources{font-size:11px;line-height:1.8;margin-top:20px;color:#afc3b7;overflow-wrap:anywhere}
+  .report-paper .pf-result{color:#223b30}.report-paper .pf-result p,.report-paper .pf-result h4,.report-paper .pf-result b,.report-paper .pf-meta,.report-paper .pf-check summary>span:last-child{color:#40574a}.report-paper .pf-status{color:#6a5733;border-color:#aa946a;background:#eee9dc}.report-paper .pf-match,.report-paper .pf-check{border-color:#b5c3b4}.report-paper .pf-notice{color:#5c563c;background:#eee9dc}.report-paper .pf-result a{color:#286253}
+  @media(min-width:901px){.pf-form{position:sticky;top:83px;align-self:start;max-height:calc(100dvh - 132px);overflow-y:auto}}
+  @media(max-width:900px){.pf-dialog{width:100vw;max-height:100dvh;height:100dvh;margin:0;border:0;border-radius:0}.pf-head{padding:calc(10px + env(safe-area-inset-top)) 20px 10px}.pf-grid{grid-template-columns:1fr}.pf-form{padding:22px 20px;border-right:0;border-bottom:1px solid #a7c6ba26}.pf-output{padding:24px 20px calc(24px + env(safe-area-inset-bottom))}.pf-form input{font-size:16px}.pf-extra input{font-size:16px}.pf-empty{padding:0}.pf-form h3{font-size:25px}.pf-note{font-size:16px}.pf-actions button{flex:1}.pf-result-heading{scroll-margin-top:95px}.pf-dialog.has-result .pf-form{display:none}.pf-edit{display:block;min-height:44px;padding:0;margin:-12px 0 14px;font-size:12px;color:#c1d6c9;text-decoration:underline;text-underline-offset:4px}.pf-dialog:not(.has-result) .pf-output{display:none}}
+  .report-paper .pf-result{animation:none}
+  @media print{.pf-check{break-inside:avoid}.report-paper .pf-check>p{display:block!important}.pf-result-heading{break-after:avoid}.pf-match{break-inside:avoid;padding:9px;margin:6px 0}.pf-match li+li{margin-top:4px}.pf-result h4{margin:14px 0 6px}.pf-check summary{min-height:38px;padding:6px 0}.pf-check p{font-size:11px;line-height:1.5;margin:0 0 6px}.pf-check[open] summary>span:last-child:after{content:none}}
 </style>
 </head>
 <body class="loading">
@@ -882,6 +929,7 @@
   </div>
   <nav class="briefnav" aria-label="Review tools"><button class="workspace-button" id="briefButton" onclick="toggleBrief()" aria-controls="briefPanel" aria-expanded="false">Regional briefing</button><button class="workspace-button primary" onclick="openReport()" aria-label="Prepare review brief"><span class="report-top-label">Review brief </span>↗</button></nav>
   <details class="deskMore" id="deskMore"><summary aria-label="More map tools">···</summary><div>
+    <button id="pfMenuEntry" onclick="openPreflight()">Permit Preflight · preview</button>
     <button onclick="toggleMeas(true)">Measure distance &amp; area</button>
     <button onclick="toggleImm(true)">Full screen map</button>
     <button onclick="briefOverview()">Show the whole region</button>
@@ -939,6 +987,7 @@
       </div>
       <div class="brief-section-label">Existing water records <span>Examples, not a ranking</span></div>
       <div id="briefCases"></div>
+      <button class="pf-entry" onclick="openPreflight()"><span><b>Permit Preflight</b><small>Prepare a question before you submit</small></span><span aria-hidden="true">↗</span></button>
       <section class="brief-data" aria-labelledby="briefDataTitle"><h3 id="briefDataTitle">Reader data</h3><p>Download the small source files used by this reader. They are derived working data, not official VMRDA records.</p><div class="data-downloads"><a href="places.json" download="vmr-places.json">Settlements ↧</a><a href="rules.json" download="vmr-rules.json">Zoning schedule ↧</a><a href="tanks_all.json" download="vmr-water-checks.json">Water checks ↧</a></div></section>
       <div class="brief-actions"><button class="workspace-button" onclick="briefOverview()">Whole region</button><button class="workspace-button" onclick="toggleBrief(false);toggleDrawer()">Sources &amp; limits</button></div>
     </div>
@@ -1134,6 +1183,7 @@
     </div>
 
     <div class="mmenu" id="mmenu"><button onclick="mMenu(0);toggleBrief(true)">Regional briefing<i>Places, existing evidence and a review brief</i></button><button onclick="mMenu(0);openReport()">Prepare review brief</button>
+      <button onclick="mMenu(0);openPreflight()">Permit Preflight<i>Proposal checklist · preview</i></button>
       <button onclick="mMenu(0);toggleChanged()">What changed between the plans
         <i>Certain, directional, and what cannot be said</i></button>
       <button onclick="mMenu(0);toggleDrawer()">What this plan can and cannot answer
@@ -1225,6 +1275,24 @@
   <article class="report-paper" id="reportPaper"></article>
 </section>
 
+<dialog id="preflightDialog" class="pf-dialog" aria-labelledby="pfTitle" lang="en">
+  <div class="pf-head"><div><h2 id="pfTitle">Permit Preflight <span class="pf-kicker"> / preview</span></h2><small>VMR Plan Reader · preparation for a planning conversation</small></div><button type="button" onclick="closePreflight()" aria-label="Close Permit Preflight">×</button></div>
+  <div class="pf-grid">
+    <form id="pfForm" class="pf-form">
+      <p class="pf-kicker">Start with a proposal</p><h3>Before you submit.</h3>
+      <p class="pf-lead">Find entries in the zoning summary and collect the questions that need an official answer.</p>
+      <div class="pf-coords"><div><label for="pfLat">Latitude</label><input id="pfLat" name="latitude" type="number" inputmode="decimal" min="-90" max="90" step="any" required aria-describedby="pfPlace"></div><div><label for="pfLon">Longitude</label><input id="pfLon" name="longitude" type="number" inputmode="decimal" min="-180" max="180" step="any" required aria-describedby="pfPlace"></div></div>
+      <p id="pfPlace" class="pf-help">Enter coordinates or choose a place on the map.</p><button class="pf-link" type="button" onclick="preflightChoosePlace()">Choose a place on the map</button>
+      <label for="pfUse">Proposed use</label><input id="pfUse" name="use" type="text" maxlength="80" required list="pfUseOptions" placeholder="For example: apartment, warehouse" autocomplete="off" aria-describedby="pfUseHelp">
+      <datalist id="pfUseOptions"><option value="residential"><option value="apartment"><option value="restaurant"><option value="school"><option value="hospital"><option value="warehouse"><option value="industry"><option value="shop"><option value="farmhouse"></datalist>
+      <p id="pfUseHelp" class="pf-help">Use a short activity name. Matching finds words in the summary; conditions still need review.</p>
+      <details class="pf-extra"><summary>Add proposal details <span class="pf-help">(optional)</span></summary><label for="pfArea">Plot area you report, m²</label><input id="pfArea" type="number" inputmode="decimal" min="0.01" step="any"><label for="pfHeight">Height you propose, m</label><input id="pfHeight" type="number" inputmode="decimal" min="0.01" step="any"><p class="pf-help">Included in your report as supplied. Setbacks, height limits and development capacity are not calculated.</p></details>
+      <button id="pfSubmit" class="pf-submit" type="submit">Prepare my checklist ↗</button><p id="pfError" class="pf-error" role="alert"></p>
+      <p class="pf-help">Uses the Final 2026 sheet. Coordinates identify a point, not a verified survey parcel. Placement is approximately ±200 m.</p>
+    </form>
+    <div class="pf-output"><div id="pfOutput"><div class="pf-empty"><div class="pf-mapmark" aria-hidden="true">⌖</div><h3>A clearer first conversation.</h3><p>Your checklist will keep the proposed use, source text and unresolved checks together.</p><ol><li>Read the mapped class</li><li>Find relevant schedule entries</li><li>See which official records are needed</li><li>Take a dated brief to the planning desk</li></ol><p>Road reservations, legal buffers and height controls are not connected to this reader. No parcel clearance or approval probability is generated.</p></div></div><p id="pfStatus" class="pf-help" role="status" aria-live="polite"></p></div>
+  </div>
+</dialog>
 <script>
 "use strict";
 var VERSIONS = {"draft": {"label": "Draft 2021", "plan": "plan.jpg", "zones": "zones.png", "tiles": "t/draft", "px": [10080, 4020], "geo": {"s": 16.87, "deg": 34.4, "lon0": 83.2363196451436, "lat0": 18.092701821448614, "kx": 105815.8156647524, "ky": 110540.0, "tE": -107387.80566260655, "tN": -46425.09832071707, "cx": 15, "cy": 15, "err_m": 200}, "zones_list": [{"raw": "Agriculture", "name": "Agriculture", "rgb": [209, 255, 188], "grp": "Agriculture", "sqkm": 1702.9, "grpkm": 1702.9, "pub": 2078.09, "prot": false}, {"raw": "Residential", "name": "Residential", "rgb": [255, 255, 152], "grp": "Residential", "sqkm": 457.0, "grpkm": 457.0, "pub": 957.81, "prot": false}, {"raw": "Hills", "name": "Hills", "rgb": [169, 110, 3], "grp": "Hills", "sqkm": 323.0, "grpkm": 323.0, "pub": null, "prot": true}, {"raw": "Forest", "name": "Forest", "rgb": [38, 115, 0], "grp": "Forest", "sqkm": 280.7, "grpkm": 280.7, "pub": null, "prot": true}, {"raw": "Transportation existing", "name": "Transportation", "rgb": [178, 178, 178], "grp": "Transportation", "sqkm": 275.3, "grpkm": 345.4, "pub": 187.76, "prot": false}, {"raw": "Water bodies", "name": "Water body", "rgb": [114, 224, 252], "grp": "Water bodies", "sqkm": 242.8, "grpkm": 242.8, "pub": 366.96, "prot": true}, {"raw": "Accreted land", "name": "Accreted land", "rgb": [217, 189, 144], "grp": "Accreted land", "sqkm": 203.2, "grpkm": 203.2, "pub": null, "prot": false}, {"raw": "Industrial existing", "name": "Industrial", "rgb": [222, 101, 254], "grp": "Industrial", "sqkm": 90.9, "grpkm": 137.3, "pub": 181.3, "prot": false}, {"raw": "Mixed Use 2", "name": "Mixed use", "rgb": [255, 211, 128], "grp": "Mixed use", "sqkm": 72.6, "grpkm": 145.5, "pub": 75.44, "prot": false}, {"raw": "Transportation proposed", "name": "Transportation (proposed)", "rgb": [104, 104, 104], "grp": "Transportation", "sqkm": 70.1, "grpkm": 345.4, "pub": 187.76, "prot": false}, {"raw": "Mixed Use 3", "name": "Mixed use", "rgb": [231, 151, 0], "grp": "Mixed use", "sqkm": 58.4, "grpkm": 145.5, "pub": 75.44, "prot": false}, {"raw": "Industrial proposed", "name": "Industrial (proposed)", "rgb": [226, 126, 253], "grp": "Industrial", "sqkm": 46.4, "grpkm": 137.3, "pub": 181.3, "prot": false}, {"raw": "Eco-sensitive / park", "name": "Eco-sensitive", "rgb": [83, 139, 68], "grp": "Eco-sensitive", "sqkm": 33.3, "grpkm": 33.3, "pub": null, "prot": true}, {"raw": "Special Area", "name": "Special area", "rgb": [49, 67, 133], "grp": "Special area", "sqkm": 24.0, "grpkm": 24.0, "pub": null, "prot": false}, {"raw": "Mixed Use 1", "name": "Mixed use", "rgb": [254, 165, 1], "grp": "Mixed use", "sqkm": 14.5, "grpkm": 145.5, "pub": 75.44, "prot": false}, {"raw": "Recreational proposed", "name": "Recreational (proposed)", "rgb": [74, 212, 1], "grp": "Recreational", "sqkm": 13.2, "grpkm": 16.4, "pub": 97.22, "prot": false}, {"raw": "Educational", "name": "Educational", "rgb": [222, 13, 26], "grp": "Public & semi-public", "sqkm": 10.7, "grpkm": 24.0, "pub": 96.38, "prot": false}, {"raw": "Facility proposed", "name": "Facility (proposed)", "rgb": [249, 38, 36], "grp": "Public & semi-public", "sqkm": 9.6, "grpkm": 24.0, "pub": 96.38, "prot": false}, {"raw": "Utilities proposed", "name": "Public utilities (proposed)", "rgb": [255, 161, 160], "grp": "Public utilities", "sqkm": 4.5, "grpkm": 7.6, "pub": 9.42, "prot": false}, {"raw": "Parks existing", "name": "Parks", "rgb": [85, 255, 0], "grp": "Recreational", "sqkm": 3.2, "grpkm": 16.4, "pub": 97.22, "prot": false}, {"raw": "Utilities existing", "name": "Public utilities", "rgb": [255, 135, 135], "grp": "Public utilities", "sqkm": 3.1, "grpkm": 7.6, "pub": 9.42, "prot": false}, {"raw": "Religious", "name": "Religious", "rgb": [221, 29, 0], "grp": "Public & semi-public", "sqkm": 1.8, "grpkm": 24.0, "pub": 96.38, "prot": false}, {"raw": "Health", "name": "Health", "rgb": [245, 7, 11], "grp": "Public & semi-public", "sqkm": 1.7, "grpkm": 24.0, "pub": 96.38, "prot": false}, {"raw": "Commercial", "name": "Commercial", "rgb": [0, 1, 252], "grp": "Commercial", "sqkm": 0.3, "grpkm": 0.3, "pub": 21.26, "prot": false}, {"raw": "Government facilities", "name": "Government", "rgb": [253, 2, 2], "grp": "Public & semi-public", "sqkm": 0.2, "grpkm": 24.0, "pub": 96.38, "prot": false}], "lookup": [{"rgb": [255, 255, 152], "name": "Residential", "raw": "Residential"}, {"rgb": [0, 1, 252], "name": "Commercial", "raw": "Commercial"}, {"rgb": [254, 165, 1], "name": "Mixed use", "raw": "Mixed Use 1"}, {"rgb": [255, 211, 128], "name": "Mixed use", "raw": "Mixed Use 2"}, {"rgb": [231, 151, 0], "name": "Mixed use", "raw": "Mixed Use 3"}, {"rgb": [222, 101, 254], "name": "Industrial", "raw": "Industrial existing"}, {"rgb": [226, 126, 253], "name": "Industrial (proposed)", "raw": "Industrial proposed"}, {"rgb": [253, 2, 2], "name": "Government", "raw": "Government facilities"}, {"rgb": [222, 13, 26], "name": "Educational", "raw": "Educational"}, {"rgb": [245, 7, 11], "name": "Health", "raw": "Health"}, {"rgb": [221, 29, 0], "name": "Religious", "raw": "Religious"}, {"rgb": [249, 38, 36], "name": "Facility (proposed)", "raw": "Facility proposed"}, {"rgb": [255, 135, 135], "name": "Public utilities", "raw": "Utilities existing"}, {"rgb": [255, 161, 160], "name": "Public utilities (proposed)", "raw": "Utilities proposed"}, {"rgb": [85, 255, 0], "name": "Parks", "raw": "Parks existing"}, {"rgb": [74, 212, 1], "name": "Recreational (proposed)", "raw": "Recreational proposed"}, {"rgb": [178, 178, 178], "name": "Transportation", "raw": "Transportation existing"}, {"rgb": [104, 104, 104], "name": "Transportation (proposed)", "raw": "Transportation proposed"}, {"rgb": [209, 255, 188], "name": "Agriculture", "raw": "Agriculture"}, {"rgb": [49, 67, 133], "name": "Special area", "raw": "Special Area"}, {"rgb": [114, 224, 252], "name": "Water body", "raw": "Water bodies"}, {"rgb": [38, 115, 0], "name": "Forest", "raw": "Forest"}, {"rgb": [169, 110, 3], "name": "Hills", "raw": "Hills"}, {"rgb": [83, 139, 68], "name": "Eco-sensitive", "raw": "Eco-sensitive / park"}, {"rgb": [217, 189, 144], "name": "Accreted land", "raw": "Accreted land"}], "area": 4873, "note": "Draft Master Plan 2041, notified 19 June 2021. Superseded."}, "final": {"label": "Final 2026", "plan": "final_plan.jpg", "zones": "final_zones.png", "tiles": "t/final", "px": [9838, 4156], "geo": {"s": 16.87, "deg": 34.4, "lon0": 83.2363196451436, "lat0": 18.092701821448614, "kx": 105815.8156647524, "ky": 110540.0, "tE": -108814.37058177184, "tN": -45661.34772165285, "cx": 0, "cy": 0, "err_m": 200}, "zones_list": [{"raw": "Agriculture", "name": "Agriculture", "rgb": [211, 255, 190], "grp": "Agriculture", "sqkm": 1493.9, "grpkm": 1493.9, "pub": null, "prot": false}, {"raw": "Residential", "name": "Residential", "rgb": [255, 255, 153], "grp": "Residential", "sqkm": 620.2, "grpkm": 620.2, "pub": null, "prot": false}, {"raw": "Mixed Use", "name": "Mixed Use", "rgb": [255, 165, 0], "grp": "Mixed Use", "sqkm": 325.4, "grpkm": 325.4, "pub": null, "prot": false}, {"raw": "Protected Blue", "name": "Protected Blue", "rgb": [115, 223, 255], "grp": "Protected Blue", "sqkm": 310.4, "grpkm": 310.4, "pub": null, "prot": true}, {"raw": "Protected Forest", "name": "Protected Forest", "rgb": [0, 115, 76], "grp": "Protected Forest", "sqkm": 288.3, "grpkm": 288.3, "pub": null, "prot": true}, {"raw": "Protected Hills", "name": "Protected Hills", "rgb": [168, 112, 0], "grp": "Protected Hills", "sqkm": 249.8, "grpkm": 249.8, "pub": null, "prot": true}, {"raw": "Transportation", "name": "Transportation", "rgb": [104, 104, 104], "grp": "Transportation", "sqkm": 101.7, "grpkm": 101.7, "pub": null, "prot": false}, {"raw": "Protected Green", "name": "Protected Green", "rgb": [0, 255, 0], "grp": "Protected Green", "sqkm": 85.4, "grpkm": 85.4, "pub": null, "prot": true}, {"raw": "Protected Kambalakonda ESZ", "name": "Protected Kambalakonda ESZ", "rgb": [239, 228, 190], "grp": "Protected Kambalakonda ESZ", "sqkm": 79.3, "grpkm": 79.3, "pub": null, "prot": true}, {"raw": "Public & Semi Public", "name": "Public & Semi Public", "rgb": [255, 0, 0], "grp": "Public & Semi Public", "sqkm": 40.9, "grpkm": 40.9, "pub": null, "prot": false}, {"raw": "Industrial Red & Orange", "name": "Industrial Red & Orange", "rgb": [223, 115, 255], "grp": "Industrial Red & Orange", "sqkm": 39.1, "grpkm": 39.1, "pub": null, "prot": false}, {"raw": "Special Area", "name": "Special Area", "rgb": [0, 38, 115], "grp": "Special Area", "sqkm": 29.3, "grpkm": 29.3, "pub": null, "prot": false}, {"raw": "Affordable Housing", "name": "Affordable Housing", "rgb": [255, 255, 115], "grp": "Affordable Housing", "sqkm": 10.7, "grpkm": 10.7, "pub": null, "prot": false}, {"raw": "Commercial", "name": "Commercial", "rgb": [0, 0, 255], "grp": "Commercial", "sqkm": 8.1, "grpkm": 8.1, "pub": null, "prot": false}, {"raw": "Industrial Work Centre", "name": "Industrial Work Centre", "rgb": [222, 102, 255], "grp": "Industrial Work Centre", "sqkm": 0.7, "grpkm": 0.7, "pub": null, "prot": false}, {"raw": "Recreational", "name": "Recreational", "rgb": [85, 255, 0], "grp": "Recreational", "sqkm": 0.3, "grpkm": 0.3, "pub": null, "prot": false}], "lookup": [{"rgb": [255, 255, 153], "name": "Residential", "raw": "Residential"}, {"rgb": [255, 255, 115], "name": "Affordable Housing", "raw": "Affordable Housing"}, {"rgb": [0, 0, 255], "name": "Commercial", "raw": "Commercial"}, {"rgb": [255, 0, 0], "name": "Public & Semi Public", "raw": "Public & Semi Public"}, {"rgb": [222, 102, 255], "name": "Industrial Work Centre", "raw": "Industrial Work Centre"}, {"rgb": [223, 115, 255], "name": "Industrial Red & Orange", "raw": "Industrial Red & Orange"}, {"rgb": [85, 255, 0], "name": "Recreational", "raw": "Recreational"}, {"rgb": [104, 104, 104], "name": "Transportation", "raw": "Transportation"}, {"rgb": [255, 165, 0], "name": "Mixed Use", "raw": "Mixed Use"}, {"rgb": [211, 255, 190], "name": "Agriculture", "raw": "Agriculture"}, {"rgb": [0, 38, 115], "name": "Special Area", "raw": "Special Area"}, {"rgb": [239, 228, 190], "name": "Protected Kambalakonda ESZ", "raw": "Protected Kambalakonda ESZ"}, {"rgb": [115, 223, 255], "name": "Protected Blue", "raw": "Protected Blue"}, {"rgb": [168, 112, 0], "name": "Protected Hills", "raw": "Protected Hills"}, {"rgb": [0, 255, 0], "name": "Protected Green", "raw": "Protected Green"}, {"rgb": [0, 115, 76], "name": "Protected Forest", "raw": "Protected Forest"}], "area": 4380, "note": "Revised Master Plan 2041, signed 29 June 2026. The operative plan."}};
@@ -3547,7 +3615,135 @@ function localityRulesHTML(res){
   if(!rows.length||!blocks.length)return "";
   return '<details class="locality-check"><summary>What the plan prohibits in these classes</summary><p class="lcintro">These restrictions come from the zoning schedule for the classes detected around this reading. A restriction is not evidence that the use exists there.</p>'+blocks.join('')+'</details><div class="ground-check"><b>Current-use check</b><br>This reader does not determine whether a prohibited use is actually present. Confirming that requires current field, cadastral, and permission records. Imagery can help prioritise review.</div>';
 }
-function readActions(){return '<div class="reading-tag">±200 m placement · indicative reading</div><div class="read-actions"><button class="workspace-button primary" onclick="openReport()">Prepare review brief ↗</button><button class="workspace-button" onclick="toggleBrief(true)">Briefing</button></div>'}
+function readActions(){return '<div class="reading-tag">±200 m placement · indicative reading</div><div class="read-actions"><button class="workspace-button primary" onclick="openReport()">Prepare review brief ↗</button><button class="workspace-button" onclick="openPreflight()">Permit Preflight ↗</button></div>'}
+/* Preflight owns an independent Final display-raster read. It never uses the
+   tile width, a locality sample, or an uploaded sketch to infer parcel rights.
+   Results are frozen with their input, source text and unassessed checks. */
+var PF_RUN=null, PF_RASTER=null, PF_RETURN=null, PF_ANCHOR=null, PF_SEQ=0;
+var PF_CHECKS=[
+  {id:"zone",title:"Official zoning confirmation",record:"A zoning confirmation for the surveyed site, with the applicable plan and amendments.",action:"Ask the planning desk to confirm the site's regulatory class and the conditions on the proposed use."},
+  {id:"parcel",title:"Survey parcel and layout status",record:"Survey or cadastral boundary records and any approved layout or subdivision proceedings.",action:"Ask the permitting authority to identify the parcel and check the applicable layout records."},
+  {id:"road",title:"Road reservation and access",record:"An authoritative road-development or widening alignment and verified access-road particulars.",action:"Ask the planning desk to check reservations and access against the surveyed site."},
+  {id:"water",title:"Water bodies and legal buffers",record:"Authority-confirmed water-body boundaries, applicable buffer provisions and a site survey.",action:"Request a water-body and buffer check. Satellite water observations do not establish the legal boundary."},
+  {id:"environment",title:"Coastal, forest and protected-area controls",record:"Applicable notified coastal, forest, hill, eco-sensitive and other protected-area records.",action:"Ask which environmental controls apply and which department must verify them."},
+  {id:"height",title:"Height, setbacks and other building controls",record:"Current building rules, verified road and plot dimensions, and any applicable airport or defence height restrictions.",action:"Have the proposed building particulars checked against the applicable controls. Supplied height and area are not assessed here."},
+  {id:"submission",title:"Application route and required documents",record:"The current checklist for the confirmed authority, application type and site.",action:"Confirm the submission route, mandatory documents and any required NOCs with the permitting authority before applying."}
+];
+function preflightRaster(){
+  if(PF_RASTER)return PF_RASTER;
+  PF_RASTER=new Promise(function(resolve,reject){
+    var im=new Image(),timer=setTimeout(function(){im.onload=im.onerror=null;reject(new Error("The final zoning image took too long to load. Please retry."))},25000);
+    im.onload=function(){clearTimeout(timer);try{
+      var canvas=document.createElement("canvas");canvas.width=Math.round(im.naturalWidth*ID_SCALE);canvas.height=Math.round(im.naturalHeight*ID_SCALE);
+      var context=canvas.getContext("2d",{willReadFrequently:true});context.imageSmoothingEnabled=false;context.drawImage(im,0,0,canvas.width,canvas.height);
+      resolve({ctx:context,w:canvas.width,h:canvas.height,iw:im.naturalWidth,ih:im.naturalHeight,geo:VERSIONS.final.geo,lookup:VERSIONS.final.lookup});
+    }catch(e){reject(new Error("The zoning image could not be read. Please retry."))}};
+    im.onerror=function(){clearTimeout(timer);reject(new Error("The final zoning image is unavailable. Check the connection and retry."))};
+    im.src=VERSIONS.final.zones;
+  }).catch(function(e){PF_RASTER=null;throw e});
+  return PF_RASTER;
+}
+function preflightRead(raster,lo,la){
+  var g=raster.geo,th=g.deg*Math.PI/180,c=Math.cos(th),sn=Math.sin(th);
+  var e=((lo-g.lon0)*g.kx-g.tE)/g.s,n=((la-g.lat0)*g.ky-g.tN)/g.s;
+  var x=e*c+n*sn-g.cx,y=e*sn-n*c-g.cy;
+  if(x<0||y<0||x>=raster.iw||y>=raster.ih)throw new Error("These coordinates are outside the available plan sheet. Check latitude and longitude or choose a place on the map.");
+  return probeAt(raster.ctx,raster.lookup,raster.w,raster.h,Math.floor(x*ID_SCALE),Math.floor(y*ID_SCALE));
+}
+/* Token matching retrieves text, not legal conclusions. In particular, retain
+   matches on BOTH lists and full conditions such as industry categories. */
+function preflightMatches(rule,use){
+  var tokens=stemText(use).split(" ").filter(Boolean);
+  if(!rule||!tokens.length)return {permit:[],prohibit:[]};
+  function matches(s){var words=stemText(s).split(" ");return tokens.every(function(q){return words.indexOf(q)!==-1})}
+  return {permit:(rule.permit||[]).filter(matches),prohibit:(rule.prohibit||[]).filter(matches)};
+}
+function preflightBuild(input,probe,created){
+  var hit=probe.hit,key=hit&&(RULEKEY[hit.raw]||RULEKEY[hit.name]),rule=key&&RULES&&RULES.zones[key]||null;
+  var match=preflightMatches(rule,input.use);
+  var status=!rule?"summary_unavailable":match.permit.length&&match.prohibit.length?"both_lists":match.prohibit.length?"prohibition_wording":match.permit.length?"permission_wording":"no_direct_match";
+  var p=new URLSearchParams({lo:String(input.lon),la:String(input.lat),v:"final",mpp:"16.0000"});if(input.place)p.set("title",input.place);
+  return JSON.parse(JSON.stringify({schema:"vmr-permit-preflight-v1",created:created,assessment:"Preparation only. Site permission and constraints are not determined.",
+    input:input,location:{kind:"unverified_point",coordinates:[input.lon,input.lat],parcelVerified:false},
+    plan:{version:"final",label:VERSIONS.final.label,provenance:VERSIONS.final.note,source:new URL(VERSIONS.final.plan,location.href).href,legendClass:hit?hit.raw:null,regulatoryClass:key||null,nearbyFillMetres:hit&&probe.ring>0?Math.round(probe.ring*VERSIONS.final.geo.s/ID_SCALE/10)*10:0},
+    schedule:{status:status,source: RULES?RULES.source:"Summary unavailable",url:new URL("rules.json",location.href).href,matched:match,classSummary:rule},
+    limits:{placementMetres:200,recoveredAreaMedianErrorPercent:43,statement:"Raster readings do not establish a parcel's zoning or clearance. Recovered areas are not measurements."},
+    checks:PF_CHECKS.map(function(check){return Object.assign({status:"not_checked"},check)}),
+    readingLink:new URL("#read="+p.toString(),location.href).href,
+    portal:"https://portal.apdpms.ap.gov.in/",publication:"https://vmrda.gov.in/masterplan_2041.html"}));
+}
+function preflightList(entries){return '<ul>'+entries.map(function(s){return '<li>'+esc(s)+'</li>'}).join('')+'</ul>'}
+function preflightResultHTML(run,expand){
+  var sc=run.schedule,m=sc.matched,rule=sc.classSummary;
+  var titles={summary_unavailable:"No class summary available",both_lists:"Mentioned on both lists",permission_wording:"Mentioned on the permitted list",prohibition_wording:"Mentioned on the prohibited list",no_direct_match:"No direct wording match"};
+  var explain={summary_unavailable:"The reader cannot connect this point to a zoning summary. Obtain official zoning confirmation.",both_lists:"These entries distinguish conditions or types of use. Read both in full; this is not a yes or no answer.",permission_wording:"An entry mentions this use. Conditions, the site's actual zoning and other controls still require verification.",prohibition_wording:"A restriction mentions this use. Its qualifications matter; this is not a site refusal or a finding about an existing use.",no_direct_match:"The wording may differ, or this class may refer to other classes. No match does not mean permission or prohibition. Read the full class summary."};
+  var h='<section class="pf-result"><span class="pf-status">Site checks still required</span><h3 id="'+(expand?'pfReportTitle':'pfResultTitle')+'" class="pf-result-heading" tabindex="-1">'+esc(run.input.place||"Selected point")+'</h3>'+
+    '<p class="pf-meta">Proposed use: <b>'+esc(run.input.use)+'</b><br>'+run.input.lat.toFixed(6)+', '+run.input.lon.toFixed(6)+' · '+esc(run.plan.label)+'<br>Prepared '+esc(run.created.replace('T',' ').slice(0,19))+' UTC'+
+    (run.input.area!==null?'<br>Reported plot area: '+esc(String(run.input.area))+' m² (not verified)':'')+(run.input.height!==null?'<br>Proposed height: '+esc(String(run.input.height))+' m (not assessed)':'')+'</p>'+
+    '<div class="pf-notice">Preparation only. Placement is approximately ±200 m; recovered areas have 43% median error. This reading cannot confirm parcel zoning or approval.</div>'+
+    '<h4>01 / Zoning summary</h4><p>Recovered legend class: <b>'+esc(run.plan.legendClass||"No readable zone colour")+'</b>'+(run.plan.regulatoryClass?'<br>Linked regulatory class: '+esc(run.plan.regulatoryClass):'')+'.'+(run.plan.nearbyFillMetres?' The point has no readable fill; nearby colour was sampled at about '+run.plan.nearbyFillMetres+' m.':'')+'</p>'+
+    '<p><b>'+titles[sc.status]+'</b><br>'+explain[sc.status]+'</p>'+
+    (m.permit.length?'<div class="pf-match"><b>Permitted-list excerpts</b>'+preflightList(m.permit)+'</div>':'')+
+    (m.prohibit.length?'<div class="pf-match"><b>Prohibited-list excerpts</b>'+preflightList(m.prohibit)+'</div>':'');
+  if(rule)h+='<details class="pf-check"'+(expand?' open':'')+'><summary><span>Read the full class summary</span><span>Source text</span></summary><div>'+(rule.headline?'<p>'+esc(rule.headline)+'</p>':'')+'<div class="pf-match"><b>Permitted list</b>'+preflightList(rule.permit||[])+'</div><div class="pf-match"><b>Prohibited list</b>'+preflightList(rule.prohibit||[])+'</div><p class="pf-meta">'+esc(sc.source)+' <a href="'+esc(sc.url)+'" target="_blank" rel="noopener">Reader summary ↗</a></p></div></details>';
+  h+='<h4>02 / Questions for the planning desk</h4><p>Open a check to see the records to obtain and what to ask.</p>';
+  run.checks.forEach(function(check){h+='<details class="pf-check"'+(expand?' open':'')+'><summary><span>'+esc(check.title)+'</span><span>Not checked</span></summary><p><b>Record to obtain</b><br>'+esc(check.record)+'</p><p><b>Next step</b><br>'+esc(check.action)+'</p></details>'});
+  return h+'<div class="pf-sources"><a href="'+esc(run.plan.source)+'" target="_blank" rel="noopener">Recovered final sheet ↗</a> · <a href="'+run.publication+'" target="_blank" rel="noopener">VMRDA publication index ↗</a><br><a href="'+run.portal+'" target="_blank" rel="noopener">APDPMS portal ↗</a> · <a href="'+esc(run.readingLink)+'" target="_blank" rel="noopener">Reopen the point reading ↗</a></div><p class="pf-foot">The reading link restores the map point only. It excludes proposal details and notes. These records support a discussion; they are not a mandatory-document checklist or an authority decision.</p></section>';
+}
+function openPreflight(){
+  if(!document.getElementById("reportShell").hidden)return;
+  PF_RETURN=document.activeElement;PF_ANCHOR=LAST&&LAST.ll?{ll:LAST.ll.slice(),title:LAST.title||""}:null;
+  if(PF_RETURN.closest("#deskMore"))PF_RETURN=document.querySelector("#deskMore>summary");
+  if(PF_RETURN.closest("#mmenu"))PF_RETURN=document.querySelector(".mmore");
+  PF_RUN=null;PF_SEQ++;document.getElementById("pfForm").reset();
+  document.getElementById("pfLat").value=PF_ANCHOR?PF_ANCHOR.ll[1].toFixed(6):"";document.getElementById("pfLon").value=PF_ANCHOR?PF_ANCHOR.ll[0].toFixed(6):"";
+  document.getElementById("pfPlace").textContent=PF_ANCHOR?(PF_ANCHOR.title||"Selected map point")+". A point reading does not identify a survey parcel.":"Enter coordinates or choose a place on the map.";
+  document.getElementById("pfOutput").innerHTML=PF_EMPTY;document.getElementById("pfStatus").textContent="";document.getElementById("pfError").textContent="";document.getElementById("pfSubmit").disabled=false;document.getElementById("pfSubmit").textContent="Prepare my checklist ↗";
+  var dialog=document.getElementById("preflightDialog");dialog.classList.remove("has-result");dialog.showModal();dialog.scrollTop=0;document.getElementById("pfForm").scrollTop=0;
+  document.getElementById(PF_ANCHOR?"pfUse":"pfLat").focus({preventScroll:true});
+}
+function closePreflight(){PF_SEQ++;document.getElementById("preflightDialog").close();if(PF_RETURN&&PF_RETURN.isConnected&&!PF_RETURN.closest('[inert]'))PF_RETURN.focus({preventScroll:true})}
+function preflightEdit(){var dialog=document.getElementById("preflightDialog");dialog.classList.remove("has-result");dialog.scrollTop=0;document.getElementById("pfUse").focus({preventScroll:true})}
+function preflightChoosePlace(){closePreflight();toggleBrief(false);if(MOBILE)mPane("msearchp",1);else document.getElementById("q").focus({preventScroll:true})}
+async function runPreflight(e){
+  e.preventDefault();var form=document.getElementById("pfForm");if(!form.reportValidity())return;
+  var lo=Number(document.getElementById("pfLon").value),la=Number(document.getElementById("pfLat").value),use=document.getElementById("pfUse").value.trim();
+  var area=document.getElementById("pfArea").value,height=document.getElementById("pfHeight").value,error=document.getElementById("pfError");error.textContent="";
+  if(!Number.isFinite(lo)||!Number.isFinite(la)||lo<-180||lo>180||la<-90||la>90){error.textContent="Enter valid latitude and longitude.";return}
+  if(!stemText(use).trim()){error.textContent="Enter a short activity name in English, as used in the summary.";document.getElementById("pfUse").focus({preventScroll:true});return}
+  if((area!==""&&(!Number.isFinite(Number(area))||Number(area)<=0))||(height!==""&&(!Number.isFinite(Number(height))||Number(height)<=0))){error.textContent="Optional height and plot area must be positive numbers.";return}
+  var seq=++PF_SEQ,button=document.getElementById("pfSubmit");button.disabled=true;button.textContent="Reading the final sheet…";document.getElementById("pfStatus").textContent="Loading the source image…";
+  try{
+    var raster=await preflightRaster();if(seq!==PF_SEQ)return;
+    var probe=preflightRead(raster,lo,la),same=PF_ANCHOR&&Math.abs(lo-PF_ANCHOR.ll[0])<.000002&&Math.abs(la-PF_ANCHOR.ll[1])<.000002;
+    PF_RUN=preflightBuild({lon:lo,lat:la,use:use,place:same?PF_ANCHOR.title:"",area:area===""?null:Number(area),height:height===""?null:Number(height)},probe,new Date().toISOString());
+    document.getElementById("pfOutput").innerHTML='<button type="button" class="pf-edit" onclick="preflightEdit()">← Edit proposal</button>'+preflightResultHTML(PF_RUN,false)+'<label for="pfNote" class="pf-note-label">Your question for the planning desk</label><textarea id="pfNote" class="pf-note" maxlength="2000" placeholder="For example: Which official zoning and access records should I obtain for this proposal?"></textarea><div class="pf-actions"><button type="button" onclick="preflightReport()">Review / print brief ↗</button><button type="button" onclick="preflightExport()">Save evidence JSON ↓</button></div><p class="pf-foot">Proposal details stay in this session unless you print or download them. No application is submitted.</p>';
+    document.getElementById("pfStatus").textContent="Checklist prepared. Official site checks remain unassessed.";
+    var dialog=document.getElementById("preflightDialog");dialog.classList.add("has-result");dialog.scrollTop=0;document.getElementById("pfResultTitle").focus({preventScroll:true});
+  }catch(err){if(seq===PF_SEQ){PF_RUN=null;document.getElementById("pfOutput").innerHTML=PF_EMPTY;error.textContent=err.message;document.getElementById("pfStatus").textContent="No checklist prepared."}}
+  finally{if(seq===PF_SEQ){button.disabled=false;button.textContent="Prepare my checklist ↗"}}
+}
+function preflightExport(){
+  if(!PF_RUN)return;var payload=Object.assign({},PF_RUN,{userNote:document.getElementById("pfNote").value});
+  var url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:"application/json"})),a=document.createElement("a");a.href=url;a.download="vmr-preflight-"+PF_RUN.created.slice(0,10)+".json";document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url)},1000);
+  document.getElementById("pfStatus").textContent="Evidence file prepared for download. It includes your proposal and note.";
+}
+function preflightReport(){
+  if(!PF_RUN)return;var run=JSON.parse(JSON.stringify(PF_RUN)),note=document.getElementById("pfNote").value;
+  closePreflight();REVIEW_RETURN=PF_RETURN;REPORT_SNAPSHOT={res:{ll:run.location.coordinates},ver:"final",link:run.readingLink,created:run.created,preflight:run};
+  document.getElementById("reportPaper").innerHTML='<div class="report-titlebar"><b>VMR Plan Reader</b><span>PERMIT PREFLIGHT · PREVIEW</span></div><h1 id="reportTitle">Before you submit</h1><p>Independent preparation brief. Official authority decision required.</p>'+preflightResultHTML(run,true)+'<label class="report-note-label" for="reviewNote">Question for the planning desk</label><textarea id="reviewNote" maxlength="2000"></textarea><p class="report-note-hint">Included in print. Excluded from the map reading link.</p><div class="printed-note" id="printedNote"></div><div class="report-end">'+esc(run.plan.provenance)+'<br>This brief retains the supplied proposal and reader summary as prepared above. Source URLs may change; retain the evidence JSON with this brief.</div>';
+  document.getElementById("reviewNote").value=note;document.getElementById("copyStatus").textContent="";
+  document.getElementById("reportShell").hidden=false;document.getElementById("reportShell").scrollTop=0;document.body.classList.add("report-open");
+  [document.querySelector("header"),stage,document.getElementById("foot")].forEach(function(el){el.inert=true});document.getElementById("copyReport").focus({preventScroll:true});
+}
+var PF_EMPTY=document.getElementById("pfOutput").innerHTML;
+document.getElementById("pfForm").addEventListener("submit",runPreflight);
+document.getElementById("pfForm").addEventListener("input",function(){
+  PF_SEQ++;PF_RUN=null;document.getElementById("preflightDialog").classList.remove("has-result");document.getElementById("pfOutput").innerHTML=PF_EMPTY;document.getElementById("pfStatus").textContent="Prepare the checklist to use the updated inputs.";document.getElementById("pfError").textContent="";var b=document.getElementById("pfSubmit");b.disabled=false;b.textContent="Prepare my checklist ↗";
+  if(PF_ANCHOR&&(Math.abs(Number(document.getElementById("pfLon").value)-PF_ANCHOR.ll[0])>.000002||Math.abs(Number(document.getElementById("pfLat").value)-PF_ANCHOR.ll[1])>.000002))document.getElementById("pfPlace").textContent="Coordinates edited. The previous place label no longer applies.";
+});
+document.getElementById("preflightDialog").addEventListener("cancel",function(e){e.preventDefault();closePreflight()});
+document.getElementById("preflightDialog").addEventListener("keydown",function(e){e.stopPropagation()});
 function announce(msg){document.getElementById("readStatus").textContent=msg}
 function readingChanged(res){
   var c=activeCase(res);REVIEW_ACTIVE=c?c.id:null;renderBrief();
@@ -3626,6 +3822,10 @@ function noteKey(){var r=REPORT_SNAPSHOT&&REPORT_SNAPSHOT.res;return "vmr-review
 function closeReport(){
   document.getElementById("reportShell").hidden=true;document.body.classList.remove("report-open");
   [document.querySelector("header"),stage,document.getElementById("foot")].forEach(function(e){e.inert=false});
+  if(REPORT_SNAPSHOT&&REPORT_SNAPSHOT.preflight&&PF_RUN){
+    document.getElementById("pfNote").value=document.getElementById("reviewNote").value;
+    document.getElementById("preflightDialog").showModal();document.querySelector("#pfOutput .pf-actions button").focus({preventScroll:true});return;
+  }
   if(REVIEW_RETURN&&document.contains(REVIEW_RETURN))REVIEW_RETURN.focus({preventScroll:true});
 }
 async function copyReviewLink(){
