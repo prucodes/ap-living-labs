@@ -186,6 +186,16 @@
   table.sh td:first-child{text-align:left;color:var(--ink)}
   table.sh td.up{color:var(--ok)} table.sh td.dn{color:var(--warn)}
   table.sh tr.flag td{opacity:.45}
+  .shift-chart{margin:12px 0 15px;padding:11px 12px;border:1px solid rgba(150,200,235,.12);border-radius:9px;background:rgba(255,255,255,.025)}
+  .shift-chart-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;font:9px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+  .shift-key{display:flex;gap:10px;text-transform:none;letter-spacing:0;font:10px system-ui,sans-serif;color:var(--dim)}
+  .shift-key i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:0}
+  .shift-row{display:grid;grid-template-columns:minmax(86px,.7fr) 1.3fr 42px;gap:8px;align-items:center;margin:7px 0}
+  .shift-row.flag{opacity:.45}.shift-name{font-size:10px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .shift-bars{display:grid;gap:3px}.shift-bar{height:5px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden}.shift-bar i{display:block;height:100%;border-radius:4px}
+  .shift-bar.draft i{background:#b49a68}.shift-bar.final i{background:#73c6a4}.shift-value{font:10px var(--mono);text-align:right}.shift-value.up{color:var(--ok)}.shift-value.dn{color:var(--warn)}
+  .brief-data{margin-top:18px;padding-top:15px;border-top:1px solid var(--line)}.brief-data h3{margin:0 0 6px;font-size:11px;text-transform:uppercase;letter-spacing:.13em;color:var(--faint)}.brief-data p{margin:0 0 9px;color:var(--dim);font-size:11px;line-height:1.5}.brief-data a{color:var(--cy);font-size:11px;text-decoration:none}.brief-data a+ a{margin-left:12px}
+  .data-downloads{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px}.data-downloads a{border:1px solid rgba(150,200,194,.28);border-radius:6px;padding:6px 8px;background:rgba(255,255,255,.035)}
   .cwarn{border:1px solid rgba(239,107,107,.3);background:rgba(239,107,107,.07);
     border-radius:11px;padding:12px 13px;font-size:12.4px;line-height:1.62;color:var(--ink)}
   .cwarn b{color:var(--bad)}
@@ -450,8 +460,9 @@
     .mver{position:absolute;left:10px;top:calc(env(safe-area-inset-top,0px) + 70px);
       display:flex;border-radius:12px;overflow:hidden;border:1px solid var(--line2);
       background:rgba(10,16,26,.88);backdrop-filter:blur(18px) saturate(1.4);
-      box-shadow:0 10px 28px -16px rgba(0,0,0,.95)}
-    .mver button{padding:9px 14px;font-size:12.5px;color:var(--dim);white-space:nowrap}
+      box-shadow:0 10px 28px -16px rgba(0,0,0,.95);max-width:calc(100vw - 20px);overflow-x:auto;scrollbar-width:none}
+    .mver::-webkit-scrollbar{display:none}
+    .mver button{flex:none;padding:9px 14px;font-size:12.5px;color:var(--dim);white-space:nowrap}
     .mver button.on{background:rgba(224,184,114,.2);color:var(--gold);font-weight:640}
     .mver button+button{border-left:1px solid var(--line)}
 
@@ -527,6 +538,7 @@
     .law .lg>b{font-size:9.4px}
     .law .lhd{font-size:13px}
     .law .lh{font-size:9px}
+    .msbody .area-summary{margin:16px 0;padding:12px 13px}.msbody .area-summary-head b{font-size:12px}.msbody .area-chip{font-size:11px;padding:6px 9px}.msbody .locality-check{margin:12px 0 16px}.msbody .lcrow{padding:9px 0}
 
     /* ---- full-screen panes: search, and the zone index ---- */
     .mpane{position:fixed;inset:0;z-index:24;background:rgba(6,10,17,.985);
@@ -653,38 +665,242 @@
     .mleg{bottom:14px;max-height:calc(100% - 28px)}
     .mtoast{bottom:16px;left:12px;right:calc(min(360px,58vw) + 68px)}
   }
+  /* Review workspace: neutral chrome lets the published sheet keep its colours. */
+  :root{--bg:#0b121a;--panel:rgba(15,24,33,.97);--ink:#edf2f3;--dim:#b0bec7;--faint:#8b9ba8;--cy:#96c8ca;--gold:#ddc59a;--line:rgba(164,189,201,.19)}
+  body.loading header{opacity:0;transform:translateY(-9px)}
+  body.loading .stage{opacity:0}
+  body.loading footer{opacity:0;transform:translateY(8px)}
+  header,.stage,footer{transition:opacity .58s ease,transform .58s cubic-bezier(.2,.75,.25,1)}
+  button,a,input,textarea,summary{ -webkit-tap-highlight-color:transparent }
+  button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--cy);outline-offset:3px}
+  button:disabled{opacity:.4;cursor:wait}
+  header{display:grid;grid-template-columns:auto minmax(180px,380px) 1fr auto;gap:12px 24px;padding:14px 20px 0;background:#101a24;z-index:12}
+  .brand{gap:11px;align-items:center;flex:none;min-width:190px}
+  .brand b{font-size:15px;letter-spacing:-.025em}
+  .brand small{display:block;color:var(--faint);font-size:10px;letter-spacing:.04em;font-weight:400}
+  .brandmark{display:grid;place-items:center;width:31px;height:34px;border:1px solid #64808a;border-radius:9px;color:#b4d4cd;font:13px var(--mono)}
+  .find{min-width:0;width:100%;height:39px;border-radius:9px;background:#172430}
+  .find input{font-size:13px}
+  .fres{top:45px;min-width:260px}
+  .briefnav{display:flex;justify-content:flex-end;gap:8px}
+  .workspace-button{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid var(--line);border-radius:8px;padding:9px 13px;font-size:12px;font-weight:550;white-space:nowrap}
+  .workspace-button:hover{background:#24343f;border-color:#708991}
+  .workspace-button.primary{background:#cbdcd3;color:#142923;border-color:#cbdcd3}
+  .workspace-button.primary:hover{background:#e1ece5}
+  .workspace-button.active{border-color:#7fa4a5;color:#c3e0da;background:#203536}
+  .workspace-button svg{flex:none}
+  .deskMore{position:relative;grid-column:4;grid-row:1}
+  .deskMore>summary{list-style:none;cursor:pointer;padding:8px 11px;border:1px solid var(--line);border-radius:8px;font-size:20px;line-height:20px;color:var(--dim)}
+  .deskMore>summary::-webkit-details-marker{display:none}
+  .deskMore>div{position:absolute;right:0;top:46px;width:230px;padding:6px;background:#13212c;border:1px solid var(--line);border-radius:12px;box-shadow:0 16px 40px #0006}
+  .deskMore button{display:block;padding:12px;width:100%;text-align:left;border-radius:7px;font-size:13px;color:var(--dim)}
+  .deskMore button:hover{background:#253843;color:#fff}
+  .maptools{grid-column:1/-1;display:flex;align-items:center;gap:9px;min-width:0;padding:10px 0 11px;border-top:1px solid var(--line)}
+  .maptools .seg{margin:0;border-radius:7px}
+  .maptools .seg button{padding:6px 11px;font-size:11.5px}
+  .maptools .satwrap{margin-left:auto}
+  .maptools .ico{height:31px;border-radius:7px}
+  .maptools .tool-separator{height:19px;width:1px;background:var(--line);margin:0 4px}
+  .maptools .view-caption{color:var(--faint);font:9px var(--mono);letter-spacing:.12em;margin-right:3px}
+  .stage{background:#1a2731;box-shadow:none}
+  footer{font-size:9px;line-height:1.5;color:#9dacb6;background:#101a24;padding:7px 20px;white-space:normal}
+  .read,.zpanel{box-shadow:0 12px 36px #0003;border-radius:12px}
+  .read:not(.on),.drawer:not(.on),.chg:not(.on){visibility:hidden;pointer-events:none}
+  .read.on,.drawer.on,.chg.on{visibility:visible}
+  .briefpanel{display:none;position:absolute;inset:16px auto 16px 16px;width:350px;z-index:8;flex-direction:column;overflow:hidden;border:1px solid #5b707b55;border-radius:15px;background:#101b25f7;box-shadow:0 16px 50px #0004;backdrop-filter:blur(16px);cursor:auto}
+  .briefpanel.on{display:flex;animation:panel-in .22s ease-out}
+  @keyframes panel-in{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+  body.briefing .zpanel{display:none}
+  body.briefing .read{left:382px;width:min(340px,calc(100vw - 432px))}
+  body.briefing .hint{left:382px}
+  .brief-head{display:flex;align-items:center;justify-content:space-between;padding:17px 19px;border-bottom:1px solid var(--line);flex:none}
+  .eyebrow{font:10px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:#a9c8c6}
+  .brief-head button,.review-close{width:30px;height:30px;border:1px solid var(--line);border-radius:8px;color:var(--dim);font-size:19px}
+  .brief-scroll{overflow-y:auto;overscroll-behavior:contain;flex:1;padding:22px 20px 20px}
+  .brief-scroll h1{font-size:29px;line-height:1.12;font-weight:520;letter-spacing:-.045em;margin:0 0 13px;color:#f0f1e9}
+  .brief-scroll p{color:var(--dim);font-size:12.5px;line-height:1.65;margin:0 0 17px}
+  .brief-stamp{display:flex;gap:7px;align-items:center;color:#bccfc5;font-size:10.5px;margin-bottom:18px}
+  .brief-stamp:before{content:"";width:5px;height:5px;border-radius:50%;background:#a7c4b1}
+  .brief-steps{display:grid;gap:7px;margin:20px 0 22px}
+  .brief-step{display:grid;grid-template-columns:26px 1fr 14px;gap:10px;width:100%;align-items:center;text-align:left;border:1px solid var(--line);border-radius:10px;padding:12px;background:#192731;color:var(--ink)}
+  .brief-step:hover{background:#213641;border-color:#78969b;transform:translateY(-1px)}
+  .brief-step>span{color:#c0d0c9;font:11px var(--mono)}
+  .brief-step b{font-weight:550;font-size:12.5px;display:block}
+  .brief-step small{display:block;font-size:11px;color:var(--faint);margin-top:2px}
+  .brief-step>i{font-style:normal;color:#a8c8c6}
+  .brief-section-label{display:flex;align-items:center;justify-content:space-between;margin:0 0 11px;color:#b3c8c9;font:9px var(--mono);letter-spacing:.12em;text-transform:uppercase}
+  .brief-section-label span{color:var(--faint);font-size:9px;letter-spacing:0;text-transform:none}
+  .evidence-card{display:grid;grid-template-columns:62px 1fr 12px;align-items:center;gap:11px;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:8px 0;background:#14222c;text-align:left;width:100%;padding:9px}
+  .evidence-card img{width:62px;height:62px;border-radius:6px;object-fit:cover;filter:saturate(.8)}
+  .evidence-card strong{display:block;font-weight:550;font-size:12.2px;line-height:1.4}
+  .evidence-card small{display:block;color:#a1b2bd;font-size:10.5px;margin-top:4px}
+  .evidence-card i{font-style:normal;color:#aac9c8}
+  .evidence-card:hover,.evidence-card.selected{border-color:#789994;background:#20332f}
+  .brief-disclaimer{padding:13px 16px;border-top:1px solid var(--line);color:var(--faint);font-size:10.5px;line-height:1.55;background:#0e1821;flex:none}
+  .brief-disclaimer b{color:#cbbb9e;font-weight:500}
+  .brief-actions{display:flex;gap:7px;margin-top:12px}
+  .brief-actions button{flex:1;font-size:11px;padding:9px 5px}
+  .read-actions{display:flex;gap:7px;margin:12px 0 3px}
+  .read-actions button{font-size:11px;padding:8px 10px;flex:1}
+  .reading-tag{display:flex;align-items:center;gap:7px;margin:6px 0 11px;color:#d2c7b1;font-size:11px}
+  .reading-tag:before{content:"";width:6px;height:6px;border:1px solid #ccb994;border-radius:50%}
+  .evidence-detail{margin:14px 0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#172630}
+  .evidence-detail img{width:100%;max-height:220px;object-fit:contain;background:#243734;display:block}
+  .evidence-detail .evidence-caption{padding:11px 12px;font-size:11px;color:var(--dim);line-height:1.6}
+  .evidence-detail dl{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+  .evidence-detail dt{font-size:10px;color:var(--faint)}
+  .evidence-detail dd{margin:0;color:var(--ink);font-size:12px}
+  .evidence-detail a{color:var(--cy)}
+  .evidence-detail .review-question{border-top:1px solid var(--line);padding-top:9px;color:#dfcaa8}
+  .area-summary{margin:14px 0;border:1px solid var(--line);border-radius:10px;background:#14222c;padding:12px 13px}
+  .area-summary-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:9px}
+  .area-summary-head b{font-size:11.5px;font-weight:600;color:var(--ink)}
+  .area-summary-head span{font:9px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
+  .area-summary-grid{display:flex;flex-wrap:wrap;gap:6px}
+  .area-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(164,189,201,.23);border-radius:999px;padding:5px 8px;color:var(--dim);font-size:10.5px;background:rgba(255,255,255,.035)}
+  .area-chip i{width:8px;height:8px;border-radius:2px;border:1px solid rgba(255,255,255,.3);flex:none}
+  .area-summary-note{margin:9px 0 0;color:var(--faint);font-size:9.8px;line-height:1.5}
+  .locality-check{margin:10px 0 14px;border:1px solid rgba(221,197,154,.25);border-radius:10px;background:rgba(221,197,154,.06);padding:11px 12px}
+  .locality-check>summary{cursor:pointer;list-style:none;color:#e0cda8;font-size:11.5px;font-weight:600}
+  .locality-check>summary::-webkit-details-marker{display:none}
+  .locality-check>summary:after{content:"＋";float:right;color:#cbb990;font-size:14px;font-weight:400}
+  .locality-check[open]>summary:after{content:"－"}
+  .locality-check .lcintro{margin:8px 0 10px;color:var(--faint);font-size:10px;line-height:1.5}
+  .lcrow{padding:8px 0;border-top:1px solid rgba(221,197,154,.16)}
+  .lcrow b{display:block;color:var(--ink);font-size:10.5px;margin-bottom:4px}
+  .lcrow span{display:block;color:#c7bda9;font-size:10px;line-height:1.5}
+  .ground-check{margin:0 0 14px;border-left:3px solid #7e9d98;padding:8px 10px;background:rgba(126,157,152,.08);color:var(--dim);font-size:10.5px;line-height:1.55}
+  .ground-check b{color:#b7d1cb;font-weight:600}
+  .law-note{margin:0 0 11px;padding:8px 10px;border-left:2px solid #778c8d;color:var(--faint);font-size:10px;line-height:1.5}
+  .ground-context{margin:14px 0;border:1px solid rgba(150,200,194,.28);border-radius:10px;background:rgba(126,157,152,.08);padding:12px 13px}
+  .ground-context-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:6px}
+  .ground-context-head b{font-size:11.5px;font-weight:600;color:#b7d1cb}.ground-context-head span{font:9px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+  .ground-context p{margin:0 0 10px;color:var(--dim);font-size:10px;line-height:1.5}
+  .ground-context-actions{display:flex;gap:7px}.ground-context-actions a{flex:1;text-align:center;border:1px solid rgba(150,200,194,.32);border-radius:7px;padding:7px 5px;color:var(--cy);font-size:10.5px;text-decoration:none;background:rgba(255,255,255,.035)}
+  .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  .report-shell{position:fixed;inset:0;z-index:100;background:#07111bce;backdrop-filter:blur(10px);display:flex;flex-direction:column;align-items:center;padding:24px;overflow:auto;overscroll-behavior:contain}
+  .report-shell[hidden]{display:none}
+  .report-toolbar{width:min(900px,100%);display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 0 13px;flex:none}
+  .report-toolbar>div{display:flex;gap:8px;align-items:center}
+  .report-toolbar span{color:var(--dim);font-size:12px}
+  .report-paper{width:min(900px,100%);background:#f6f5ee;color:#22312f;padding:38px 44px;box-shadow:0 20px 90px #0005;border-radius:3px;flex:none}
+  .report-paper .eyebrow{color:#556a60;font-size:10px}
+  .report-titlebar{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #23382d33;padding-bottom:18px;margin-bottom:24px}
+  .report-titlebar b{font-size:14px;font-weight:600}
+  .report-titlebar span{font:10px var(--mono);color:#66716b}
+  .report-paper h1{font-size:32px;font-weight:550;letter-spacing:-.035em;line-height:1.12;margin:7px 0 12px;color:#243e33}
+  .report-paper h2{font-size:15px;font-weight:650;color:#2d493d;margin:23px 0 10px}
+  .report-paper p{font-size:12px;line-height:1.65;margin:8px 0}
+  .report-paper a{color:#286253;text-underline-offset:3px;overflow-wrap:anywhere}
+  .report-meta{display:flex;flex-wrap:wrap;gap:8px 20px;font:11px var(--mono);color:#52655b;margin:15px 0}
+  .report-map{width:100%;max-height:320px;object-fit:contain;background:#e0e7e0;border:1px solid #24382d22;display:block}
+  .report-map-caption{font-size:10px!important;color:#5f7065;margin:5px 0 15px!important}
+  .report-facts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+  .report-fact{padding:14px 16px;border:1px solid #243e3326;border-radius:7px;background:#ecede4}
+  .report-fact span{display:block;font:9px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#5e7264;margin-bottom:5px}
+  .report-fact b{font-size:15px;font-weight:550}
+  .report-limit{padding:12px 15px;border-left:3px solid #9b875d;background:#eee9dc;font-size:11px;line-height:1.65;margin:14px 0}
+  .report-paper .law{border-color:#c8d1c5;background:none}
+  .report-paper .law *{color:#2b4335!important}
+  .report-paper .law .lh,.report-paper .law .lc{border-color:#c8d1c5;background:#e6ece3}
+  .report-paper .law .lg{background:transparent}
+  .report-paper .law .lg li{font-size:11.5px}
+  .report-paper .law .lg li:before{background:#dce6d8;color:#345344;box-shadow:none}
+  .report-paper .evidence-detail{background:#e7ece3;border-color:#bccabc}
+  .report-paper .area-summary{background:#e7ece3;border-color:#bccabc}
+  .report-paper .area-summary-head b,.report-paper .area-chip{color:#304839}
+  .report-paper .area-summary-note{color:#5e7063}
+  .report-paper .locality-check{background:#eee9dc;border-color:#c8b88f}
+  .report-paper .locality-check>summary,.report-paper .lcrow b{color:#405442}
+  .report-paper .locality-check .lcintro,.report-paper .lcrow span{color:#5e7063}
+  .report-paper .ground-check{background:#e7ece3;border-color:#7e9d98;color:#4c6354}
+  .report-paper .ground-check b{color:#405e50}
+  .report-paper .law-note{border-color:#91a79c;color:#5e7063}
+  .report-paper .ground-context{background:#e7ece3;border-color:#aabfb0}.report-paper .ground-context-head b{color:#405e50}.report-paper .ground-context p{color:#5e7063}.report-paper .ground-context-actions a{color:#286253;border-color:#aabfb0}
+  .report-paper .evidence-detail .evidence-caption,.report-paper .evidence-detail dd,.report-paper .evidence-detail dt,.report-paper .review-question{color:#304839}
+  .report-note-label{display:block;font-size:11px;font-weight:600;margin:20px 0 6px}
+  .report-paper textarea{width:100%;min-height:95px;resize:vertical;background:#fffdf5;border:1px solid #aebfaf;border-radius:6px;padding:12px;color:#253c2c;font:12px/1.6 system-ui,sans-serif}
+  .report-note-hint{color:#5e7063;font-size:10px!important}
+  .printed-note{display:none;white-space:pre-wrap}
+  .report-source-list{padding-left:17px;font-size:11px;line-height:1.9;overflow-wrap:anywhere}
+  .report-end{padding-top:15px;margin-top:25px;border-top:1px solid #243e3326;color:#5d6a61;font-size:10px}
+  .copy-status{font-size:11px;color:#bbd6c5;max-width:250px}
+  body.report-open>header,body.report-open>.stage,body.report-open>footer{pointer-events:none}
+  body.imm .briefpanel{display:none}
+  @media(min-width:761px) and (max-width:1000px){
+    header{grid-template-columns:auto minmax(170px,1fr) auto auto;gap:10px;padding:11px 13px 0}
+    .brand{min-width:163px}.brand b{font-size:13px}.brandmark{display:none}
+    .briefnav .workspace-button{padding:9px}.briefnav .report-top-label{display:none}
+    .maptools{gap:7px}.maptools .view-caption{display:none}.maptools .seg button{padding:6px 8px}
+    .maptools .satwrap{padding:0 8px}.maptools .satwrap input{width:65px}
+    .briefpanel{width:305px;left:12px;top:12px;bottom:12px}.brief-scroll{padding:19px 16px}
+    body.briefing .read{left:329px;width:min(325px,calc(100vw - 379px))}body.briefing .hint{left:329px}
+  }
+  @media(max-width:760px){
+    header{display:none}.briefpanel{position:fixed;inset:0;width:100%;border:0;border-radius:0;z-index:42;background:#101b25}
+    .brief-head{padding:calc(env(safe-area-inset-top,0px) + 15px) 20px 15px}
+    .brief-scroll{padding:24px;max-width:520px;width:100%;margin:auto}.brief-scroll h1{font-size:34px}
+    .brief-disclaimer{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 15px)}
+    .mver .mbrief{border-left:1px solid var(--line);color:#c8dacf;padding:10px 12px;font-size:11px}
+    .report-shell{padding:12px 0;background:#12202a}.report-toolbar{padding:0 12px 12px}.report-toolbar>span{display:none}
+    .report-toolbar>div{gap:5px}.report-toolbar button{padding:9px;font-size:11px}
+    .report-paper{padding:25px 21px;border-radius:0}.report-paper h1{font-size:27px}.report-titlebar span{font-size:8px}
+    .report-facts{grid-template-columns:1fr}.report-fact{padding:10px 13px}
+    .copy-status{max-width:100px;font-size:10px}.report-map{max-height:260px}
+  }
+  @media(max-width:380px){
+    .mver button{padding-left:11px;padding-right:11px;font-size:11.5px}
+  }
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+  @media print{
+    @page{size:A4;margin:15mm}
+    html,body{height:auto!important;overflow:visible!important;display:block!important;background:#fff!important}
+    body>*{display:none!important}
+    body>#reportShell:not([hidden]){display:block!important;position:static!important;background:#fff!important;padding:0!important;overflow:visible!important;backdrop-filter:none!important}
+    .report-toolbar,.report-paper textarea,.report-note-hint,.report-note-label{display:none!important}
+    .report-paper{width:100%!important;padding:0!important;box-shadow:none!important;background:#fff!important;color:#183427!important}
+    .report-paper h1{font-size:25px}.report-paper h2{break-after:avoid}.report-paper p,.report-paper li{orphans:3;widows:3}
+    .report-fact,.report-limit,.evidence-detail,.law .lg li{break-inside:avoid}
+    .report-map{max-height:78mm}.printed-note{display:block;white-space:pre-wrap;overflow-wrap:anywhere;border-left:2px solid #a3b09f;padding:10px;font-size:12px}
+    .report-paper *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .evidence-detail img{max-height:45mm}.report-end{font-size:9px}
+  }
+
 </style>
 </head>
-<body>
+<body class="loading">
 
 <header>
-  <div class="brand"><b>VMR Plan Reader</b></div>
+  <div class="brand"><span class="brandmark" aria-hidden="true">V</span><div><b>VMR Plan Reader</b><small>Plan · rules · evidence</small></div></div>
   <div class="find">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.2"/>
-      <path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
-    <input id="q" placeholder="Find a village or town" autocomplete="off"
-      oninput="findPlace()" onkeydown="if(event.key==='Enter')goFirst();
-               if(event.key==='Escape')clearFind()">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="1.8"/></svg>
+    <input id="q" aria-label="Find a village or town" placeholder="Find a village or town" autocomplete="off" oninput="findPlace()" onkeydown="if(event.key==='Enter')goFirst();if(event.key==='Escape')clearFind()">
     <div class="fres" id="fres"></div>
   </div>
-  <div class="seg vseg">
-    <button id="vDraft" onclick="setVersion('draft')">Draft 2021</button>
-    <button id="vFinal" onclick="setVersion('final')">Final 2026</button>
-    <button id="vCmp" onclick="toggleCmp()" title="Both plans either side of a seam">Compare</button>
+  <nav class="briefnav" aria-label="Review tools"><button class="workspace-button" id="briefButton" onclick="toggleBrief()" aria-controls="briefPanel" aria-expanded="false">Regional briefing</button><button class="workspace-button primary" onclick="openReport()" aria-label="Prepare review brief"><span class="report-top-label">Review brief </span>↗</button></nav>
+  <details class="deskMore" id="deskMore"><summary aria-label="More map tools">···</summary><div>
+    <button onclick="toggleMeas(true)">Measure distance &amp; area</button>
+    <button onclick="toggleImm(true)">Full screen map</button>
+    <button onclick="briefOverview()">Show the whole region</button>
+    <button onclick="toggleBrief(false);toggleDrawer()">Sources &amp; limitations</button>
+  </div></details>
+  <nav class="maptools" aria-label="Map controls">  <div class="seg vseg">
+    <button id="vDraft" aria-pressed="false" onclick="setVersion('draft')">Draft 2021</button>
+    <button id="vFinal" aria-pressed="true" onclick="setVersion('final')">Final 2026</button>
+    <button id="vCmp" aria-pressed="false" onclick="toggleCmp()" title="Both plans either side of a seam">Compare</button>
   </div>
   <div class="seg">
-    <button id="mPlan" class="on" onclick="setMode('plan')">Plan</button>
-    <button id="mSplit" onclick="setMode('split')">Split</button>
-    <button id="mZone" onclick="setMode('zone')">Zones</button>
+    <button id="mPlan" class="on" aria-pressed="true" onclick="setMode('plan')">Plan</button>
+    <button id="mSplit" aria-pressed="false" onclick="setMode('split')">Split</button>
+    <button id="mZone" aria-pressed="false" onclick="setMode('zone')">Zones</button>
   </div>
-  <button class="ico wide" id="tBtn" onclick="toggleTanks()"
+  <button class="ico wide" id="tBtn" aria-pressed="false" onclick="toggleTanks()"
     title="Ring the water bodies this plan protects that show no water on satellite">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2.4"/>
       <circle cx="12" cy="12" r="2.2" fill="currentColor"/></svg>
     <span>Dry water</span></button>
-  <button class="ico wide" id="cBtn" onclick="toggleChanged()"
+  <button class="ico wide" id="cBtn" aria-pressed="false" onclick="toggleChanged()"
     title="What changed between the 2021 draft and the 2026 revision">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M4 8h11l-3-3M20 16H9l3 3" stroke="currentColor" stroke-width="2.2"
@@ -692,7 +908,7 @@
     <span>What changed</span></button>
   <label class="satwrap" title="Fade between the plan and what is actually there">
     <span>SAT</span>
-    <input id="satMix" type="range" min="0" max="100" value="0"
+    <input id="satMix" aria-label="Satellite opacity" type="range" min="0" max="100" value="0"
       oninput="satMix=this.value/100;document.getElementById('satPct').textContent=this.value+'%';draw()">
     <b id="satPct">0%</b>
   </label>
@@ -702,20 +918,30 @@
       <circle cx="18" cy="17" r="3.4" stroke="currentColor" stroke-width="2"/>
       <path d="m21 20 1.6 1.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
     <span>What&#8217;s allowed</span></button>
-  <button class="ico" onclick="toggleMeas(true)" title="Measure distance and area">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M2.5 15.5 8.5 21.5 21.5 8.5 15.5 2.5z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/>
-      <path d="M11 6.5 13 8.5M8 9.5 10 11.5M5.5 12.5 7.5 14.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
-  <button class="ico" onclick="toggleImm(true)" title="Full screen map">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M3 9V3h6M21 9V3h-6M3 15v6h6M21 15v6h-6"
-        stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-  <button class="ico" onclick="reset()" title="Reset view">&#10226;</button>
-  <button class="ico" onclick="toggleDrawer()" title="What this plan can and cannot answer">?</button>
+</nav>
 </header>
 
 <div class="stage" id="stage">
-  <canvas id="cv"></canvas>
+  <canvas id="cv" role="img" aria-label="Interactive VMR plan map. Search for a place to read its zoning in text."></canvas>
+  <aside class="briefpanel" id="briefPanel" aria-label="Regional briefing" lang="en">
+    <div class="brief-head"><span class="eyebrow">Regional briefing</span><button onclick="toggleBrief(false)" aria-label="Close regional briefing">×</button></div>
+    <div class="brief-scroll">
+      <div class="brief-stamp">Independent reading · VMR Master Plan 2041</div>
+      <h1>A place.<br>The plan.<br>The evidence.</h1>
+      <p>Read the region, inspect an existing observation, and take a source-linked question into the next review.</p>
+      <div class="brief-steps">
+        <button class="brief-step" onclick="briefFind()"><span>01</span><div><b>Start with a place</b><small>Find a village or town on the sheet</small></div><i>↗</i></button>
+        <button class="brief-step" onclick="briefCompare()"><span>02</span><div><b>Read the two plans</b><small>Legends, rules and limits of comparison</small></div><i>↗</i></button>
+        <button class="brief-step" onclick="openReport()"><span>03</span><div><b>Prepare a review brief</b><small>Map, sources and a question to resolve</small></div><i>↗</i></button>
+      </div>
+      <div class="brief-section-label">Existing water records <span>Examples, not a ranking</span></div>
+      <div id="briefCases"></div>
+      <section class="brief-data" aria-labelledby="briefDataTitle"><h3 id="briefDataTitle">Reader data</h3><p>Download the small source files used by this reader. They are derived working data, not official VMRDA records.</p><div class="data-downloads"><a href="places.json" download="vmr-places.json">Settlements ↧</a><a href="rules.json" download="vmr-rules.json">Zoning schedule ↧</a><a href="tanks_all.json" download="vmr-water-checks.json">Water checks ↧</a></div></section>
+      <div class="brief-actions"><button class="workspace-button" onclick="briefOverview()">Whole region</button><button class="workspace-button" onclick="toggleBrief(false);toggleDrawer()">Sources &amp; limits</button></div>
+    </div>
+    <div class="brief-disclaimer"><b>±200 m placement · 43% median area-recovery error.</b><br>Observations are starting points for verification. This reader is independent of VMRDA.</div>
+  </aside>
+
 
   <button class="immx" id="immx" onclick="toggleImm(false)" aria-label="Leave full screen">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -727,8 +953,8 @@
   </button>
 
   <div class="zoombox">
-    <button onclick="zoomBy(1.5)">+</button>
-    <button onclick="zoomBy(1/1.5)">&minus;</button>
+    <button aria-label="Zoom in" onclick="zoomBy(1.5)">+</button>
+    <button aria-label="Zoom out" onclick="zoomBy(1/1.5)">&minus;</button>
   </div>
 
   <div class="read" id="read">
@@ -745,7 +971,7 @@
   <div class="zpanel" id="zpanel">
     <div class="zh">
       <span>Zone index</span>
-      <input id="zq" placeholder="filter" oninput="renderZones()">
+      <input aria-label="Filter zone index" id="zq" placeholder="filter" oninput="renderZones()">
       <button class="zmin" id="zmin" onclick="toggleZ()" aria-label="Collapse">&#9662;</button>
     </div>
     <div class="zb" id="zb"></div>
@@ -794,6 +1020,7 @@
         plan reaches the public as a picture. This page is that picture, read as far
         as it can be read.</p>
 
+      <p id="currentSourceNote"></p><p>The sheet dimensions and recovery test below describe the 2021 draft. The selected version is identified above.</p>
       <h3>What is checkable today</h3>
       <div class="f ok"><span class="m">&#10003;</span><div>The sheet itself. <b>43,200 &times; 16,200 px</b>
         across 14,462 tiles, recovered in full from VMRDA's own viewer.</div></div>
@@ -817,19 +1044,17 @@
       <h3>What is not</h3>
       <div class="f bad"><span class="m">&times;</span><div><b>Area.</b> Recovered figures miss VMRDA's
         own Table 17-4 by a median of <b>43%</b>. Detail below.</div></div>
-      <div class="f bad"><span class="m">&times;</span><div><b>Any comparison between versions.</b> Two
-        pictures cannot be differenced. When the plan is said to have changed
-        between draft and final, nothing published can settle it either way.</div></div>
+      <div class="f bad"><span class="m">&times;</span><div><b>Parcel-level geometric comparison.</b> These sheets cannot support a reliable parcel-level diff. The reader compares legend classes and shows both sheets; a difference at a point can be misalignment rather than a planning decision.</div></div>
       <div class="f warn"><span class="m">!</span><div><b>The final plan from its official
         source.</b> The download for the Final Revised Master Plan 2041 on VMRDA's site
         still does not resolve, from inside India or outside it. The 2026 sheet this page
         opens with was obtained another way and georeferenced independently. It can be read;
         nobody should have to go around a statutory publication to read it.</div></div>
-      <div class="f bad"><span class="m">&times;</span><div><b>What has changed on the ground.</b> The base
+      <div class="f bad"><span class="m">&times;</span><div><b>The plan’s underlying basemap.</b> The base
         map was interpreted by hand from imagery captured in <b>2015 and 2017</b>.
         No refresh cycle is defined, and the capital plan funds none.</div></div>
 
-      <h3>The recovery test</h3>
+      <h3>The draft-sheet recovery test</h3>
       <p>Every zone colour was sampled off the published legend, every map pixel
         classified to its nearest match, and the result measured against VMRDA's
         published table. 34% of the plan area carries a readable zone
@@ -874,7 +1099,7 @@
       <p><b>3.</b> Once there is a baseline, Sentinel imagery gives a free
         twelve-day check on whether the ground is diverging from the plan.</p>
 
-      <h3>Provenance</h3>
+      <h3>Provenance of the recovery test</h3>
       <p>Sheet: <b>Draft Master Plan 2041, Proposed Landuse</b>, notified 19 June
         2021, from the Zoomify pyramid at vmrda.gov.in/dmpmaps. Areas checked
         against Table 17-4 of the Draft Master Plan Report, June 2021.
@@ -902,10 +1127,10 @@
     <div class="mver">
       <button id="mvD" onclick="setVersion('draft')" data-i18n="Draft 2021">Draft 2021</button>
       <button id="mvF" onclick="setVersion('final')" data-i18n="Final 2026">Final 2026</button>
-      <button id="mvC" onclick="toggleCmp()" data-i18n="Compare">Compare</button>
+      <button id="mvC" onclick="toggleCmp()" data-i18n="Compare">Compare</button><button class="mbrief" onclick="toggleBrief(true)">Briefing ↗</button>
     </div>
 
-    <div class="mmenu" id="mmenu">
+    <div class="mmenu" id="mmenu"><button onclick="mMenu(0);toggleBrief(true)">Regional briefing<i>Places, existing evidence and a review brief</i></button><button onclick="mMenu(0);openReport()">Prepare review brief</button>
       <button onclick="mMenu(0);toggleChanged()">What changed between the plans
         <i>Certain, directional, and what cannot be said</i></button>
       <button onclick="mMenu(0);toggleDrawer()">What this plan can and cannot answer
@@ -972,7 +1197,7 @@
      and no ancestor filter can trap their fixed positioning. -->
 <div class="mpane" id="msearchp">
   <div class="mph">
-    <input id="mq" placeholder="Find a village or town" autocomplete="off"
+    <input id="mq" aria-label="Find a village or town" placeholder="Find a village or town" autocomplete="off"
       autocapitalize="words" oninput="mFind()"
       onkeydown="if(event.key==='Enter'){event.preventDefault();mGo(0)}">
     <button class="mx" onclick="mPane('msearchp',0)" data-i18n="Cancel">Cancel</button>
@@ -988,6 +1213,15 @@
 
 <footer id="foot"><span id="vNote">Draft Master Plan 2041, notified 19 June 2021. Superseded.</span> &middot; as published by VMRDA &middot; zones read back by colour, indicative only &middot; not a VMRDA record</footer>
 
+<div class="sr-only" id="readStatus" role="status" aria-live="polite" aria-atomic="true"></div>
+<section class="report-shell" id="reportShell" role="dialog" aria-modal="true" aria-labelledby="reportTitle" hidden lang="en">
+  <div class="report-toolbar">
+    <span>Review brief · preview</span>
+    <div><span class="copy-status" id="copyStatus" role="status"></span><button class="workspace-button" id="copyReport" onclick="copyReviewLink()">Copy reading link</button><button class="workspace-button primary" onclick="printReview()">Print / save PDF</button><button class="review-close" onclick="closeReport()" aria-label="Close review brief">×</button></div>
+  </div>
+  <article class="report-paper" id="reportPaper"></article>
+</section>
+
 <script>
 "use strict";
 var VERSIONS = {"draft": {"label": "Draft 2021", "plan": "plan.jpg", "zones": "zones.png", "tiles": "t/draft", "px": [10080, 4020], "geo": {"s": 16.87, "deg": 34.4, "lon0": 83.2363196451436, "lat0": 18.092701821448614, "kx": 105815.8156647524, "ky": 110540.0, "tE": -107387.80566260655, "tN": -46425.09832071707, "cx": 15, "cy": 15, "err_m": 200}, "zones_list": [{"raw": "Agriculture", "name": "Agriculture", "rgb": [209, 255, 188], "grp": "Agriculture", "sqkm": 1702.9, "grpkm": 1702.9, "pub": 2078.09, "prot": false}, {"raw": "Residential", "name": "Residential", "rgb": [255, 255, 152], "grp": "Residential", "sqkm": 457.0, "grpkm": 457.0, "pub": 957.81, "prot": false}, {"raw": "Hills", "name": "Hills", "rgb": [169, 110, 3], "grp": "Hills", "sqkm": 323.0, "grpkm": 323.0, "pub": null, "prot": true}, {"raw": "Forest", "name": "Forest", "rgb": [38, 115, 0], "grp": "Forest", "sqkm": 280.7, "grpkm": 280.7, "pub": null, "prot": true}, {"raw": "Transportation existing", "name": "Transportation", "rgb": [178, 178, 178], "grp": "Transportation", "sqkm": 275.3, "grpkm": 345.4, "pub": 187.76, "prot": false}, {"raw": "Water bodies", "name": "Water body", "rgb": [114, 224, 252], "grp": "Water bodies", "sqkm": 242.8, "grpkm": 242.8, "pub": 366.96, "prot": true}, {"raw": "Accreted land", "name": "Accreted land", "rgb": [217, 189, 144], "grp": "Accreted land", "sqkm": 203.2, "grpkm": 203.2, "pub": null, "prot": false}, {"raw": "Industrial existing", "name": "Industrial", "rgb": [222, 101, 254], "grp": "Industrial", "sqkm": 90.9, "grpkm": 137.3, "pub": 181.3, "prot": false}, {"raw": "Mixed Use 2", "name": "Mixed use", "rgb": [255, 211, 128], "grp": "Mixed use", "sqkm": 72.6, "grpkm": 145.5, "pub": 75.44, "prot": false}, {"raw": "Transportation proposed", "name": "Transportation (proposed)", "rgb": [104, 104, 104], "grp": "Transportation", "sqkm": 70.1, "grpkm": 345.4, "pub": 187.76, "prot": false}, {"raw": "Mixed Use 3", "name": "Mixed use", "rgb": [231, 151, 0], "grp": "Mixed use", "sqkm": 58.4, "grpkm": 145.5, "pub": 75.44, "prot": false}, {"raw": "Industrial proposed", "name": "Industrial (proposed)", "rgb": [226, 126, 253], "grp": "Industrial", "sqkm": 46.4, "grpkm": 137.3, "pub": 181.3, "prot": false}, {"raw": "Eco-sensitive / park", "name": "Eco-sensitive", "rgb": [83, 139, 68], "grp": "Eco-sensitive", "sqkm": 33.3, "grpkm": 33.3, "pub": null, "prot": true}, {"raw": "Special Area", "name": "Special area", "rgb": [49, 67, 133], "grp": "Special area", "sqkm": 24.0, "grpkm": 24.0, "pub": null, "prot": false}, {"raw": "Mixed Use 1", "name": "Mixed use", "rgb": [254, 165, 1], "grp": "Mixed use", "sqkm": 14.5, "grpkm": 145.5, "pub": 75.44, "prot": false}, {"raw": "Recreational proposed", "name": "Recreational (proposed)", "rgb": [74, 212, 1], "grp": "Recreational", "sqkm": 13.2, "grpkm": 16.4, "pub": 97.22, "prot": false}, {"raw": "Educational", "name": "Educational", "rgb": [222, 13, 26], "grp": "Public & semi-public", "sqkm": 10.7, "grpkm": 24.0, "pub": 96.38, "prot": false}, {"raw": "Facility proposed", "name": "Facility (proposed)", "rgb": [249, 38, 36], "grp": "Public & semi-public", "sqkm": 9.6, "grpkm": 24.0, "pub": 96.38, "prot": false}, {"raw": "Utilities proposed", "name": "Public utilities (proposed)", "rgb": [255, 161, 160], "grp": "Public utilities", "sqkm": 4.5, "grpkm": 7.6, "pub": 9.42, "prot": false}, {"raw": "Parks existing", "name": "Parks", "rgb": [85, 255, 0], "grp": "Recreational", "sqkm": 3.2, "grpkm": 16.4, "pub": 97.22, "prot": false}, {"raw": "Utilities existing", "name": "Public utilities", "rgb": [255, 135, 135], "grp": "Public utilities", "sqkm": 3.1, "grpkm": 7.6, "pub": 9.42, "prot": false}, {"raw": "Religious", "name": "Religious", "rgb": [221, 29, 0], "grp": "Public & semi-public", "sqkm": 1.8, "grpkm": 24.0, "pub": 96.38, "prot": false}, {"raw": "Health", "name": "Health", "rgb": [245, 7, 11], "grp": "Public & semi-public", "sqkm": 1.7, "grpkm": 24.0, "pub": 96.38, "prot": false}, {"raw": "Commercial", "name": "Commercial", "rgb": [0, 1, 252], "grp": "Commercial", "sqkm": 0.3, "grpkm": 0.3, "pub": 21.26, "prot": false}, {"raw": "Government facilities", "name": "Government", "rgb": [253, 2, 2], "grp": "Public & semi-public", "sqkm": 0.2, "grpkm": 24.0, "pub": 96.38, "prot": false}], "lookup": [{"rgb": [255, 255, 152], "name": "Residential", "raw": "Residential"}, {"rgb": [0, 1, 252], "name": "Commercial", "raw": "Commercial"}, {"rgb": [254, 165, 1], "name": "Mixed use", "raw": "Mixed Use 1"}, {"rgb": [255, 211, 128], "name": "Mixed use", "raw": "Mixed Use 2"}, {"rgb": [231, 151, 0], "name": "Mixed use", "raw": "Mixed Use 3"}, {"rgb": [222, 101, 254], "name": "Industrial", "raw": "Industrial existing"}, {"rgb": [226, 126, 253], "name": "Industrial (proposed)", "raw": "Industrial proposed"}, {"rgb": [253, 2, 2], "name": "Government", "raw": "Government facilities"}, {"rgb": [222, 13, 26], "name": "Educational", "raw": "Educational"}, {"rgb": [245, 7, 11], "name": "Health", "raw": "Health"}, {"rgb": [221, 29, 0], "name": "Religious", "raw": "Religious"}, {"rgb": [249, 38, 36], "name": "Facility (proposed)", "raw": "Facility proposed"}, {"rgb": [255, 135, 135], "name": "Public utilities", "raw": "Utilities existing"}, {"rgb": [255, 161, 160], "name": "Public utilities (proposed)", "raw": "Utilities proposed"}, {"rgb": [85, 255, 0], "name": "Parks", "raw": "Parks existing"}, {"rgb": [74, 212, 1], "name": "Recreational (proposed)", "raw": "Recreational proposed"}, {"rgb": [178, 178, 178], "name": "Transportation", "raw": "Transportation existing"}, {"rgb": [104, 104, 104], "name": "Transportation (proposed)", "raw": "Transportation proposed"}, {"rgb": [209, 255, 188], "name": "Agriculture", "raw": "Agriculture"}, {"rgb": [49, 67, 133], "name": "Special area", "raw": "Special Area"}, {"rgb": [114, 224, 252], "name": "Water body", "raw": "Water bodies"}, {"rgb": [38, 115, 0], "name": "Forest", "raw": "Forest"}, {"rgb": [169, 110, 3], "name": "Hills", "raw": "Hills"}, {"rgb": [83, 139, 68], "name": "Eco-sensitive", "raw": "Eco-sensitive / park"}, {"rgb": [217, 189, 144], "name": "Accreted land", "raw": "Accreted land"}], "area": 4873, "note": "Draft Master Plan 2041, notified 19 June 2021. Superseded."}, "final": {"label": "Final 2026", "plan": "final_plan.jpg", "zones": "final_zones.png", "tiles": "t/final", "px": [9838, 4156], "geo": {"s": 16.87, "deg": 34.4, "lon0": 83.2363196451436, "lat0": 18.092701821448614, "kx": 105815.8156647524, "ky": 110540.0, "tE": -108814.37058177184, "tN": -45661.34772165285, "cx": 0, "cy": 0, "err_m": 200}, "zones_list": [{"raw": "Agriculture", "name": "Agriculture", "rgb": [211, 255, 190], "grp": "Agriculture", "sqkm": 1493.9, "grpkm": 1493.9, "pub": null, "prot": false}, {"raw": "Residential", "name": "Residential", "rgb": [255, 255, 153], "grp": "Residential", "sqkm": 620.2, "grpkm": 620.2, "pub": null, "prot": false}, {"raw": "Mixed Use", "name": "Mixed Use", "rgb": [255, 165, 0], "grp": "Mixed Use", "sqkm": 325.4, "grpkm": 325.4, "pub": null, "prot": false}, {"raw": "Protected Blue", "name": "Protected Blue", "rgb": [115, 223, 255], "grp": "Protected Blue", "sqkm": 310.4, "grpkm": 310.4, "pub": null, "prot": true}, {"raw": "Protected Forest", "name": "Protected Forest", "rgb": [0, 115, 76], "grp": "Protected Forest", "sqkm": 288.3, "grpkm": 288.3, "pub": null, "prot": true}, {"raw": "Protected Hills", "name": "Protected Hills", "rgb": [168, 112, 0], "grp": "Protected Hills", "sqkm": 249.8, "grpkm": 249.8, "pub": null, "prot": true}, {"raw": "Transportation", "name": "Transportation", "rgb": [104, 104, 104], "grp": "Transportation", "sqkm": 101.7, "grpkm": 101.7, "pub": null, "prot": false}, {"raw": "Protected Green", "name": "Protected Green", "rgb": [0, 255, 0], "grp": "Protected Green", "sqkm": 85.4, "grpkm": 85.4, "pub": null, "prot": true}, {"raw": "Protected Kambalakonda ESZ", "name": "Protected Kambalakonda ESZ", "rgb": [239, 228, 190], "grp": "Protected Kambalakonda ESZ", "sqkm": 79.3, "grpkm": 79.3, "pub": null, "prot": true}, {"raw": "Public & Semi Public", "name": "Public & Semi Public", "rgb": [255, 0, 0], "grp": "Public & Semi Public", "sqkm": 40.9, "grpkm": 40.9, "pub": null, "prot": false}, {"raw": "Industrial Red & Orange", "name": "Industrial Red & Orange", "rgb": [223, 115, 255], "grp": "Industrial Red & Orange", "sqkm": 39.1, "grpkm": 39.1, "pub": null, "prot": false}, {"raw": "Special Area", "name": "Special Area", "rgb": [0, 38, 115], "grp": "Special Area", "sqkm": 29.3, "grpkm": 29.3, "pub": null, "prot": false}, {"raw": "Affordable Housing", "name": "Affordable Housing", "rgb": [255, 255, 115], "grp": "Affordable Housing", "sqkm": 10.7, "grpkm": 10.7, "pub": null, "prot": false}, {"raw": "Commercial", "name": "Commercial", "rgb": [0, 0, 255], "grp": "Commercial", "sqkm": 8.1, "grpkm": 8.1, "pub": null, "prot": false}, {"raw": "Industrial Work Centre", "name": "Industrial Work Centre", "rgb": [222, 102, 255], "grp": "Industrial Work Centre", "sqkm": 0.7, "grpkm": 0.7, "pub": null, "prot": false}, {"raw": "Recreational", "name": "Recreational", "rgb": [85, 255, 0], "grp": "Recreational", "sqkm": 0.3, "grpkm": 0.3, "pub": null, "prot": false}], "lookup": [{"rgb": [255, 255, 153], "name": "Residential", "raw": "Residential"}, {"rgb": [255, 255, 115], "name": "Affordable Housing", "raw": "Affordable Housing"}, {"rgb": [0, 0, 255], "name": "Commercial", "raw": "Commercial"}, {"rgb": [255, 0, 0], "name": "Public & Semi Public", "raw": "Public & Semi Public"}, {"rgb": [222, 102, 255], "name": "Industrial Work Centre", "raw": "Industrial Work Centre"}, {"rgb": [223, 115, 255], "name": "Industrial Red & Orange", "raw": "Industrial Red & Orange"}, {"rgb": [85, 255, 0], "name": "Recreational", "raw": "Recreational"}, {"rgb": [104, 104, 104], "name": "Transportation", "raw": "Transportation"}, {"rgb": [255, 165, 0], "name": "Mixed Use", "raw": "Mixed Use"}, {"rgb": [211, 255, 190], "name": "Agriculture", "raw": "Agriculture"}, {"rgb": [0, 38, 115], "name": "Special Area", "raw": "Special Area"}, {"rgb": [239, 228, 190], "name": "Protected Kambalakonda ESZ", "raw": "Protected Kambalakonda ESZ"}, {"rgb": [115, 223, 255], "name": "Protected Blue", "raw": "Protected Blue"}, {"rgb": [168, 112, 0], "name": "Protected Hills", "raw": "Protected Hills"}, {"rgb": [0, 255, 0], "name": "Protected Green", "raw": "Protected Green"}, {"rgb": [0, 115, 76], "name": "Protected Forest", "raw": "Protected Forest"}], "area": 4380, "note": "Revised Master Plan 2041, signed 29 June 2026. The operative plan."}};
@@ -996,6 +1230,7 @@ var VERSIONS = {"draft": {"label": "Draft 2021", "plan": "plan.jpg", "zones": "z
    anything and you had to know to switch. The draft stays one tap away, which
    is what it is for. */
 var VER = "final";
+if(location.hash.indexOf("#read=")===0){var initialVersion=new URLSearchParams(location.hash.slice(6)).get("v");if(initialVersion==="draft")VER="draft";}
 var V0 = VERSIONS[VER];
 var LOOKUP = V0.lookup;
 var GEO = V0.geo;                   /* sheet pixel -> lon/lat, +/- 200 m */
@@ -1226,8 +1461,9 @@ function buildOtherAffine(){ buildRasterAffines() }
 var cv=document.getElementById("cv"), ctx=cv.getContext("2d",{alpha:false});
 var stage=document.getElementById("stage");
 var plan=new Image(), zone=new Image(), ready=0, mode="plan";
-var IW=0, IH=0, split=0.5, dpr=1;
+var IW=0, IH=0, split=0.5, dpr=1, seamGoal=0.5, seamAuto=false, seamPulse=0;
 var view={x:0,y:0,s:1}, goal={x:0,y:0,s:1};
+var focusPulse=0, focusLL=null;
 
 /* identify raster, kept small: a full 10080x4020 backing store is 160 MB and
    dies on a phone. 4x down is ~70 m on the ground, which is honest for a
@@ -1261,6 +1497,7 @@ Promise.all([
   buildRasterAffines();
   ready=1; resize(); reset(true);
   document.getElementById("boot").classList.add("off");
+  setTimeout(function(){document.body.classList.remove("loading")},40);
   requestAnimationFrame(tick);
   renderComposition();
   renderZones();
@@ -1268,7 +1505,7 @@ Promise.all([
   applyLang();
   if(MOBILE) mBoot();
   loadTiles(VERSIONS[VER]); loadOther();
-  if(location.hash.length>3) fromHash();
+  // The reading is restored after the tile transform is available.
 }).catch(function(){
   document.getElementById("boot").innerHTML='<div style="color:#ef6b6b">Could not load the sheet</div>';
 });
@@ -1442,8 +1679,14 @@ function zoomAt(cx,cy,k){
 function zoomBy(f){var r=stage.getBoundingClientRect();zoomAt(r.width/2,r.height/2,f)}
 
 function tick(){
-  var k=0.22, d=Math.abs(view.s-goal.s)+Math.abs(view.x-goal.x)+Math.abs(view.y-goal.y);
-  if(d>0.01){
+  var k=(typeof REDUCED_MOTION!=="undefined"&&REDUCED_MOTION.matches)?1:0.16, d=Math.abs(view.s-goal.s)+Math.abs(view.x-goal.x)+Math.abs(view.y-goal.y);
+  if(seamAuto){
+    split+=(seamGoal-split)*(REDUCED_MOTION.matches?1:.14);
+    if(Math.abs(split-seamGoal)<.002){split=seamGoal;seamAuto=false}
+  }
+  if(focusPulse>0)focusPulse=Math.max(0,focusPulse-(REDUCED_MOTION.matches?.08:.024));
+  if(seamPulse>0)seamPulse=Math.max(0,seamPulse-(REDUCED_MOTION.matches?.08:.035));
+  if(d>0.01||seamAuto||focusPulse>0||seamPulse>0){
     view.s+=(goal.s-view.s)*k; view.x+=(goal.x-view.x)*k; view.y+=(goal.y-view.y)*k;
     draw();
   }
@@ -1595,8 +1838,42 @@ function draw(){
       ctx.restore();
     }
   }
+  drawPlanningWindow(x,y,w,h);
+  drawFocusReticle(x,y,w,h);
   drawMark(x,y,w,h);
   drawMeas(x,y,w,h);
+}
+
+/* A short-lived target ring makes a place selection legible while the map is
+   flying. It is anchored to ground coordinates, so it stays under the reading
+   as the view interpolates. */
+function drawFocusReticle(x,y,w,h){
+  if(!focusLL||focusPulse<=0||!GEO)return;
+  var q=ll2px(focusLL[0],focusLL[1]), sx=x+q[0]*view.s*dpr, sy=y+q[1]*view.s*dpr;
+  if(sx<-70||sy<-70||sx>w+70||sy>h+70)return;
+  var age=1-focusPulse, r=(12+48*age)*dpr, a=Math.min(.9,focusPulse*1.3);
+  ctx.save();ctx.translate(sx,sy);ctx.globalAlpha=a;ctx.strokeStyle="rgba(190,235,224,.95)";
+  ctx.lineWidth=1.5*dpr;ctx.shadowColor="rgba(130,220,210,.8)";ctx.shadowBlur=10*dpr;
+  ctx.beginPath();ctx.arc(0,0,r,0,7);ctx.stroke();ctx.shadowBlur=0;
+  ctx.beginPath();ctx.moveTo(-r-8*dpr,0);ctx.lineTo(-r+2*dpr,0);ctx.moveTo(r-2*dpr,0);ctx.lineTo(r+8*dpr,0);
+  ctx.moveTo(0,-r-8*dpr);ctx.lineTo(0,-r+2*dpr);ctx.moveTo(0,r-2*dpr);ctx.lineTo(0,r+8*dpr);ctx.stroke();ctx.restore();
+}
+
+/* The nearby-class sampler uses this same visual window. It is deliberately a
+   dashed reading aid rather than a filled polygon: it does not pretend to be
+   an administrative locality boundary. */
+function drawPlanningWindow(x,y,w,h){
+  if(!LAST||!LAST.ll||!GEO)return;
+  var q=ll2px(LAST.ll[0],LAST.ll[1]), sx=x+q[0]*view.s*dpr, sy=y+q[1]*view.s*dpr;
+  var rad=Math.max(200,Math.min(1500,520/Math.max(goal.s,.001)))*view.s*dpr;
+  if(sx+rad<-20||sy+rad<-20||sx-rad>w+20||sy-rad>h+20)return;
+  var pad=9*dpr, left=sx-rad, top=sy-rad, right=sx+rad, bottom=sy+rad;
+  ctx.save();ctx.globalAlpha=.48;ctx.fillStyle="rgba(150,220,211,.055)";ctx.strokeStyle="rgba(177,225,214,.95)";ctx.lineWidth=1.6*dpr;ctx.setLineDash([9*dpr,6*dpr]);
+  ctx.fillRect(left,top,right-left,bottom-top);ctx.strokeRect(left,top,right-left,bottom-top);ctx.setLineDash([]);
+  ctx.globalAlpha=.86;ctx.lineWidth=2*dpr;var L=Math.min(22*dpr,Math.max(10*dpr,rad*.12));
+  [[left,top,1,1],[right,top,-1,1],[left,bottom,1,-1],[right,bottom,-1,-1]].forEach(function(c){ctx.beginPath();ctx.moveTo(c[0]+c[2]*L,c[1]);ctx.lineTo(c[0],c[1]);ctx.lineTo(c[0],c[1]+c[3]*L);ctx.stroke()});
+  if(right-left>115*dpr){var lx=Math.max(8*dpr,Math.min(w-111*dpr,left+8*dpr)),ly=Math.max(18*dpr,Math.min(h-8*dpr,top+17*dpr));ctx.globalAlpha=.86;ctx.fillStyle="rgba(9,13,20,.84)";ctx.fillRect(lx,ly-9*dpr,103*dpr,18*dpr);ctx.globalAlpha=1;ctx.fillStyle="rgba(200,235,225,.95)";ctx.font=(8*dpr)+"px ui-monospace,Menlo,monospace";ctx.textBaseline="middle";ctx.fillText("READING WINDOW",lx+7*dpr,ly)}
+  ctx.restore();
 }
 
 /* Nothing on the sheet said which point the panel was answering about, which
@@ -1653,6 +1930,10 @@ function drawCompare(x,y,dw,dh,w,h){
   /* the seam, dark-edged so it holds over both palettes */
   ctx.fillStyle="rgba(9,13,20,.5)"; ctx.fillRect(sx-2.5*dpr,0,5*dpr,h);
   ctx.fillStyle="rgba(255,255,255,.92)"; ctx.fillRect(sx-1.5*dpr,0,3*dpr,h);
+  if(seamPulse>0){
+    ctx.save();ctx.globalAlpha=seamPulse*.75;ctx.shadowColor="rgba(150,220,211,.95)";ctx.shadowBlur=18*dpr;
+    ctx.fillStyle="rgba(174,235,222,.95)";ctx.fillRect(sx-1*dpr,0,2*dpr,h);ctx.restore();
+  }
   /* The grab handle and the two labels belong in the strip of map that is
      actually visible, not the middle of the canvas: on a phone the middle of
      the canvas is behind the bottom sheet. */
@@ -1680,7 +1961,11 @@ function toggleCmp(){
     return;
   }
   cmp=!cmp;
-  if(cmp && (split<0.08||split>0.92)) split=0.5;
+  if(cmp){
+    seamPulse=1;
+    if(split<0.08||split>0.92){split=REDUCED_MOTION.matches?.5:.04;seamGoal=.5;seamAuto=!REDUCED_MOTION.matches}
+    else {seamGoal=split;seamAuto=false}
+  } else seamAuto=false;
   syncCmpUI();
   draw();
   if(MOBILE) mToast(cmp
@@ -1690,7 +1975,7 @@ function toggleCmp(){
 function syncCmpUI(){
   ["vCmp","mvC"].forEach(function(id){
     var b=document.getElementById(id);
-    if(b) b.classList.toggle("on", cmp);
+    if(b){ b.classList.toggle("on", cmp); b.setAttribute("aria-pressed",cmp); }
   });
   var h=document.getElementById("hint");
   if(h) h.innerHTML = cmp
@@ -1703,6 +1988,7 @@ function toggleTanks(){
   showTanks=!showTanks;
   document.getElementById("tBtn").style.color=showTanks?"#ef6b6b":"";
   document.getElementById("tBtn").style.borderColor=showTanks?"#ef6b6b":"";
+  document.getElementById("tBtn").setAttribute("aria-pressed",showTanks);
   var mb=document.getElementById("mbW");
   if(mb) mb.classList.toggle("on",showTanks);
   if(MOBILE) mToast(showTanks
@@ -1875,7 +2161,7 @@ function doReloc(){
   identifyAt(q[0],q[1],k.t);
 }
 function loadTiles(V){
-  if(!V.tiles){ TILES=null; PENDVIEW=null; doReloc(); return }
+  if(!V.tiles){ TILES=null; PENDVIEW=null; doReloc(); restoreReading(); return }
   fetch(V.tiles+"/meta.json").then(function(r){return r.json()}).then(function(m){
     m.base=V.tiles; TILES=m;
     /* The tile pyramid renders at full source resolution, so IW/IH and the
@@ -1904,8 +2190,8 @@ function loadTiles(V){
     } else { reset(true); }
     PENDVIEW=null;
     buildRasterAffines();   /* GEO.s just changed under both */
-    draw(); doReloc();
-  }).catch(function(){ TILES=null; PENDVIEW=null; doReloc() });
+    draw(); doReloc(); restoreReading();
+  }).catch(function(){ TILES=null; PENDVIEW=null; doReloc(); restoreReading() });
 }
 
 function setVersion(v){
@@ -1955,8 +2241,11 @@ function setVersion(v){
 /* One place that says which plan is showing, so the markup does not carry a
    default that then has to be kept in step with VER. */
 function syncVersionUI(){
+  var n=document.getElementById("currentSourceNote");if(n)n.textContent="Showing: "+VERSIONS[VER].note;
   document.getElementById("vDraft").classList.toggle("on",VER==="draft");
   document.getElementById("vFinal").classList.toggle("on",VER==="final");
+  document.getElementById("vDraft").setAttribute("aria-pressed",VER==="draft");
+  document.getElementById("vFinal").setAttribute("aria-pressed",VER==="final");
   document.getElementById("mvD").classList.toggle("on",VER==="draft");
   document.getElementById("mvF").classList.toggle("on",VER==="final");
   document.getElementById("vNote").textContent=VERSIONS[VER].note;
@@ -1967,6 +2256,9 @@ function setMode(m){
   document.getElementById("mPlan").classList.toggle("on",m==="plan");
   document.getElementById("mSplit").classList.toggle("on",m==="split");
   document.getElementById("mZone").classList.toggle("on",m==="zone");
+  document.getElementById("mPlan").setAttribute("aria-pressed",m==="plan");
+  document.getElementById("mSplit").setAttribute("aria-pressed",m==="split");
+  document.getElementById("mZone").setAttribute("aria-pressed",m==="zone");
   draw();
 }
 
@@ -2044,6 +2336,7 @@ function identify(cx,cy,title){
                  Math.floor(idp[0]*ID_SCALE), Math.floor(idp[1]*ID_SCALE));
   var hit=pr.hit;
   var ll=GEO?px2ll(ix,iy):null;
+  if(ll){focusLL=ll;focusPulse=REDUCED_MOTION.matches?0:1}
   var oq=(ll&&OTHER.ctx)?zoneAtLL(OTHER,ll[0],ll[1]):null;
   var oz=oq?oq.name:null;
   var mine=hit?hit.name:"no zone colour";
@@ -2060,7 +2353,7 @@ function identify(cx,cy,title){
   if(immOn()) immAnswer(LAST);
   else if(MOBILE) mAnswer(LAST);
   else renderRead(LAST);
-  location.replace("#"+ix+","+iy+","+goal.s.toFixed(4));
+  readingChanged(LAST); writeReadingHash();
 }
 
 function bothHTML(res){
@@ -2092,7 +2385,8 @@ function lawHTML(R){
   var ul=function(a){ return '<ul>'+a.map(function(x){
     return '<li>'+tru(x)+'</li>' }).join("")+'</ul>' };
   return '<div class="law">'+
-    '<div class="lh">'+t("What the zoning law allows here")+'</div>'+
+    '<div class="lh">'+t("What the plan permits in this class")+'</div>'+ 
+    '<div class="law-note">These are schedule entries for the selected regulatory class. They do not confirm which uses currently exist at this place.</div>'+ 
     (R.headline?'<div class="lhd">'+R.headline+'</div>':'')+
     (P.length?'<div class="lg ok"><b>'+t("Permitted")+'<u>'+P.length+'</u></b>'+ul(P)+'</div>':'')+
     (Q.length?'<div class="lg no"><b>'+t("Not permitted")+'<u>'+Q.length+'</u></b>'+ul(Q)+'</div>':'')+
@@ -2113,6 +2407,19 @@ function coordHTML(ll){
     " &middot; <a href='https://www.google.com/maps/@"+ll[1].toFixed(5)+","+
     ll[0].toFixed(5)+",16z' target='_blank' rel='noopener' style='color:var(--cy)'>maps</a>";
 }
+/* A plan reading and a current-ground observation answer different questions.
+   Keep the handoff explicit and send the reviewer to live map surfaces rather
+   than pretending the published plan contains a parcel inventory. */
+function groundContextHTML(res){
+  if(!res||!res.ll) return "";
+  var la=res.ll[1].toFixed(5), lo=res.ll[0].toFixed(5);
+  var sat="https://www.google.com/maps/@"+la+","+lo+",16z/data=!3m1!1e3";
+  var osm="https://www.openstreetmap.org/?mlat="+la+"&mlon="+lo+"#map=16/"+la+"/"+lo;
+  return '<section class="ground-context" aria-label="Inspect current ground">'+
+    '<div class="ground-context-head"><b>Inspect the current ground</b><span>external maps</span></div>'+
+    '<p>Use current satellite imagery and open map labels to form a review question. They do not establish permission or breach.</p>'+
+    '<div class="ground-context-actions"><a href="'+sat+'" target="_blank" rel="noopener">Satellite view ↗</a><a href="'+osm+'" target="_blank" rel="noopener">Open map ↗</a></div></section>';
+}
 
 function renderRead(res){
   var hit=res.hit;
@@ -2121,7 +2428,7 @@ function renderRead(res){
   document.getElementById("rP").innerHTML=
     (hit ? "Legend class <b>"+hit.raw+"</b>."+ringNote(res)+"<br>"
          : "Boundary line work, a label, or outside the plan area.<br>")
-    + bothHTML(res) + lawHTML(res.rule) + coordHTML(res.ll);
+    + readActions() + areaSummaryHTML(res) + localityRulesHTML(res) + evidenceHTML(activeCase(res)) + bothHTML(res) + lawHTML(res.rule) + groundContextHTML(res) + coordHTML(res.ll);
   document.getElementById("read").classList.add("on");
   document.body.classList.add("reading");
   /* The index sits top-left and the readout bottom-left, and a fixed cap kept
@@ -2276,10 +2583,13 @@ function goPlace(i){
 }
 
 function toggleChanged(){
+  toggleBrief(false);
   var el=document.getElementById("chg");
   el.classList.toggle("on");
-  document.getElementById("cBtn").style.color=el.classList.contains("on")?"var(--gold)":"";
-  document.getElementById("cBtn").style.borderColor=el.classList.contains("on")?"var(--gold)":"";
+  var on=el.classList.contains("on");
+  document.getElementById("cBtn").style.color=on?"var(--gold)":"";
+  document.getElementById("cBtn").style.borderColor=on?"var(--gold)":"";
+  document.getElementById("cBtn").setAttribute("aria-pressed",on);
   if(el.classList.contains("on")) renderChanged();
 }
 function renderChanged(){
@@ -2298,6 +2608,8 @@ function renderChanged(){
        'classify different fractions of their paper. Colour recovery carried <b>43% median '+
        'error</b>, so read the ordering and the sign, never the decimal. Greyed rows use '+
        'colours that clash with the sheet\'s own line work and are not trustworthy.</p>'+
+       '<div class="shift-chart" aria-label="Directional recovered area shares"><div class="shift-chart-head"><span>Directional recovered share</span><span class="shift-key"><span><i style="background:#b49a68"></i>Draft</span><span><i style="background:#73c6a4"></i>Final</span></span></div>'+
+       SHIFT.rows.map(function(r){var cl=UNRELIABLE[r.cls]?" flag":"";return '<div class="shift-row'+cl+'"><span class="shift-name">'+r.cls+'</span><span class="shift-bars"><span class="shift-bar draft"><i style="width:'+Math.max(0,Math.min(100,r.draft_pct))+'%"></i></span><span class="shift-bar final"><i style="width:'+Math.max(0,Math.min(100,r.final_pct))+'%"></i></span></span><span class="shift-value '+(r.shift>0?'up':'dn')+'">'+(r.shift>0?'+':'')+r.shift.toFixed(1)+'</span></div>'}).join('')+'</div>'+
        '<table class="sh"><thead><tr><th>Class</th><th>Draft</th><th>Final</th><th>Shift</th></tr></thead><tbody>';
     SHIFT.rows.forEach(function(r){
       var cls=UNRELIABLE[r.cls]?' class="flag"':'';
@@ -2328,7 +2640,7 @@ function renderChanged(){
   b.innerHTML=h;
 }
 
-function toggleDrawer(){document.getElementById("drawer").classList.toggle("on")}
+function toggleDrawer(){toggleBrief(false);document.getElementById("drawer").classList.toggle("on")}
 
 /* ---- what may be built where --------------------------------------------
    The Dutch environment portal lets you ask what is allowed at an address and
@@ -2381,6 +2693,7 @@ function mark(text, term){
   });
 }
 function toggleUse(on){
+  if(on!==false)toggleBrief(false);
   var el=document.getElementById("usep");
   var want = on===undefined ? !el.classList.contains("on") : !!on;
   el.classList.toggle("on", want);
@@ -2677,7 +2990,7 @@ function immOpen(){
    click on them also reached the map handlers: selecting a zone opened a
    "no zone colour here" readout instead. Anything inside a panel is UI. */
 ["pointerdown","pointermove","pointerup","click","wheel","dblclick"].forEach(function(t){
-  ["zpanel","read","drawer","chg","usep","measbar","mshell","immx","immread"].forEach(function(id){
+  ["zpanel","read","drawer","chg","usep","measbar","mshell","immx","immread","briefPanel"].forEach(function(id){
     var el=document.getElementById(id);
     /* Bubble phase, not capture. On capture the event is stopped before the
        button's own onclick ever runs, so the panel became inert. On bubble the
@@ -2687,7 +3000,7 @@ function immOpen(){
 });
 
 function onUI(e){ return !!(e.target && e.target.closest &&
-  e.target.closest(".zpanel,.read,.drawer,.chg,.zoombox,.hint,.mshell,.mpane,.immx,.immread,.measbar")) }
+  e.target.closest(".zpanel,.read,.drawer,.chg,.zoombox,.hint,.mshell,.mpane,.immx,.immread,.measbar,.briefpanel")) }
 
 stage.addEventListener("wheel",function(e){ if(onUI(e))return;
   e.preventDefault();
@@ -2733,6 +3046,7 @@ stage.addEventListener("pointermove",function(e){
   var ddx=e.clientX-lx, ddy=e.clientY-ly; lx=e.clientX; ly=e.clientY;
   moved+=Math.abs(ddx)+Math.abs(ddy);
   if(seam){                    /* grabbed the seam: move the wipe, not the map */
+    seamAuto=false;
     split=Math.max(.04,Math.min(.96,(e.clientX-r.left)/r.width));
     draw(); return;
   }
@@ -2770,6 +3084,9 @@ stage.addEventListener("click",function(e){
 });
 
 addEventListener("keydown",function(e){
+  if(e.defaultPrevented||e.ctrlKey||e.metaKey||e.altKey||!document.getElementById("reportShell").hidden)return;
+  if(e.target.closest("input,textarea,select,[contenteditable=true]"))return;
+  if(e.key==="Escape"&&document.getElementById("briefPanel").classList.contains("on")){toggleBrief(false);return}
   if(e.key==="f"||e.key==="F"){ toggleImm(); return }
   if(e.key==="m"||e.key==="M"){ toggleMeas(); return }
   if(e.key==="Escape"){
@@ -2891,7 +3208,7 @@ function mEmpty(){
 function mAnswer(res){
   var b=document.getElementById("msbody"); if(!b) return;
   var hit=res.hit, h="";
-  if(res.title) h+='<div class="meyebrow">'+res.title+'</div>';
+  if(res.title) h+='<div class="meyebrow">'+esc(res.title)+'</div>';
   h+='<div class="mzone"><i style="background:'+
        (hit?"rgb("+hit.rgb.join(",")+")":"#2a3446")+'"></i>'+
      '<span>'+(hit?tz(hit.name):t("No zone colour"))+'</span></div>'+
@@ -2900,7 +3217,7 @@ function mAnswer(res){
              {c:'&ldquo;'+tz(hit.raw)+'&rdquo;', v:t(VERSIONS[VER].label)})+ringNote(res)
         : t("Boundary line work, a label, or outside the plan area. Try a few metres away."))+
      '</div>'+
-     bothHTML(res)+lawHTML(res.rule);
+     readActions()+areaSummaryHTML(res)+localityRulesHTML(res)+evidenceHTML(activeCase(res))+bothHTML(res)+lawHTML(res.rule)+groundContextHTML(res);
   if(res.ll) h+='<a class="mmaps" href="https://www.google.com/maps/@'+
       res.ll[1].toFixed(5)+','+res.ll[0].toFixed(5)+',16z" target="_blank" rel="noopener">'+
       '<code>'+res.ll[1].toFixed(5)+', '+res.ll[0].toFixed(5)+'</code>'+
@@ -3124,6 +3441,222 @@ addEventListener("resize", function(){
   if(m!==MOBILE){ MOBILE=m; if(m) mBoot(); }
   else if(m) mSnap(MS.det);
 });
+
+/* Regional review tools. They reuse the shipped readings; no new classifier,
+   geometric comparison, assignment or verification verdict is introduced.
+   The image/date pointers below were matched by coordinates to verified.json.
+   Only its chip and acquisition date are used, NEVER its superseded optical
+   built-over verdict. Chip bytes match the existing dry-tanks deployment. */
+var REVIEW_CASES=[
+  {id:"water-s008",lo:82.61799,la:17.37144,chip:"s008.jpg",date:"2026-01-14",title:"Read a dry-site record",subtitle:"Optical reading alongside radar",question:"What does a current site inspection show, and how does it compare with the dated imagery?"},
+  {id:"water-s002",lo:82.99914,la:17.60717,chip:"s002.jpg",date:"2026-01-14",title:"Read a partial-water record",subtitle:"Keep water and ground readings together",question:"What do seasonal observations and local records establish about this site?"},
+  {id:"water-s011",lo:83.00651,la:17.59954,chip:"s011.jpg",date:"2026-01-14",title:"Examine different sensor signals",subtitle:"A record that needs careful interpretation",question:"How should the optical and radar readings be reconciled before drawing a conclusion?"}
+];
+var REVIEW_ACTIVE=null, REVIEW_RETURN=null, REPORT_SNAPSHOT=null, REVIEW_RESTORE=location.hash;
+var REDUCED_MOTION=matchMedia("(prefers-reduced-motion:reduce)");
+function esc(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function caseRecord(c){return TANKS.find(function(t){return t.set==="region"&&Math.abs(t.lo-c.lo)<.000001&&Math.abs(t.la-c.la)<.000001})}
+function activeCase(res){
+  if(!res||!res.ll)return null;
+  return REVIEW_CASES.find(function(c){return Math.abs(c.lo-res.ll[0])<.00015&&Math.abs(c.la-res.ll[1])<.00015})||null;
+}
+function renderBrief(){
+  document.getElementById("briefCases").innerHTML=REVIEW_CASES.filter(caseRecord).map(function(c,i){
+    return '<button class="evidence-card'+(REVIEW_ACTIVE===c.id?' selected':'')+'" onclick="reviewCase('+i+')" aria-label="'+esc(c.title)+'">'+
+      '<img src="../dry-tanks/chips/'+c.chip+'" alt="" loading="lazy"><span><strong>'+esc(c.title)+'</strong><small>'+esc(c.subtitle)+'</small></span><i>↗</i></button>';
+  }).join("");
+}
+function toggleBrief(on){
+  var panel=document.getElementById("briefPanel");
+  var want=on===undefined?!panel.classList.contains("on"):!!on;
+  panel.classList.toggle("on",want);document.body.classList.toggle("briefing",want);
+  document.getElementById("briefButton").classList.toggle("active",want);
+  document.getElementById("briefButton").setAttribute("aria-expanded",String(want));
+  if(want){
+    ["drawer","chg","usep"].forEach(function(id){document.getElementById(id).classList.remove("on")});
+    document.getElementById("deskMore").open=false;
+    renderBrief();
+    if(MOBILE) panel.querySelector("button").focus({preventScroll:true});
+  }
+  if(ready&&LAST) { if(MOBILE) mAnswer(LAST); else renderRead(LAST); }
+  if(ready)draw();
+}
+function briefFind(){
+  if(MOBILE){toggleBrief(false);mPane("msearchp",1)}
+  else { var q=document.getElementById("q");q.focus({preventScroll:true});q.select() }
+}
+function briefCompare(){toggleBrief(false);toggleChanged();if(!cmp)toggleCmp()}
+function briefOverview(){
+  closeRead();REVIEW_ACTIVE=null;renderBrief();
+  if(cmp)toggleCmp();if(showTanks)toggleTanks();setMode("plan");
+  history.replaceState(null,"",location.pathname+location.search);REVIEW_RESTORE="";
+  reset();
+}
+function flyToReading(lo,la,title,mpp){
+  if(!ready)return;
+  var q=ll2px(lo,la),r=stage.getBoundingClientRect();
+  var left=(!MOBILE&&document.body.classList.contains("briefing"))?document.getElementById("briefPanel").getBoundingClientRect().right-r.left+18:0;
+  goal.s=mpp?GEO.s/mpp:fitScale()*13;
+  goal.x=left+(r.width-left)/2-q[0]*goal.s;
+  goal.y=r.height*(MOBILE?.3:.47)-q[1]*goal.s;clamp();
+  focusLL=[lo,la];focusPulse=REDUCED_MOTION.matches?0:1;
+  identifyAt(q[0],q[1],title);
+  if(REDUCED_MOTION.matches){view.s=goal.s;view.x=goal.x;view.y=goal.y;draw()}
+}
+function reviewCase(i){
+  var c=REVIEW_CASES[i];if(!c||!caseRecord(c))return;
+  if(!ready){announce("The plan is still loading. Please try the record again in a moment.");return}
+  REVIEW_ACTIVE=c.id;renderBrief();
+  if(MOBILE)toggleBrief(false);
+  if(cmp)toggleCmp();setMode("plan");
+  flyToReading(c.lo,c.la,c.title,12);
+}
+function evidenceHTML(c){
+  var rec=c&&caseRecord(c);if(!rec)return "";
+  return '<section class="evidence-detail"><a href="../dry-tanks/chips/'+c.chip+'" target="_blank" rel="noopener" aria-label="Open original Sentinel-2 chip"><img src="../dry-tanks/chips/'+c.chip+'" alt="Existing Sentinel-2 image chip for '+esc(c.id)+', acquired '+c.date+'"></a>'+
+    '<div class="evidence-caption"><b>Existing observation · '+esc(c.id)+'</b><br>Sentinel-2 chip acquired '+c.date+'.<br>Selected from the existing regional water records; not a new survey.'+
+    '<dl><div><dt>Water record</dt><dd>'+ (rec.dry?'Dry':'Partly dry')+'</dd></div><div><dt>Radar record</dt><dd>'+esc(rec.sar)+'</dd></div></dl>'+
+    '<p>The water status uses the wettest checked pass. The image above is a dated chip and may be from a different pass. Radar is a separate assessment; this is not a field verification or a finding of a violation.</p>'+
+    '<div class="review-question"><b>Question for review</b><br>'+esc(c.question)+'</div></div></section>';
+}
+function nearbyZoneClasses(res){
+  if(!res||!res.ll||!idc.width||!GEO)return [];
+  var c=ll2px(res.ll[0],res.ll[1]), rad=Math.max(200,Math.min(1500,520/Math.max(goal.s,.001))), n=13, out={};
+  for(var yy=0;yy<n;yy++)for(var xx=0;xx<n;xx++){
+    var px=c[0]+(xx/(n-1)*2-1)*rad, py=c[1]+(yy/(n-1)*2-1)*rad, ll=px2ll(px,py), ip=idPx(ll[0],ll[1]);
+    if(!isFinite(ip[0])||!isFinite(ip[1])||ip[0]<0||ip[1]<0||ip[0]>=idc.width||ip[1]>=idc.height)continue;
+    var pr=probeAt(idx,LOOKUP,idc.width,idc.height,Math.floor(ip[0]*ID_SCALE),Math.floor(ip[1]*ID_SCALE)), h=pr&&pr.hit;
+    if(h){var k=h.raw; if(!out[k])out[k]={raw:h.raw,name:h.name,rgb:h.rgb,n:0};out[k].n++}
+  }
+  if(res.hit&&!out[res.hit.raw])out[res.hit.raw]={raw:res.hit.raw,name:res.hit.name,rgb:res.hit.rgb,n:1};
+  return Object.keys(out).map(function(k){return out[k]}).sort(function(a,b){return (b.raw===res.mine)-(a.raw===res.mine)||b.n-a.n}).slice(0,8);
+}
+function areaSummaryHTML(res){
+  var rows=nearbyZoneClasses(res);if(!rows.length)return "";
+  return '<section class="area-summary" aria-label="Planning context near this place"><div class="area-summary-head"><b>Planning context near this place</b><span>visual window</span></div><div class="area-summary-grid">'+rows.map(function(z){return '<span class="area-chip"><i style="background:rgb('+z.rgb.join(",")+')"></i>'+esc(z.name||z.raw)+'</span>'}).join('')+'</div><p class="area-summary-note">Detected by sampling a wider planning window around the selected point. This is not an administrative boundary or an area measurement.</p></section>';
+}
+function localityRulesHTML(res){
+  var rows=nearbyZoneClasses(res), blocks=[];
+  rows.forEach(function(z){
+    var key=RULEKEY[z.raw]||RULEKEY[z.name], rule=key&&RULES&&RULES.zones?RULES.zones[key]:null;
+    if(rule&&rule.prohibit&&rule.prohibit.length)blocks.push('<div class="lcrow"><b>'+esc(z.name||z.raw)+'</b><span>'+rule.prohibit.map(esc).join(' · ')+'</span></div>');
+  });
+  if(!rows.length||!blocks.length)return "";
+  return '<details class="locality-check"><summary>What the plan prohibits in these classes</summary><p class="lcintro">These restrictions come from the zoning schedule for the classes detected around this reading. A restriction is not evidence that the use exists there.</p>'+blocks.join('')+'</details><div class="ground-check"><b>Current-use check</b><br>This reader does not determine whether a prohibited use is actually present. Confirming that requires current field, cadastral, and permission records. Imagery can help prioritise review.</div>';
+}
+function readActions(){return '<div class="reading-tag">±200 m placement · indicative reading</div><div class="read-actions"><button class="workspace-button primary" onclick="openReport()">Prepare review brief ↗</button><button class="workspace-button" onclick="toggleBrief(true)">Briefing</button></div>'}
+function announce(msg){document.getElementById("readStatus").textContent=msg}
+function readingChanged(res){
+  var c=activeCase(res);REVIEW_ACTIVE=c?c.id:null;renderBrief();
+  announce((res.title?res.title+". ":"")+(res.hit?res.hit.raw:"No readable zone colour")+". "+VERSIONS[VER].label+". Placement is approximate to 200 metres.");
+}
+/* Ground coordinates and metres per screen pixel survive a tile resolution
+   change. Legacy pixel hashes are still restored once the tiles are ready. */
+function readingHash(res){
+  if(!res||!res.ll)return "";
+  var p=new URLSearchParams();p.set("lo",res.ll[0].toFixed(6));p.set("la",res.ll[1].toFixed(6));p.set("v",VER);p.set("mpp",(GEO.s/goal.s).toFixed(4));
+  if(res.title)p.set("title",res.title.slice(0,120));
+  return "#read="+p.toString();
+}
+function writeReadingHash(){
+  if(!LAST)return;var h=readingHash(LAST);history.replaceState(null,"",h);REVIEW_RESTORE="";
+}
+function restoreReading(){
+  var h=REVIEW_RESTORE;if(!h||!ready)return;
+  REVIEW_RESTORE="";
+  if(h.indexOf("#read=")===0){
+    var p=new URLSearchParams(h.slice(6)),lo=Number(p.get("lo")),la=Number(p.get("la")),mpp=Number(p.get("mpp"));
+    if(!p.has("lo")||!p.has("la")||!Number.isFinite(lo)||!Number.isFinite(la)||lo<-180||lo>180||la<-90||la>90)return;
+    toggleBrief(false);flyToReading(lo,la,(p.get("title")||"").slice(0,120),Number.isFinite(mpp)&&mpp>0?mpp:null);
+    view.s=goal.s;view.x=goal.x;view.y=goal.y;draw();
+  }else{fromHash()}
+}
+function sourceLinks(){
+  return '<li><a href="https://vmrda.gov.in/masterplan_2041.html" target="_blank" rel="noopener">VMRDA master-plan publication page</a> · publication index, not confirmation of this recovered sheet.</li>'+
+    '<li><a href="'+VERSIONS[VER].plan+'" target="_blank" rel="noopener">'+esc(VERSIONS[VER].label)+' display sheet used by this reader</a> · recovered raster.</li>'+
+    '<li><a href="rules.json" target="_blank" rel="noopener">Zoning schedule summary used by this reader</a> · G.O. Ms. 216, 22.10.2025. Consult the notified G.O. for the full provisions.</li>'+
+    '<li><a href="tanks_all.json" target="_blank" rel="noopener">Existing water-record dataset</a> · independent observations.</li>'+
+    '<li><b>Reader data downloads:</b> <a href="places.json" download="vmr-places.json">settlements</a> · <a href="rules.json" download="vmr-rules.json">zoning schedule</a> · <a href="tanks_all.json" download="vmr-water-checks.json">water checks</a>. These are derived working files, not official VMRDA records.</li>';
+}
+function openReport(){
+  if(!ready){announce("The plan is still loading.");return}
+  REVIEW_RETURN=document.activeElement;
+  document.getElementById("deskMore").open=false;
+  var res=LAST?JSON.parse(JSON.stringify(LAST)):null,c=activeCase(res),label=res?(res.title||res.mine):"Regional orientation";
+  /* Capture the actual drawn map, without UI panels. Settle the interpolation
+     explicitly so the report's location and the map cannot disagree. */
+  view.s=goal.s;view.x=goal.x;view.y=goal.y;draw();
+  var snap="";try{snap=cv.toDataURL("image/jpeg",.9)}catch(e){}
+  var link=res?new URL(readingHash(res),location.href).href:location.origin+location.pathname;
+  REPORT_SNAPSHOT={res:res,caseId:c?c.id:null,ver:VER,link:link,created:new Date().toISOString()};
+  var law=res?lawHTML(res.rule):"";
+  var oldLang=LANG;LANG="en";if(res)law=lawHTML(res.rule);LANG=oldLang;
+  var h='<div class="report-titlebar"><b>VMR Plan Reader</b><span>INDEPENDENT REVIEW BRIEF</span></div>'+
+    '<div class="eyebrow">'+(res?'Point reading':'Regional briefing')+'</div><h1 id="reportTitle">'+esc(label)+'</h1>'+
+    '<p>'+esc(VERSIONS[VER].note)+'</p>'+
+    '<div class="report-meta"><span>'+esc(VERSIONS[VER].label)+'</span>'+(res?'<span>'+res.ll[1].toFixed(5)+', '+res.ll[0].toFixed(5)+'</span>':'')+'<span>Prepared '+REPORT_SNAPSHOT.created.slice(0,10)+' UTC</span></div>'+
+    (snap?'<img class="report-map" src="'+snap+'" alt="Map view captured for this review brief"><p class="report-map-caption">Current map view, including active overlays. The marker identifies the selected reading. The sheet is approximately placed on the ground.</p>':'<p>Map image unavailable. Use the reading link to inspect the map.</p>');
+  if(res){
+    h+='<div class="report-facts"><div class="report-fact"><span>Recovered legend class</span><b>'+esc(res.hit?res.hit.raw:"No readable zone colour")+'</b></div><div class="report-fact"><span>'+esc(OTHER.label||"Other sheet")+'</span><b>'+esc(res.other||"Reading unavailable")+'</b></div></div>';
+    h+=areaSummaryHTML(res)+localityRulesHTML(res);
+    if(res.ring)h+='<p>'+ringNote(res)+'</p>';
+  }else h+='<p>No point is selected. This brief records the current regional view. Select a place to include a zoning reading and schedule entries.</p>';
+  h+='<div class="report-limit"><b>Reading limits</b><br>Placement is approximately ±200 m. Recovered areas have 43% median error against the published comparison table. Read the ordering, not recovered totals. Differences between sheets at a point can be registration error. This is an independent reading of an image, not a VMRDA record, parcel determination, approval or enforcement finding.</div>';
+  if(c)h+='<h2>Existing ground observation</h2>'+evidenceHTML(c);
+    if(law)h+='<h2>Schedule entries associated with this class</h2>'+law;
+    if(res)h+=groundContextHTML(res);
+  h+='<label class="report-note-label" for="reviewNote">Question or note for the next review</label><textarea id="reviewNote" maxlength="4000" placeholder="Record a question, the evidence needed, or a point to clarify. These notes do not assign an officer or record an official action."></textarea><p class="report-note-hint">Kept on this device for this reading. Included when printed; excluded from the shared reading link.</p><div class="printed-note" id="printedNote"></div>'+
+    '<h2>Sources and reading link</h2><ol class="report-source-list">'+sourceLinks()+(c?'<li><a href="../dry-tanks/chips/'+c.chip+'">Original Sentinel-2 chip '+c.chip+'</a> · acquisition '+c.date+'.</li>':'')+'<li><a href="'+esc(link)+'">Reopen this reading</a><br><span>'+esc(link)+'</span></li></ol>'+
+    '<div class="report-end">Prepared with VMR Plan Reader · Review edition 1 · Independent work, not endorsed by VMRDA. This link reopens the reading against the data currently served; it is not an immutable archive. Retain this brief with its sources.</div>';
+  document.getElementById("reportPaper").innerHTML=h;
+  var note=document.getElementById("reviewNote");
+  var defaultNote=c?c.question:"";
+  try{var saved=localStorage.getItem(noteKey());note.value=saved!==null?saved:defaultNote}catch(e){note.value=defaultNote}
+  note.addEventListener("input",function(){try{localStorage.setItem(noteKey(),note.value)}catch(e){document.querySelector(".report-note-hint").textContent="Device storage is unavailable. Print this brief to retain your note."}});
+  document.getElementById("copyStatus").textContent="";
+  document.getElementById("reportShell").hidden=false;document.getElementById("reportShell").scrollTop=0;
+  document.body.classList.add("report-open");
+  [document.querySelector("header"),stage,document.getElementById("foot")].forEach(function(e){e.inert=true});
+  document.getElementById("copyReport").focus({preventScroll:true});
+}
+function noteKey(){var r=REPORT_SNAPSHOT&&REPORT_SNAPSHOT.res;return "vmr-review-note-v1:"+(REPORT_SNAPSHOT?REPORT_SNAPSHOT.ver:VER)+":"+(r?r.ll.map(function(n){return n.toFixed(5)}).join(","):"region")}
+function closeReport(){
+  document.getElementById("reportShell").hidden=true;document.body.classList.remove("report-open");
+  [document.querySelector("header"),stage,document.getElementById("foot")].forEach(function(e){e.inert=false});
+  if(REVIEW_RETURN&&document.contains(REVIEW_RETURN))REVIEW_RETURN.focus({preventScroll:true});
+}
+async function copyReviewLink(){
+  if(!REPORT_SNAPSHOT)return;
+  try{await navigator.clipboard.writeText(REPORT_SNAPSHOT.link);document.getElementById("copyStatus").textContent="Reading link copied. Notes stay private."}
+  catch(e){document.getElementById("copyStatus").textContent="Copy the reading link from Sources below."}
+}
+function preparePrint(){var n=document.getElementById("reviewNote"),p=document.getElementById("printedNote");if(n&&p)p.textContent=n.value?"Question or note for review\n"+n.value:"No review note added."}
+function printReview(){preparePrint();window.print()}
+addEventListener("beforeprint",preparePrint);
+/* Keep hidden drawers out of keyboard and screen-reader navigation. Visibility
+   is also controlled in CSS so there is no focus-triggered off-screen scroll. */
+function syncPanelAccess(){
+  ["drawer","chg","usep","read","briefPanel","msearchp","mzonep"].forEach(function(id){
+    var e=document.getElementById(id);if(!e)return;
+    var visible=e.classList.contains("on");e.inert=!visible;e.setAttribute("aria-hidden",String(!visible));
+  });
+}
+var panelObserver=new MutationObserver(syncPanelAccess);
+["drawer","chg","usep","read","briefPanel","msearchp","mzonep"].forEach(function(id){var e=document.getElementById(id);if(e)panelObserver.observe(e,{attributes:true,attributeFilter:["class"]})});
+syncPanelAccess();renderBrief();
+document.addEventListener("keydown",function(e){
+  if(document.getElementById("reportShell").hidden)return;
+  if(e.key==="Escape"){e.preventDefault();e.stopImmediatePropagation();closeReport();return}
+  if(e.key==="Tab"){
+    var f=Array.from(document.getElementById("reportShell").querySelectorAll("button,a[href],textarea")),first=f[0],last=f[f.length-1];
+    if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}
+    else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}
+  }
+},true);
+document.getElementById("reportShell").addEventListener("click",function(e){if(e.target===this)closeReport()});
+document.getElementById("deskMore").addEventListener("click",function(e){if(e.target.closest("button"))this.open=false});
+document.addEventListener("pointerdown",function(e){var d=document.getElementById("deskMore");if(!d.contains(e.target))d.open=false});
+if(!MOBILE&&!location.hash)toggleBrief(true);
 
 </script>
 </body>
