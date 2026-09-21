@@ -15,7 +15,7 @@
  *
  * Nothing here is written by the page and nothing leaves the device.
  */
-const BUILD = "5cad7185ae";
+const BUILD = "84aea29b69";
 const SHELL_CACHE = "vmr-shell-" + BUILD;
 const TILE_CACHE = "vmr-tiles-v1";
 const ASSET_CACHE = "vmr-assets-" + BUILD;
