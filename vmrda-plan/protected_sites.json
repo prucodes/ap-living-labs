@@ -1,5 +1,6 @@
 {
- "source": "final_zones.png traced by vectorise_zones.py",
+ "city": "Visakhapatnam Metropolitan Region",
+ "source": "data/final/final_zones.png traced by vectorise_zones.py",
  "min_ha": 2.0,
  "placement_error_m": 200,
  "caution": "Sites are recovered from a picture. Area carries 43% median error and the outline is not a survey boundary. Use for sampling imagery, not for measurement.",
