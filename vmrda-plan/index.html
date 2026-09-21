@@ -1330,7 +1330,7 @@
 </dialog>
 <script>
 "use strict";
-var VERSIONS = {"draft": {"label": "Draft 2021", "plan": "plan.jpg", "zones": "zones.png", "tiles": "t/draft", "px": [10080, 4020], "geo": {"s": 16.87, "deg": 34.4, "lon0": 83.2363196451436, "lat0": 18.092701821448614, "kx": 105815.8156647524, "ky": 110540.0, "tE": -107387.80566260655, "tN": -46425.09832071707, "cx": 15, "cy": 15, "err_m": 200}, "zones_list": [{"raw": "Agriculture", "name": "Agriculture", "rgb": [209, 255, 188], "grp": "Agriculture", "sqkm": 1702.9, "grpkm": 1702.9, "pub": 2078.09, "prot": false}, {"raw": "Residential", "name": "Residential", "rgb": [255, 255, 152], "grp": "Residential", "sqkm": 457.0, "grpkm": 457.0, "pub": 957.81, "prot": false}, {"raw": "Hills", "name": "Hills", "rgb": [169, 110, 3], "grp": "Hills", "sqkm": 323.0, "grpkm": 323.0, "pub": null, "prot": true}, {"raw": "Forest", "name": "Forest", "rgb": [38, 115, 0], "grp": "Forest", "sqkm": 280.7, "grpkm": 280.7, "pub": null, "prot": true}, {"raw": "Transportation existing", "name": "Transportation", "rgb": [178, 178, 178], "grp": "Transportation", "sqkm": 275.3, "grpkm": 345.4, "pub": 187.76, "prot": false}, {"raw": "Water bodies", "name": "Water body", "rgb": [114, 224, 252], "grp": "Water bodies", "sqkm": 242.8, "grpkm": 242.8, "pub": 366.96, "prot": true}, {"raw": "Accreted land", "name": "Accreted land", "rgb": [217, 189, 144], "grp": "Accreted land", "sqkm": 203.2, "grpkm": 203.2, "pub": null, "prot": false}, {"raw": "Industrial existing", "name": "Industrial", "rgb": [222, 101, 254], "grp": "Industrial", "sqkm": 90.9, "grpkm": 137.3, "pub": 181.3, "prot": false}, {"raw": "Mixed Use 2", "name": "Mixed use", "rgb": [255, 211, 128], "grp": "Mixed use", "sqkm": 72.6, "grpkm": 145.5, "pub": 75.44, "prot": false}, {"raw": "Transportation proposed", "name": "Transportation (proposed)", "rgb": [104, 104, 104], "grp": "Transportation", "sqkm": 70.1, "grpkm": 345.4, "pub": 187.76, "prot": false}, {"raw": "Mixed Use 3", "name": "Mixed use", "rgb": [231, 151, 0], "grp": "Mixed use", "sqkm": 58.4, "grpkm": 145.5, "pub": 75.44, "prot": false}, {"raw": "Industrial proposed", "name": "Industrial (proposed)", "rgb": [226, 126, 253], "grp": "Industrial", "sqkm": 46.4, "grpkm": 137.3, "pub": 181.3, "prot": false}, {"raw": "Eco-sensitive / park", "name": "Eco-sensitive", "rgb": [83, 139, 68], "grp": "Eco-sensitive", "sqkm": 33.3, "grpkm": 33.3, "pub": null, "prot": true}, {"raw": "Special Area", "name": "Special area", "rgb": [49, 67, 133], "grp": "Special area", "sqkm": 24.0, "grpkm": 24.0, "pub": null, "prot": false}, {"raw": "Mixed Use 1", "name": "Mixed use", "rgb": [254, 165, 1], "grp": "Mixed use", "sqkm": 14.5, "grpkm": 145.5, "pub": 75.44, "prot": false}, {"raw": "Recreational proposed", "name": "Recreational (proposed)", "rgb": [74, 212, 1], "grp": "Recreational", "sqkm": 13.2, "grpkm": 16.4, "pub": 97.22, "prot": false}, {"raw": "Educational", "name": "Educational", "rgb": [222, 13, 26], "grp": "Public & semi-public", "sqkm": 10.7, "grpkm": 24.0, "pub": 96.38, "prot": false}, {"raw": "Facility proposed", "name": "Facility (proposed)", "rgb": [249, 38, 36], "grp": "Public & semi-public", "sqkm": 9.6, "grpkm": 24.0, "pub": 96.38, "prot": false}, {"raw": "Utilities proposed", "name": "Public utilities (proposed)", "rgb": [255, 161, 160], "grp": "Public utilities", "sqkm": 4.5, "grpkm": 7.6, "pub": 9.42, "prot": false}, {"raw": "Parks existing", "name": "Parks", "rgb": [85, 255, 0], "grp": "Recreational", "sqkm": 3.2, "grpkm": 16.4, "pub": 97.22, "prot": false}, {"raw": "Utilities existing", "name": "Public utilities", "rgb": [255, 135, 135], "grp": "Public utilities", "sqkm": 3.1, "grpkm": 7.6, "pub": 9.42, "prot": false}, {"raw": "Religious", "name": "Religious", "rgb": [221, 29, 0], "grp": "Public & semi-public", "sqkm": 1.8, "grpkm": 24.0, "pub": 96.38, "prot": false}, {"raw": "Health", "name": "Health", "rgb": [245, 7, 11], "grp": "Public & semi-public", "sqkm": 1.7, "grpkm": 24.0, "pub": 96.38, "prot": false}, {"raw": "Commercial", "name": "Commercial", "rgb": [0, 1, 252], "grp": "Commercial", "sqkm": 0.3, "grpkm": 0.3, "pub": 21.26, "prot": false}, {"raw": "Government facilities", "name": "Government", "rgb": [253, 2, 2], "grp": "Public & semi-public", "sqkm": 0.2, "grpkm": 24.0, "pub": 96.38, "prot": false}], "lookup": [{"rgb": [255, 255, 152], "name": "Residential", "raw": "Residential"}, {"rgb": [0, 1, 252], "name": "Commercial", "raw": "Commercial"}, {"rgb": [254, 165, 1], "name": "Mixed use", "raw": "Mixed Use 1"}, {"rgb": [255, 211, 128], "name": "Mixed use", "raw": "Mixed Use 2"}, {"rgb": [231, 151, 0], "name": "Mixed use", "raw": "Mixed Use 3"}, {"rgb": [222, 101, 254], "name": "Industrial", "raw": "Industrial existing"}, {"rgb": [226, 126, 253], "name": "Industrial (proposed)", "raw": "Industrial proposed"}, {"rgb": [253, 2, 2], "name": "Government", "raw": "Government facilities"}, {"rgb": [222, 13, 26], "name": "Educational", "raw": "Educational"}, {"rgb": [245, 7, 11], "name": "Health", "raw": "Health"}, {"rgb": [221, 29, 0], "name": "Religious", "raw": "Religious"}, {"rgb": [249, 38, 36], "name": "Facility (proposed)", "raw": "Facility proposed"}, {"rgb": [255, 135, 135], "name": "Public utilities", "raw": "Utilities existing"}, {"rgb": [255, 161, 160], "name": "Public utilities (proposed)", "raw": "Utilities proposed"}, {"rgb": [85, 255, 0], "name": "Parks", "raw": "Parks existing"}, {"rgb": [74, 212, 1], "name": "Recreational (proposed)", "raw": "Recreational proposed"}, {"rgb": [178, 178, 178], "name": "Transportation", "raw": "Transportation existing"}, {"rgb": [104, 104, 104], "name": "Transportation (proposed)", "raw": "Transportation proposed"}, {"rgb": [209, 255, 188], "name": "Agriculture", "raw": "Agriculture"}, {"rgb": [49, 67, 133], "name": "Special area", "raw": "Special Area"}, {"rgb": [114, 224, 252], "name": "Water body", "raw": "Water bodies"}, {"rgb": [38, 115, 0], "name": "Forest", "raw": "Forest"}, {"rgb": [169, 110, 3], "name": "Hills", "raw": "Hills"}, {"rgb": [83, 139, 68], "name": "Eco-sensitive", "raw": "Eco-sensitive / park"}, {"rgb": [217, 189, 144], "name": "Accreted land", "raw": "Accreted land"}], "area": 4873, "note": "Draft Master Plan 2041, notified 19 June 2021. Superseded."}, "final": {"label": "Final 2026", "plan": "final_plan.jpg", "zones": "final_zones.png", "tiles": "t/final", "px": [9838, 4156], "geo": {"s": 16.87, "deg": 34.4, "lon0": 83.2363196451436, "lat0": 18.092701821448614, "kx": 105815.8156647524, "ky": 110540.0, "tE": -108814.37058177184, "tN": -45661.34772165285, "cx": 0, "cy": 0, "err_m": 200}, "zones_list": [{"raw": "Agriculture", "name": "Agriculture", "rgb": [211, 255, 190], "grp": "Agriculture", "sqkm": 1493.9, "grpkm": 1493.9, "pub": null, "prot": false}, {"raw": "Residential", "name": "Residential", "rgb": [255, 255, 153], "grp": "Residential", "sqkm": 620.2, "grpkm": 620.2, "pub": null, "prot": false}, {"raw": "Mixed Use", "name": "Mixed Use", "rgb": [255, 165, 0], "grp": "Mixed Use", "sqkm": 325.4, "grpkm": 325.4, "pub": null, "prot": false}, {"raw": "Protected Blue", "name": "Protected Blue", "rgb": [115, 223, 255], "grp": "Protected Blue", "sqkm": 310.4, "grpkm": 310.4, "pub": null, "prot": true}, {"raw": "Protected Forest", "name": "Protected Forest", "rgb": [0, 115, 76], "grp": "Protected Forest", "sqkm": 288.3, "grpkm": 288.3, "pub": null, "prot": true}, {"raw": "Protected Hills", "name": "Protected Hills", "rgb": [168, 112, 0], "grp": "Protected Hills", "sqkm": 249.8, "grpkm": 249.8, "pub": null, "prot": true}, {"raw": "Transportation", "name": "Transportation", "rgb": [104, 104, 104], "grp": "Transportation", "sqkm": 101.7, "grpkm": 101.7, "pub": null, "prot": false}, {"raw": "Protected Green", "name": "Protected Green", "rgb": [0, 255, 0], "grp": "Protected Green", "sqkm": 85.4, "grpkm": 85.4, "pub": null, "prot": true}, {"raw": "Protected Kambalakonda ESZ", "name": "Protected Kambalakonda ESZ", "rgb": [239, 228, 190], "grp": "Protected Kambalakonda ESZ", "sqkm": 79.3, "grpkm": 79.3, "pub": null, "prot": true}, {"raw": "Public & Semi Public", "name": "Public & Semi Public", "rgb": [255, 0, 0], "grp": "Public & Semi Public", "sqkm": 40.9, "grpkm": 40.9, "pub": null, "prot": false}, {"raw": "Industrial Red & Orange", "name": "Industrial Red & Orange", "rgb": [223, 115, 255], "grp": "Industrial Red & Orange", "sqkm": 39.1, "grpkm": 39.1, "pub": null, "prot": false}, {"raw": "Special Area", "name": "Special Area", "rgb": [0, 38, 115], "grp": "Special Area", "sqkm": 29.3, "grpkm": 29.3, "pub": null, "prot": false}, {"raw": "Affordable Housing", "name": "Affordable Housing", "rgb": [255, 255, 115], "grp": "Affordable Housing", "sqkm": 10.7, "grpkm": 10.7, "pub": null, "prot": false}, {"raw": "Commercial", "name": "Commercial", "rgb": [0, 0, 255], "grp": "Commercial", "sqkm": 8.1, "grpkm": 8.1, "pub": null, "prot": false}, {"raw": "Industrial Work Centre", "name": "Industrial Work Centre", "rgb": [222, 102, 255], "grp": "Industrial Work Centre", "sqkm": 0.7, "grpkm": 0.7, "pub": null, "prot": false}, {"raw": "Recreational", "name": "Recreational", "rgb": [85, 255, 0], "grp": "Recreational", "sqkm": 0.3, "grpkm": 0.3, "pub": null, "prot": false}], "lookup": [{"rgb": [255, 255, 153], "name": "Residential", "raw": "Residential"}, {"rgb": [255, 255, 115], "name": "Affordable Housing", "raw": "Affordable Housing"}, {"rgb": [0, 0, 255], "name": "Commercial", "raw": "Commercial"}, {"rgb": [255, 0, 0], "name": "Public & Semi Public", "raw": "Public & Semi Public"}, {"rgb": [222, 102, 255], "name": "Industrial Work Centre", "raw": "Industrial Work Centre"}, {"rgb": [223, 115, 255], "name": "Industrial Red & Orange", "raw": "Industrial Red & Orange"}, {"rgb": [85, 255, 0], "name": "Recreational", "raw": "Recreational"}, {"rgb": [104, 104, 104], "name": "Transportation", "raw": "Transportation"}, {"rgb": [255, 165, 0], "name": "Mixed Use", "raw": "Mixed Use"}, {"rgb": [211, 255, 190], "name": "Agriculture", "raw": "Agriculture"}, {"rgb": [0, 38, 115], "name": "Special Area", "raw": "Special Area"}, {"rgb": [239, 228, 190], "name": "Protected Kambalakonda ESZ", "raw": "Protected Kambalakonda ESZ"}, {"rgb": [115, 223, 255], "name": "Protected Blue", "raw": "Protected Blue"}, {"rgb": [168, 112, 0], "name": "Protected Hills", "raw": "Protected Hills"}, {"rgb": [0, 255, 0], "name": "Protected Green", "raw": "Protected Green"}, {"rgb": [0, 115, 76], "name": "Protected Forest", "raw": "Protected Forest"}], "area": 4380, "note": "Revised Master Plan 2041, signed 29 June 2026. The operative plan."}};
+var VERSIONS = {"draft": {"label": "Draft 2021", "plan": "plan.jpg", "zones": "zones.png", "tiles": "t/draft", "px": [10080, 4020], "geo": {"s": 16.87, "deg": 34.4, "lon0": 83.2363196451436, "lat0": 18.092701821448614, "kx": 105815.8156647524, "ky": 110540.0, "tE": -107387.80566260655, "tN": -46425.09832071707, "cx": 15, "cy": 15, "err_m": 200}, "zones_list": [{"raw": "Agriculture", "name": "Agriculture", "rgb": [209, 255, 188], "grp": "Agriculture", "sqkm": 1702.9, "grpkm": 1702.9, "pub": 2078.09, "prot": false}, {"raw": "Residential", "name": "Residential", "rgb": [255, 255, 152], "grp": "Residential", "sqkm": 457.0, "grpkm": 457.0, "pub": 957.81, "prot": false}, {"raw": "Hills", "name": "Hills", "rgb": [169, 110, 3], "grp": "Hills", "sqkm": 323.0, "grpkm": 323.0, "pub": null, "prot": true}, {"raw": "Forest", "name": "Forest", "rgb": [38, 115, 0], "grp": "Forest", "sqkm": 280.7, "grpkm": 280.7, "pub": null, "prot": true}, {"raw": "Transportation existing", "name": "Transportation", "rgb": [178, 178, 178], "grp": "Transportation", "sqkm": 275.3, "grpkm": 345.4, "pub": 187.76, "prot": false}, {"raw": "Water bodies", "name": "Water body", "rgb": [114, 224, 252], "grp": "Water bodies", "sqkm": 242.8, "grpkm": 242.8, "pub": 366.96, "prot": true}, {"raw": "Accreted land", "name": "Accreted land", "rgb": [217, 189, 144], "grp": "Accreted land", "sqkm": 203.2, "grpkm": 203.2, "pub": null, "prot": false}, {"raw": "Industrial existing", "name": "Industrial", "rgb": [222, 101, 254], "grp": "Industrial", "sqkm": 90.9, "grpkm": 137.3, "pub": 181.3, "prot": false}, {"raw": "Mixed Use 2", "name": "Mixed use", "rgb": [255, 211, 128], "grp": "Mixed use", "sqkm": 72.6, "grpkm": 145.5, "pub": 75.44, "prot": false}, {"raw": "Transportation proposed", "name": "Transportation (proposed)", "rgb": [104, 104, 104], "grp": "Transportation", "sqkm": 70.1, "grpkm": 345.4, "pub": 187.76, "prot": false}, {"raw": "Mixed Use 3", "name": "Mixed use", "rgb": [231, 151, 0], "grp": "Mixed use", "sqkm": 58.4, "grpkm": 145.5, "pub": 75.44, "prot": false}, {"raw": "Industrial proposed", "name": "Industrial (proposed)", "rgb": [226, 126, 253], "grp": "Industrial", "sqkm": 46.4, "grpkm": 137.3, "pub": 181.3, "prot": false}, {"raw": "Eco-sensitive / park", "name": "Eco-sensitive", "rgb": [83, 139, 68], "grp": "Eco-sensitive", "sqkm": 33.3, "grpkm": 33.3, "pub": null, "prot": true}, {"raw": "Special Area", "name": "Special area", "rgb": [49, 67, 133], "grp": "Special area", "sqkm": 24.0, "grpkm": 24.0, "pub": null, "prot": false}, {"raw": "Mixed Use 1", "name": "Mixed use", "rgb": [254, 165, 1], "grp": "Mixed use", "sqkm": 14.5, "grpkm": 145.5, "pub": 75.44, "prot": false}, {"raw": "Recreational proposed", "name": "Recreational (proposed)", "rgb": [74, 212, 1], "grp": "Recreational", "sqkm": 13.2, "grpkm": 16.4, "pub": 97.22, "prot": false}, {"raw": "Educational", "name": "Educational", "rgb": [222, 13, 26], "grp": "Public & semi-public", "sqkm": 10.7, "grpkm": 24.0, "pub": 96.38, "prot": false}, {"raw": "Facility proposed", "name": "Facility (proposed)", "rgb": [249, 38, 36], "grp": "Public & semi-public", "sqkm": 9.6, "grpkm": 24.0, "pub": 96.38, "prot": false}, {"raw": "Utilities proposed", "name": "Public utilities (proposed)", "rgb": [255, 161, 160], "grp": "Public utilities", "sqkm": 4.5, "grpkm": 7.6, "pub": 9.42, "prot": false}, {"raw": "Parks existing", "name": "Parks", "rgb": [85, 255, 0], "grp": "Recreational", "sqkm": 3.2, "grpkm": 16.4, "pub": 97.22, "prot": false}, {"raw": "Utilities existing", "name": "Public utilities", "rgb": [255, 135, 135], "grp": "Public utilities", "sqkm": 3.1, "grpkm": 7.6, "pub": 9.42, "prot": false}, {"raw": "Religious", "name": "Religious", "rgb": [221, 29, 0], "grp": "Public & semi-public", "sqkm": 1.8, "grpkm": 24.0, "pub": 96.38, "prot": false}, {"raw": "Health", "name": "Health", "rgb": [245, 7, 11], "grp": "Public & semi-public", "sqkm": 1.7, "grpkm": 24.0, "pub": 96.38, "prot": false}, {"raw": "Commercial", "name": "Commercial", "rgb": [0, 1, 252], "grp": "Commercial", "sqkm": 0.3, "grpkm": 0.3, "pub": 21.26, "prot": false}, {"raw": "Government facilities", "name": "Government", "rgb": [253, 2, 2], "grp": "Public & semi-public", "sqkm": 0.2, "grpkm": 24.0, "pub": 96.38, "prot": false}], "vec": "zones_vec.json", "lookup": [{"rgb": [255, 255, 152], "name": "Residential", "raw": "Residential"}, {"rgb": [0, 1, 252], "name": "Commercial", "raw": "Commercial"}, {"rgb": [254, 165, 1], "name": "Mixed use", "raw": "Mixed Use 1"}, {"rgb": [255, 211, 128], "name": "Mixed use", "raw": "Mixed Use 2"}, {"rgb": [231, 151, 0], "name": "Mixed use", "raw": "Mixed Use 3"}, {"rgb": [222, 101, 254], "name": "Industrial", "raw": "Industrial existing"}, {"rgb": [226, 126, 253], "name": "Industrial (proposed)", "raw": "Industrial proposed"}, {"rgb": [253, 2, 2], "name": "Government", "raw": "Government facilities"}, {"rgb": [222, 13, 26], "name": "Educational", "raw": "Educational"}, {"rgb": [245, 7, 11], "name": "Health", "raw": "Health"}, {"rgb": [221, 29, 0], "name": "Religious", "raw": "Religious"}, {"rgb": [249, 38, 36], "name": "Facility (proposed)", "raw": "Facility proposed"}, {"rgb": [255, 135, 135], "name": "Public utilities", "raw": "Utilities existing"}, {"rgb": [255, 161, 160], "name": "Public utilities (proposed)", "raw": "Utilities proposed"}, {"rgb": [85, 255, 0], "name": "Parks", "raw": "Parks existing"}, {"rgb": [74, 212, 1], "name": "Recreational (proposed)", "raw": "Recreational proposed"}, {"rgb": [178, 178, 178], "name": "Transportation", "raw": "Transportation existing"}, {"rgb": [104, 104, 104], "name": "Transportation (proposed)", "raw": "Transportation proposed"}, {"rgb": [209, 255, 188], "name": "Agriculture", "raw": "Agriculture"}, {"rgb": [49, 67, 133], "name": "Special area", "raw": "Special Area"}, {"rgb": [114, 224, 252], "name": "Water body", "raw": "Water bodies"}, {"rgb": [38, 115, 0], "name": "Forest", "raw": "Forest"}, {"rgb": [169, 110, 3], "name": "Hills", "raw": "Hills"}, {"rgb": [83, 139, 68], "name": "Eco-sensitive", "raw": "Eco-sensitive / park"}, {"rgb": [217, 189, 144], "name": "Accreted land", "raw": "Accreted land"}], "area": 4873, "note": "Draft Master Plan 2041, notified 19 June 2021. Superseded."}, "final": {"label": "Final 2026", "plan": "final_plan.jpg", "zones": "final_zones.png", "tiles": "t/final", "px": [9838, 4156], "geo": {"s": 16.87, "deg": 34.4, "lon0": 83.2363196451436, "lat0": 18.092701821448614, "kx": 105815.8156647524, "ky": 110540.0, "tE": -108814.37058177184, "tN": -45661.34772165285, "cx": 0, "cy": 0, "err_m": 200}, "zones_list": [{"raw": "Agriculture", "name": "Agriculture", "rgb": [211, 255, 190], "grp": "Agriculture", "sqkm": 1493.9, "grpkm": 1493.9, "pub": null, "prot": false}, {"raw": "Residential", "name": "Residential", "rgb": [255, 255, 153], "grp": "Residential", "sqkm": 620.2, "grpkm": 620.2, "pub": null, "prot": false}, {"raw": "Mixed Use", "name": "Mixed Use", "rgb": [255, 165, 0], "grp": "Mixed Use", "sqkm": 325.4, "grpkm": 325.4, "pub": null, "prot": false}, {"raw": "Protected Blue", "name": "Protected Blue", "rgb": [115, 223, 255], "grp": "Protected Blue", "sqkm": 310.4, "grpkm": 310.4, "pub": null, "prot": true}, {"raw": "Protected Forest", "name": "Protected Forest", "rgb": [0, 115, 76], "grp": "Protected Forest", "sqkm": 288.3, "grpkm": 288.3, "pub": null, "prot": true}, {"raw": "Protected Hills", "name": "Protected Hills", "rgb": [168, 112, 0], "grp": "Protected Hills", "sqkm": 249.8, "grpkm": 249.8, "pub": null, "prot": true}, {"raw": "Transportation", "name": "Transportation", "rgb": [104, 104, 104], "grp": "Transportation", "sqkm": 101.7, "grpkm": 101.7, "pub": null, "prot": false}, {"raw": "Protected Green", "name": "Protected Green", "rgb": [0, 255, 0], "grp": "Protected Green", "sqkm": 85.4, "grpkm": 85.4, "pub": null, "prot": true}, {"raw": "Protected Kambalakonda ESZ", "name": "Protected Kambalakonda ESZ", "rgb": [239, 228, 190], "grp": "Protected Kambalakonda ESZ", "sqkm": 79.3, "grpkm": 79.3, "pub": null, "prot": true}, {"raw": "Public & Semi Public", "name": "Public & Semi Public", "rgb": [255, 0, 0], "grp": "Public & Semi Public", "sqkm": 40.9, "grpkm": 40.9, "pub": null, "prot": false}, {"raw": "Industrial Red & Orange", "name": "Industrial Red & Orange", "rgb": [223, 115, 255], "grp": "Industrial Red & Orange", "sqkm": 39.1, "grpkm": 39.1, "pub": null, "prot": false}, {"raw": "Special Area", "name": "Special Area", "rgb": [0, 38, 115], "grp": "Special Area", "sqkm": 29.3, "grpkm": 29.3, "pub": null, "prot": false}, {"raw": "Affordable Housing", "name": "Affordable Housing", "rgb": [255, 255, 115], "grp": "Affordable Housing", "sqkm": 10.7, "grpkm": 10.7, "pub": null, "prot": false}, {"raw": "Commercial", "name": "Commercial", "rgb": [0, 0, 255], "grp": "Commercial", "sqkm": 8.1, "grpkm": 8.1, "pub": null, "prot": false}, {"raw": "Industrial Work Centre", "name": "Industrial Work Centre", "rgb": [222, 102, 255], "grp": "Industrial Work Centre", "sqkm": 0.7, "grpkm": 0.7, "pub": null, "prot": false}, {"raw": "Recreational", "name": "Recreational", "rgb": [85, 255, 0], "grp": "Recreational", "sqkm": 0.3, "grpkm": 0.3, "pub": null, "prot": false}], "vec": "final_zones_vec.json", "lookup": [{"rgb": [255, 255, 153], "name": "Residential", "raw": "Residential"}, {"rgb": [255, 255, 115], "name": "Affordable Housing", "raw": "Affordable Housing"}, {"rgb": [0, 0, 255], "name": "Commercial", "raw": "Commercial"}, {"rgb": [255, 0, 0], "name": "Public & Semi Public", "raw": "Public & Semi Public"}, {"rgb": [222, 102, 255], "name": "Industrial Work Centre", "raw": "Industrial Work Centre"}, {"rgb": [223, 115, 255], "name": "Industrial Red & Orange", "raw": "Industrial Red & Orange"}, {"rgb": [85, 255, 0], "name": "Recreational", "raw": "Recreational"}, {"rgb": [104, 104, 104], "name": "Transportation", "raw": "Transportation"}, {"rgb": [255, 165, 0], "name": "Mixed Use", "raw": "Mixed Use"}, {"rgb": [211, 255, 190], "name": "Agriculture", "raw": "Agriculture"}, {"rgb": [0, 38, 115], "name": "Special Area", "raw": "Special Area"}, {"rgb": [239, 228, 190], "name": "Protected Kambalakonda ESZ", "raw": "Protected Kambalakonda ESZ"}, {"rgb": [115, 223, 255], "name": "Protected Blue", "raw": "Protected Blue"}, {"rgb": [168, 112, 0], "name": "Protected Hills", "raw": "Protected Hills"}, {"rgb": [0, 255, 0], "name": "Protected Green", "raw": "Protected Green"}, {"rgb": [0, 115, 76], "name": "Protected Forest", "raw": "Protected Forest"}], "area": 4380, "note": "Revised Master Plan 2041, signed 29 June 2026. The operative plan."}};
 /* Open on the plan that is in force. The 2021 draft is superseded, so landing
    there meant every first reading was of a document that no longer governs
    anything and you had to know to switch. The draft stays one tap away, which
@@ -1546,6 +1546,96 @@ function affTimes(A,fx,fy){
 function buildRasterAffines(){
   zoneAff = affFor(VERSIONS[VER].geo, zone);
   othAff  = affFor(OTHER.geo, OTHER.img);
+}
+/* --- Traced zones ---------------------------------------------------------
+   The Zones view used to stretch the 9,838 px classified raster across the
+   whole sheet, so it was soft at any real zoom and it could only ever be as
+   sharp as the picture it came from. vectorise_zones.py traces the same
+   classification into polygons in lon/lat, which are crisp at every zoom and
+   about a tenth of the bytes.
+
+   Same source, same colours, same errors. The outlines are drawn from a
+   picture placed on the ground to about 200 m, so they must never be
+   presented as boundaries. The real sheet stays one tap away, and the canvas
+   says so while this layer is on.
+
+   Drawing: one Path2D per class in tile-pyramid pixels, built once. Each
+   frame then sets a transform and issues about 40 fills, instead of walking
+   400,000 points in JS. Holes are appended as extra rings and cut with
+   evenodd, which is safe because polygons of one class never overlap: they
+   come from disjoint connected components. */
+var VEC={}, VECSTATE={};
+function vecBuild(V, data){
+  var q=data.q, paths=data.classes.map(function(){ return null });
+  var shp=data.shapes;
+  for(var i=0;i<shp.length;i++){
+    var cls=shp[i][0], rings=shp[i][2];
+    var path=paths[cls] || (paths[cls]=new Path2D());
+    for(var r=0;r<rings.length;r++){
+      var a=rings[r], lo=0, la=0;
+      for(var j=0;j<a.length;j+=2){
+        lo+=a[j]; la+=a[j+1];
+        var pxy=ll2px(lo*q, la*q);
+        if(j===0) path.moveTo(pxy[0],pxy[1]); else path.lineTo(pxy[0],pxy[1]);
+      }
+      path.closePath();
+    }
+  }
+  return {paths:paths, classes:data.classes, coverage:data.coverage, n:shp.length};
+}
+function vecFor(v){
+  if(VEC[v]) return VEC[v];
+  if(VECSTATE[v]) return null;                 /* in flight, or failed */
+  VECSTATE[v]="load";
+  var url=VERSIONS[v].vec;
+  if(!url){ VECSTATE[v]="none"; return null }
+  fetch(url).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json() })
+    .then(function(d){
+      if(v!==VER){ VECSTATE[v]=null; return }   /* geo has moved on; rebuild later */
+      VEC[v]=vecBuild(v,d); VECSTATE[v]="ok"; draw();
+    })
+    .catch(function(){ VECSTATE[v]="fail" });   /* the raster still works */
+  return null;
+}
+function drawVec(x,y,alpha){
+  var V=vecFor(VER); if(!V) return false;
+  var k=view.s*dpr;
+  ctx.save();
+  ctx.setTransform(k,0,0,k,x,y);
+  for(var i=0;i<V.paths.length;i++){
+    var path=V.paths[i]; if(!path) continue;
+    ctx.fillStyle="rgb("+V.classes[i].rgb.join(",")+")";
+    ctx.fill(path,"evenodd");
+  }
+  /* A hairline only once a patch is big enough on screen to have an edge
+     worth seeing. Below that it is just noise over small shapes. */
+  if(view.s>0.35){
+    ctx.strokeStyle="rgba(8,14,20,.38)"; ctx.lineWidth=Math.max(.35,0.9/view.s);
+    for(var m=0;m<V.paths.length;m++) if(V.paths[m]) ctx.stroke(V.paths[m]);
+  }
+  ctx.restore(); ctx.setTransform(1,0,0,1,0,0);
+  return true;
+}
+/* Traced polygons win at regional zoom, where they are crisp and the sheet is
+   a smear. The sheet wins at street zoom, where a traced 16.87 m raster turns
+   into chipped glass and the road casing reads as holes. So the layer hands
+   back: full vectors above 12 m/px, the published sheet below 5, a crossfade
+   between. Zooming in always ends on the source, which is also the honest
+   direction to fail in. */
+function vecAlpha(){
+  var mpp=GEO.s/Math.max(view.s,1e-6);
+  if(mpp>=12) return 1;
+  if(mpp<=5) return 0;
+  return (mpp-5)/7;
+}
+function drawZoneLayer(x,y){
+  var A=ctx.globalAlpha, a=VEC[VER]?vecAlpha():0;
+  if(a<1){
+    if(TILES) drawTiles(x,y,A*(1-a));
+    else { ctx.globalAlpha=A*(1-a); drawRaster(zone, zoneAff, x, y); ctx.globalAlpha=A }
+  }
+  if(a>0){ ctx.globalAlpha=A*a; drawVec(x,y); ctx.globalAlpha=A }
+  else if(!VEC[VER]) vecFor(VER);              /* kick off the fetch anyway */
 }
 function drawRaster(img, aff, x, y){
   if(!imgW(img)) return;
@@ -1833,11 +1923,11 @@ function draw(){
     if(TILES) drawTiles(x,y,A); else ctx.drawImage(plan,x,y,dw,dh);
   }
   if(cmp && OTHER.img && othAff){ drawCompare(x,y,dw,dh,w,h); }
-  else if(mode==="zone"){ drawRaster(zone, zoneAff, x, y); }
+  else if(mode==="zone"){ drawZoneLayer(x, y); }
   else if(mode==="split"){
     planLayer();
     ctx.save(); ctx.beginPath(); ctx.rect(w*split,0,w-w*split,h); ctx.clip();
-    drawRaster(zone, zoneAff, x, y); ctx.restore();
+    drawZoneLayer(x, y); ctx.restore();
     ctx.fillStyle="rgba(99,216,234,.85)"; ctx.fillRect(w*split-1*dpr,0,2*dpr,h);
   } else { planLayer(); }
   ctx.filter="none";
@@ -1943,6 +2033,17 @@ function draw(){
       ctx.fillText(seen+" of "+TANKS.length+" checked water bodies in view", 14*dpr, h-16*dpr);
       ctx.restore();
     }
+  }
+  /* A crisp outline claims more than a 200 m placement can support, so while
+     the traced layer is showing, the canvas keeps saying what it is. */
+  if((mode==="zone"||mode==="split") && VEC[VER] && vecAlpha()>0.5){
+    ctx.save();
+    ctx.font=(10*dpr)+"px ui-monospace,Menlo,monospace";
+    ctx.fillStyle="rgba(180,205,198,.72)";
+    ctx.textAlign="right";                     /* the bottom-left pill lives here */
+    ctx.fillText(tdict("ui","Outlines traced from the sheet by colour. Approximate to 200 m."),
+                 w-14*dpr, h-(MOBILE?18:14)*dpr);
+    ctx.restore();
   }
   drawPlanningWindow(x,y,w,h);
   drawFocusReticle(x,y,w,h);
