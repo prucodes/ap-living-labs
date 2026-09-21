@@ -952,6 +952,7 @@
   <details class="deskMore" id="deskMore"><summary aria-label="More map tools">···</summary><div>
     <button id="pfMenuEntry" onclick="openPreflight()">Permit Preflight · preview</button>
     <button onclick="openReviewWorkspace('saved')">Review workspace</button>
+    <button id="terrBtn" aria-pressed="false" onclick="toggleTerr()">Shaded relief</button>
     <button onclick="toggleMeas(true)">Measure distance &amp; area</button>
     <button onclick="toggleImm(true)">Full screen map</button>
     <button onclick="briefOverview()">Show the whole region</button>
@@ -1208,6 +1209,7 @@
     <div class="mmenu" id="mmenu"><button onclick="mMenu(0);toggleBrief(true)">Regional briefing<i>Places, existing evidence and a review brief</i></button><button onclick="mMenu(0);openReport()">Prepare review brief</button>
       <button onclick="mMenu(0);openPreflight()">Permit Preflight<i>Proposal checklist · preview</i></button>
       <button onclick="mMenu(0);openReviewWorkspace('saved')">Review workspace<i>Saved readings and existing water evidence</i></button>
+      <button onclick="mMenu(0);toggleTerr()">Shaded relief<i>Copernicus elevation under the plan</i></button>
       <button onclick="mMenu(0);toggleChanged()">What changed between the plans
         <i>Certain, directional, and what cannot be said</i></button>
       <button onclick="mMenu(0);toggleDrawer()">What this plan can and cannot answer
@@ -1466,6 +1468,53 @@ function drawTiles(x,y,alpha){
   ctx.restore();
   return missing===0;
 }
+/* --- Shaded relief --------------------------------------------------------
+   Vizag is hills meeting the coast and the sheet shows none of it, so the plan
+   reads as if it were drawn on a table. terrain.py builds a Copernicus DEM
+   hillshade on the basemap's lat/lon grid, which means the same affine trick
+   places it. Drawn with multiply, so it shades the sheet as light rather than
+   tinting it, and its alpha follows slope, so flat ground is left exactly as
+   published. It is elevation: it is not part of any reading. */
+var TERRAIN = {"w":82.15,"s":17.08,"e":83.98,"n":18.62,"px":[2800,2350],"source":"Copernicus DEM GLO-30 via Microsoft Planetary Computer","highest_m":1670,"note":"Shaded relief only. Elevation is not part of any plan reading and says nothing about zoning."};
+var terr=null, terrOn=false, terrAff=null;
+function buildTerrAffine(){
+  if(!TERRAIN||!terr||!terr.naturalWidth||!GEO) return;
+  var W=terr.naturalWidth, H=terr.naturalHeight;
+  function t2px(bx,by){
+    var lo=TERRAIN.w+(bx/W)*(TERRAIN.e-TERRAIN.w);
+    var la=TERRAIN.n-(by/H)*(TERRAIN.n-TERRAIN.s);
+    return ll2px(lo,la);
+  }
+  var o=t2px(0,0), ax=t2px(W,0), ay=t2px(0,H);
+  terrAff={a:(ax[0]-o[0])/W, b:(ax[1]-o[1])/W,
+           c:(ay[0]-o[0])/H, d:(ay[1]-o[1])/H, e:o[0], f:o[1]};
+}
+function toggleTerr(on){
+  terrOn = (on===undefined) ? !terrOn : !!on;
+  var b=document.getElementById("terrBtn"); if(b) b.setAttribute("aria-pressed",String(terrOn));
+  if(terrOn && !terr){
+    terr=new Image();
+    terr.onload=function(){ buildTerrAffine(); draw() };
+    terr.onerror=function(){ terr=null; terrOn=false; announce(t("Relief is unavailable.")) };
+    terr.src="terrain.webp";
+    announce(t("Loading relief."));
+  }
+  draw();
+}
+function drawTerrain(x,y){
+  if(!terrOn||!terr||!terr.naturalWidth) return;
+  if(!terrAff) buildTerrAffine();
+  if(!terrAff) return;
+  var k=view.s*dpr;
+  ctx.save();
+  ctx.globalCompositeOperation="multiply";
+  ctx.globalAlpha=0.88;
+  ctx.imageSmoothingEnabled=true;
+  ctx.setTransform(terrAff.a*k, terrAff.b*k, terrAff.c*k, terrAff.d*k,
+                   x+terrAff.e*k, y+terrAff.f*k);
+  ctx.drawImage(terr,0,0);
+  ctx.restore(); ctx.setTransform(1,0,0,1,0,0);
+}
 var isoZone = null;
 var IDGEO = null;   /* identify raster transform, separate from the tile pyramid */
 var BASEMAP = {"w": 82.15, "s": 17.08, "e": 83.98, "n": 18.62};
@@ -1478,6 +1527,7 @@ sat.src="basemap.jpg";
    single affine and the basemap can be drawn straight into the sheet's frame
    with one canvas transform instead of resampling anything. Solved from three
    corners rather than derived by hand. */
+function rebuildUnderlays(){ buildSatAffine(); buildTerrAffine() }
 function buildSatAffine(){
   if(!BASEMAP||!sat.naturalWidth) return;
   var W=sat.naturalWidth, H=sat.naturalHeight;
@@ -1932,6 +1982,7 @@ function draw(){
   } else { planLayer(); }
   ctx.filter="none";
   ctx.globalAlpha=1;
+  drawTerrain(x,y);
 
   if(isoZone && isoCv.width){
     var iAff=idcAff();
@@ -2432,7 +2483,7 @@ function setVersion(v,reading){
     idx.drawImage(zone,0,0,idc.width,idc.height);
     measureContent();
     buildRasterAffines();
-    buildSatAffine();
+    rebuildUnderlays();
     if(here){                       /* put the same ground back under the centre */
       var q=ll2px(here[0],here[1]);
       goal.x=r.width/2-q[0]*goal.s; goal.y=r.height/2-q[1]*goal.s; clamp();
