@@ -1,0 +1,1695 @@
+{
+ "question": "for the pond footprints inside the Kolleru sanctuary polygon, was there open water there before the baseline years, or did it appear after",
+ "engine": "ground_truth.py in water mode (NDWI, wettest pass per window)",
+ "boundary": {
+  "source": "OpenStreetMap way 135417091, Kolleru WLS",
+  "osm_area_sqkm": 622,
+  "notified_area_sqkm": 308.55,
+  "caveat": "The OSM polygon is roughly twice the boundary notified in October 1999 to the +5 ft contour, so inside this polygon is an upper bound and some of these ponds will lie outside the legal line. Swap in the notified contour and re-run."
+ },
+ "ponds": {
+  "source": "OSM digitised footprints, ODbL",
+  "inside": 15,
+  "inside_ha": 446.6,
+  "caveat": "OSM pond coverage is not exhaustive, so this is a floor for what is on the ground."
+ },
+ "what_this_cannot_say": "NDWI separates water from not-water. It cannot separate a lake from a fish pond, so nothing here identifies an encroachment or a violation. It can date appearance.",
+ "counts": {
+  "water_before_and_now": 11,
+  "cycling": 3,
+  "unsettled": 1
+ },
+ "sites": [
+  {
+   "id": "KOL-015",
+   "cls": "Kolleru pond footprint",
+   "ha": 102.6,
+   "lo": 81.31056,
+   "la": 16.67588,
+   "half_width_m": 576,
+   "fragile": false,
+   "verdict": "water_before_and_now",
+   "why": "Open water in the baseline window (0.27) and now (0.17). Whatever is here predates the baseline years.",
+   "baseline": {
+    "ndvi": 0.2727,
+    "years": {
+     "2019": {
+      "ndvi": 0.273,
+      "date": "2019-12-07"
+     },
+     "2020": {
+      "ndvi": 0.569,
+      "date": "2020-11-21"
+     },
+     "2021": {
+      "ndvi": 0.265,
+      "date": "2021-12-06"
+     }
+    },
+    "scenes": 15
+   },
+   "current": {
+    "ndvi": 0.173,
+    "date": "2025-11-27",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2025-12-17",
+      "ndvi": 0.099,
+      "clear": 1.0,
+      "pixels": 18862
+     },
+     {
+      "date": "2025-12-15",
+      "ndvi": 0.105,
+      "clear": 1.0,
+      "pixels": 18862
+     },
+     {
+      "date": "2025-12-10",
+      "ndvi": 0.13,
+      "clear": 1.0,
+      "pixels": 18862
+     },
+     {
+      "date": "2025-12-05",
+      "ndvi": 0.165,
+      "clear": 0.93,
+      "pixels": 17539
+     },
+     {
+      "date": "2025-11-27",
+      "ndvi": 0.173,
+      "clear": 1.0,
+      "pixels": 18862
+     }
+    ]
+   },
+   "previous": {
+    "ndvi": 0.3652,
+    "date": "2024-11-05",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2024-12-15",
+      "ndvi": 0.226,
+      "clear": 1.0,
+      "pixels": 18862
+     },
+     {
+      "date": "2024-11-20",
+      "ndvi": 0.118,
+      "clear": 1.0,
+      "pixels": 18862
+     },
+     {
+      "date": "2024-11-10",
+      "ndvi": 0.221,
+      "clear": 1.0,
+      "pixels": 18862
+     },
+     {
+      "date": "2024-11-05",
+      "ndvi": 0.365,
+      "clear": 1.0,
+      "pixels": 18862
+     },
+     {
+      "date": "2024-10-01",
+      "ndvi": 0.339,
+      "clear": 0.997,
+      "pixels": 18802
+     }
+    ]
+   },
+   "previous_verdict": "water_before_and_now",
+   "radar": {
+    "vv_vh_db": 3.97,
+    "date": "2025-12-13",
+    "pixels": 18884
+   },
+   "chip": "KOL-015-2025.jpg",
+   "chip_before": "KOL-015-base2020.jpg"
+  },
+  {
+   "id": "KOL-001",
+   "cls": "Kolleru pond footprint",
+   "ha": 54.4,
+   "lo": 81.34596,
+   "la": 16.70676,
+   "half_width_m": 281,
+   "fragile": false,
+   "verdict": "cycling",
+   "why": "Reads water gone in 2025 but water before and now in 2024. A pond that is drained at one pass and full at another is being worked, not removed.",
+   "baseline": {
+    "ndvi": 0.1109,
+    "years": {
+     "2019": {
+      "ndvi": 0.104,
+      "date": "2019-10-28"
+     },
+     "2020": {
+      "ndvi": 0.316,
+      "date": "2020-12-11"
+     },
+     "2021": {
+      "ndvi": 0.111,
+      "date": "2021-10-07"
+     }
+    },
+    "scenes": 11
+   },
+   "current": {
+    "ndvi": -0.5018,
+    "date": "2025-12-17",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2025-12-17",
+      "ndvi": -0.502,
+      "clear": 1.0,
+      "pixels": 7937
+     },
+     {
+      "date": "2025-12-15",
+      "ndvi": -0.528,
+      "clear": 1.0,
+      "pixels": 7937
+     },
+     {
+      "date": "2025-12-10",
+      "ndvi": -0.545,
+      "clear": 1.0,
+      "pixels": 7937
+     },
+     {
+      "date": "2025-12-05",
+      "ndvi": -0.517,
+      "clear": 1.0,
+      "pixels": 7937
+     },
+     {
+      "date": "2025-11-27",
+      "ndvi": -0.541,
+      "clear": 1.0,
+      "pixels": 7937
+     }
+    ]
+   },
+   "previous": {
+    "ndvi": 0.4603,
+    "date": "2024-10-01",
+    "clear": 0.679,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2024-12-15",
+      "ndvi": 0.152,
+      "clear": 1.0,
+      "pixels": 7937
+     },
+     {
+      "date": "2024-11-20",
+      "ndvi": 0.103,
+      "clear": 1.0,
+      "pixels": 7937
+     },
+     {
+      "date": "2024-11-10",
+      "ndvi": 0.294,
+      "clear": 1.0,
+      "pixels": 7937
+     },
+     {
+      "date": "2024-11-05",
+      "ndvi": 0.42,
+      "clear": 1.0,
+      "pixels": 7937
+     },
+     {
+      "date": "2024-10-01",
+      "ndvi": 0.46,
+      "clear": 0.679,
+      "pixels": 5388
+     }
+    ]
+   },
+   "previous_verdict": "water_before_and_now",
+   "radar": {
+    "vv_vh_db": 5.04,
+    "date": "2025-12-13",
+    "pixels": 7959
+   },
+   "chip": "KOL-001-2025.jpg",
+   "chip_before": "KOL-001-base2020.jpg"
+  },
+  {
+   "id": "KOL-013",
+   "cls": "Kolleru pond footprint",
+   "ha": 35.6,
+   "lo": 81.33431,
+   "la": 16.6882,
+   "half_width_m": 189,
+   "fragile": false,
+   "verdict": "cycling",
+   "why": "Reads water gone in 2025 but water before and now in 2024. A pond that is drained at one pass and full at another is being worked, not removed.",
+   "baseline": {
+    "ndvi": 0.1507,
+    "years": {
+     "2019": {
+      "ndvi": 0.151,
+      "date": "2019-12-07"
+     },
+     "2020": {
+      "ndvi": 0.527,
+      "date": "2020-11-21"
+     },
+     "2021": {
+      "ndvi": 0.123,
+      "date": "2021-12-11"
+     }
+    },
+    "scenes": 15
+   },
+   "current": {
+    "ndvi": -0.4223,
+    "date": "2025-11-25",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2025-12-17",
+      "ndvi": -0.481,
+      "clear": 1.0,
+      "pixels": 3942
+     },
+     {
+      "date": "2025-12-15",
+      "ndvi": -0.468,
+      "clear": 1.0,
+      "pixels": 3942
+     },
+     {
+      "date": "2025-12-10",
+      "ndvi": -0.473,
+      "clear": 1.0,
+      "pixels": 3942
+     },
+     {
+      "date": "2025-11-27",
+      "ndvi": -0.494,
+      "clear": 1.0,
+      "pixels": 3942
+     },
+     {
+      "date": "2025-11-25",
+      "ndvi": -0.422,
+      "clear": 1.0,
+      "pixels": 3942
+     }
+    ]
+   },
+   "previous": {
+    "ndvi": 0.1182,
+    "date": "2024-11-05",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2024-12-15",
+      "ndvi": 0.089,
+      "clear": 1.0,
+      "pixels": 3942
+     },
+     {
+      "date": "2024-11-20",
+      "ndvi": -0.01,
+      "clear": 1.0,
+      "pixels": 3942
+     },
+     {
+      "date": "2024-11-10",
+      "ndvi": 0.073,
+      "clear": 1.0,
+      "pixels": 3942
+     },
+     {
+      "date": "2024-11-05",
+      "ndvi": 0.118,
+      "clear": 1.0,
+      "pixels": 3942
+     },
+     {
+      "date": "2024-10-31",
+      "ndvi": 0.018,
+      "clear": 0.672,
+      "pixels": 2648
+     }
+    ]
+   },
+   "previous_verdict": "water_before_and_now",
+   "radar": {
+    "vv_vh_db": 4.95,
+    "date": "2025-12-13",
+    "pixels": 3942
+   },
+   "chip": "KOL-013-2025.jpg",
+   "chip_before": "KOL-013-base2020.jpg"
+  },
+  {
+   "id": "KOL-002",
+   "cls": "Kolleru pond footprint",
+   "ha": 34.6,
+   "lo": 81.34303,
+   "la": 16.70163,
+   "half_width_m": 282,
+   "fragile": false,
+   "verdict": "cycling",
+   "why": "Reads water gone in 2025 but water before and now in 2024. A pond that is drained at one pass and full at another is being worked, not removed.",
+   "baseline": {
+    "ndvi": 0.13419999999999999,
+    "years": {
+     "2020": {
+      "ndvi": 0.206,
+      "date": "2020-11-01"
+     },
+     "2021": {
+      "ndvi": 0.062,
+      "date": "2021-10-02"
+     }
+    },
+    "scenes": 7
+   },
+   "current": {
+    "ndvi": -0.432,
+    "date": "2025-12-05",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2025-12-17",
+      "ndvi": -0.453,
+      "clear": 1.0,
+      "pixels": 4149
+     },
+     {
+      "date": "2025-12-15",
+      "ndvi": -0.45,
+      "clear": 1.0,
+      "pixels": 4149
+     },
+     {
+      "date": "2025-12-10",
+      "ndvi": -0.461,
+      "clear": 1.0,
+      "pixels": 4149
+     },
+     {
+      "date": "2025-12-05",
+      "ndvi": -0.432,
+      "clear": 1.0,
+      "pixels": 4149
+     },
+     {
+      "date": "2025-11-27",
+      "ndvi": -0.5,
+      "clear": 1.0,
+      "pixels": 4149
+     }
+    ]
+   },
+   "previous": {
+    "ndvi": 0.4443,
+    "date": "2024-11-05",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2024-12-15",
+      "ndvi": 0.134,
+      "clear": 1.0,
+      "pixels": 4149
+     },
+     {
+      "date": "2024-11-20",
+      "ndvi": 0.08,
+      "clear": 1.0,
+      "pixels": 4149
+     },
+     {
+      "date": "2024-11-10",
+      "ndvi": 0.286,
+      "clear": 1.0,
+      "pixels": 4149
+     },
+     {
+      "date": "2024-11-05",
+      "ndvi": 0.444,
+      "clear": 1.0,
+      "pixels": 4149
+     },
+     {
+      "date": "2024-10-01",
+      "ndvi": 0.319,
+      "clear": 0.715,
+      "pixels": 2967
+     }
+    ]
+   },
+   "previous_verdict": "water_before_and_now",
+   "radar": {
+    "vv_vh_db": 4.75,
+    "date": "2025-12-13",
+    "pixels": 4138
+   },
+   "chip": "KOL-002-2025.jpg",
+   "chip_before": "KOL-002-base2020.jpg"
+  },
+  {
+   "id": "KOL-003",
+   "cls": "Kolleru pond footprint",
+   "ha": 27.8,
+   "lo": 81.34913,
+   "la": 16.70332,
+   "half_width_m": 267,
+   "fragile": false,
+   "verdict": "water_before_and_now",
+   "why": "Open water in the baseline window (0.18) and now (0.13). Whatever is here predates the baseline years.",
+   "baseline": {
+    "ndvi": 0.1819,
+    "years": {
+     "2019": {
+      "ndvi": 0.182,
+      "date": "2019-11-17"
+     },
+     "2020": {
+      "ndvi": 0.262,
+      "date": "2020-11-21"
+     },
+     "2021": {
+      "ndvi": 0.065,
+      "date": "2021-12-11"
+     }
+    },
+    "scenes": 13
+   },
+   "current": {
+    "ndvi": 0.133,
+    "date": "2025-11-27",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2025-12-17",
+      "ndvi": 0.043,
+      "clear": 1.0,
+      "pixels": 4616
+     },
+     {
+      "date": "2025-12-15",
+      "ndvi": 0.053,
+      "clear": 1.0,
+      "pixels": 4616
+     },
+     {
+      "date": "2025-12-10",
+      "ndvi": 0.088,
+      "clear": 1.0,
+      "pixels": 4616
+     },
+     {
+      "date": "2025-12-05",
+      "ndvi": 0.05,
+      "clear": 1.0,
+      "pixels": 4616
+     },
+     {
+      "date": "2025-11-27",
+      "ndvi": 0.133,
+      "clear": 1.0,
+      "pixels": 4616
+     }
+    ]
+   },
+   "previous": {
+    "ndvi": 0.4034,
+    "date": "2024-11-05",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2024-12-15",
+      "ndvi": 0.119,
+      "clear": 1.0,
+      "pixels": 4616
+     },
+     {
+      "date": "2024-11-20",
+      "ndvi": 0.091,
+      "clear": 1.0,
+      "pixels": 4616
+     },
+     {
+      "date": "2024-11-10",
+      "ndvi": 0.298,
+      "clear": 1.0,
+      "pixels": 4616
+     },
+     {
+      "date": "2024-11-05",
+      "ndvi": 0.403,
+      "clear": 1.0,
+      "pixels": 4616
+     },
+     {
+      "date": "2024-10-01",
+      "ndvi": 0.382,
+      "clear": 1.0,
+      "pixels": 4616
+     }
+    ]
+   },
+   "previous_verdict": "water_before_and_now",
+   "radar": null,
+   "chip": "KOL-003-2025.jpg",
+   "chip_before": "KOL-003-base2020.jpg"
+  },
+  {
+   "id": "KOL-006",
+   "cls": "Kolleru pond footprint",
+   "ha": 27.2,
+   "lo": 81.34715,
+   "la": 16.69561,
+   "half_width_m": 210,
+   "fragile": false,
+   "verdict": "water_before_and_now",
+   "why": "Open water in the baseline window (0.20) and now (0.12). Whatever is here predates the baseline years.",
+   "baseline": {
+    "ndvi": 0.1968,
+    "years": {
+     "2019": {
+      "ndvi": 0.197,
+      "date": "2019-11-27"
+     },
+     "2020": {
+      "ndvi": 0.275,
+      "date": "2020-11-21"
+     },
+     "2021": {
+      "ndvi": 0.085,
+      "date": "2021-12-06"
+     }
+    },
+    "scenes": 15
+   },
+   "current": {
+    "ndvi": 0.1168,
+    "date": "2025-11-27",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2025-12-17",
+      "ndvi": 0.11,
+      "clear": 1.0,
+      "pixels": 3685
+     },
+     {
+      "date": "2025-12-15",
+      "ndvi": 0.099,
+      "clear": 1.0,
+      "pixels": 3685
+     },
+     {
+      "date": "2025-12-10",
+      "ndvi": 0.095,
+      "clear": 1.0,
+      "pixels": 3685
+     },
+     {
+      "date": "2025-12-05",
+      "ndvi": 0.028,
+      "clear": 1.0,
+      "pixels": 3685
+     },
+     {
+      "date": "2025-11-27",
+      "ndvi": 0.117,
+      "clear": 1.0,
+      "pixels": 3685
+     }
+    ]
+   },
+   "previous": {
+    "ndvi": 0.1349,
+    "date": "2024-11-05",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2024-12-15",
+      "ndvi": 0.079,
+      "clear": 1.0,
+      "pixels": 3685
+     },
+     {
+      "date": "2024-11-20",
+      "ndvi": 0.105,
+      "clear": 1.0,
+      "pixels": 3685
+     },
+     {
+      "date": "2024-11-10",
+      "ndvi": 0.086,
+      "clear": 1.0,
+      "pixels": 3685
+     },
+     {
+      "date": "2024-11-05",
+      "ndvi": 0.135,
+      "clear": 1.0,
+      "pixels": 3685
+     },
+     {
+      "date": "2024-10-31",
+      "ndvi": 0.079,
+      "clear": 0.839,
+      "pixels": 3093
+     }
+    ]
+   },
+   "previous_verdict": "water_before_and_now",
+   "radar": {
+    "vv_vh_db": 2.87,
+    "date": "2025-12-13",
+    "pixels": 3692
+   },
+   "chip": "KOL-006-2025.jpg",
+   "chip_before": "KOL-006-base2020.jpg"
+  },
+  {
+   "id": "KOL-005",
+   "cls": "Kolleru pond footprint",
+   "ha": 26.6,
+   "lo": 81.33953,
+   "la": 16.69486,
+   "half_width_m": 242,
+   "fragile": false,
+   "verdict": "water_before_and_now",
+   "why": "Open water in the baseline window (0.23) and now (0.09). Whatever is here predates the baseline years.",
+   "baseline": {
+    "ndvi": 0.2283,
+    "years": {
+     "2019": {
+      "ndvi": 0.104,
+      "date": "2019-12-12"
+     },
+     "2020": {
+      "ndvi": 0.368,
+      "date": "2020-11-21"
+     },
+     "2021": {
+      "ndvi": 0.228,
+      "date": "2021-12-06"
+     }
+    },
+    "scenes": 15
+   },
+   "current": {
+    "ndvi": 0.0894,
+    "date": "2025-11-27",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2025-12-17",
+      "ndvi": 0.055,
+      "clear": 1.0,
+      "pixels": 3609
+     },
+     {
+      "date": "2025-12-15",
+      "ndvi": 0.048,
+      "clear": 1.0,
+      "pixels": 3609
+     },
+     {
+      "date": "2025-12-10",
+      "ndvi": 0.032,
+      "clear": 1.0,
+      "pixels": 3609
+     },
+     {
+      "date": "2025-12-05",
+      "ndvi": 0.031,
+      "clear": 1.0,
+      "pixels": 3609
+     },
+     {
+      "date": "2025-11-27",
+      "ndvi": 0.089,
+      "clear": 1.0,
+      "pixels": 3609
+     }
+    ]
+   },
+   "previous": {
+    "ndvi": 0.208,
+    "date": "2024-11-05",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2024-12-15",
+      "ndvi": 0.082,
+      "clear": 1.0,
+      "pixels": 3609
+     },
+     {
+      "date": "2024-11-20",
+      "ndvi": 0.047,
+      "clear": 1.0,
+      "pixels": 3609
+     },
+     {
+      "date": "2024-11-10",
+      "ndvi": 0.11,
+      "clear": 1.0,
+      "pixels": 3609
+     },
+     {
+      "date": "2024-11-05",
+      "ndvi": 0.208,
+      "clear": 1.0,
+      "pixels": 3609
+     },
+     {
+      "date": "2024-10-31",
+      "ndvi": 0.137,
+      "clear": 0.992,
+      "pixels": 3581
+     }
+    ]
+   },
+   "previous_verdict": "water_before_and_now",
+   "radar": {
+    "vv_vh_db": 2.56,
+    "date": "2025-12-13",
+    "pixels": 3649
+   },
+   "chip": "KOL-005-2025.jpg",
+   "chip_before": "KOL-005-base2020.jpg"
+  },
+  {
+   "id": "KOL-004",
+   "cls": "Kolleru pond footprint",
+   "ha": 26.3,
+   "lo": 81.33385,
+   "la": 16.69199,
+   "half_width_m": 259,
+   "fragile": false,
+   "verdict": "water_before_and_now",
+   "why": "Open water in the baseline window (0.14) and now (0.05). Whatever is here predates the baseline years.",
+   "baseline": {
+    "ndvi": 0.1422,
+    "years": {
+     "2019": {
+      "ndvi": 0.095,
+      "date": "2019-12-07"
+     },
+     "2020": {
+      "ndvi": 0.43,
+      "date": "2020-11-21"
+     },
+     "2021": {
+      "ndvi": 0.142,
+      "date": "2021-12-11"
+     }
+    },
+    "scenes": 15
+   },
+   "current": {
+    "ndvi": 0.0473,
+    "date": "2025-12-05",
+    "clear": 0.592,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2025-12-17",
+      "ndvi": 0.017,
+      "clear": 1.0,
+      "pixels": 3814
+     },
+     {
+      "date": "2025-12-15",
+      "ndvi": 0.016,
+      "clear": 1.0,
+      "pixels": 3814
+     },
+     {
+      "date": "2025-12-10",
+      "ndvi": 0.018,
+      "clear": 1.0,
+      "pixels": 3814
+     },
+     {
+      "date": "2025-12-05",
+      "ndvi": 0.047,
+      "clear": 0.592,
+      "pixels": 2256
+     },
+     {
+      "date": "2025-11-27",
+      "ndvi": 0.035,
+      "clear": 1.0,
+      "pixels": 3814
+     }
+    ]
+   },
+   "previous": {
+    "ndvi": 0.124,
+    "date": "2024-11-05",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2024-12-15",
+      "ndvi": 0.077,
+      "clear": 1.0,
+      "pixels": 3814
+     },
+     {
+      "date": "2024-11-20",
+      "ndvi": 0.007,
+      "clear": 1.0,
+      "pixels": 3814
+     },
+     {
+      "date": "2024-11-10",
+      "ndvi": 0.096,
+      "clear": 1.0,
+      "pixels": 3814
+     },
+     {
+      "date": "2024-11-05",
+      "ndvi": 0.124,
+      "clear": 1.0,
+      "pixels": 3814
+     },
+     {
+      "date": "2024-10-31",
+      "ndvi": 0.031,
+      "clear": 1.0,
+      "pixels": 3814
+     }
+    ]
+   },
+   "previous_verdict": "water_before_and_now",
+   "radar": {
+    "vv_vh_db": 2.99,
+    "date": "2025-12-13",
+    "pixels": 3785
+   },
+   "chip": "KOL-004-2025.jpg",
+   "chip_before": "KOL-004-base2020.jpg"
+  },
+  {
+   "id": "KOL-009",
+   "cls": "Kolleru pond footprint",
+   "ha": 26.0,
+   "lo": 81.36079,
+   "la": 16.7052,
+   "half_width_m": 196,
+   "fragile": false,
+   "verdict": "unsettled",
+   "why": "Reads water_gone in 2024 and intact in 2025. The two most recent windows disagree, so nothing is claimed.",
+   "baseline": {
+    "ndvi": 0.2164,
+    "years": {
+     "2019": {
+      "ndvi": -0.095,
+      "date": "2019-10-13"
+     },
+     "2020": {
+      "ndvi": 0.394,
+      "date": "2020-11-21"
+     },
+     "2021": {
+      "ndvi": 0.216,
+      "date": "2021-11-26"
+     }
+    },
+    "scenes": 11
+   },
+   "current": {
+    "ndvi": 0.1433,
+    "date": "2025-12-10",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2025-12-17",
+      "ndvi": 0.058,
+      "clear": 1.0,
+      "pixels": 4050
+     },
+     {
+      "date": "2025-12-15",
+      "ndvi": 0.062,
+      "clear": 1.0,
+      "pixels": 4050
+     },
+     {
+      "date": "2025-12-10",
+      "ndvi": 0.143,
+      "clear": 1.0,
+      "pixels": 4050
+     },
+     {
+      "date": "2025-12-05",
+      "ndvi": 0.087,
+      "clear": 1.0,
+      "pixels": 4050
+     },
+     {
+      "date": "2025-11-27",
+      "ndvi": 0.099,
+      "clear": 1.0,
+      "pixels": 4050
+     }
+    ]
+   },
+   "previous": {
+    "ndvi": -0.4178,
+    "date": "2024-11-20",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2024-12-15",
+      "ndvi": -0.478,
+      "clear": 1.0,
+      "pixels": 4050
+     },
+     {
+      "date": "2024-11-20",
+      "ndvi": -0.418,
+      "clear": 1.0,
+      "pixels": 4050
+     },
+     {
+      "date": "2024-11-10",
+      "ndvi": -0.464,
+      "clear": 1.0,
+      "pixels": 4050
+     },
+     {
+      "date": "2024-11-05",
+      "ndvi": -0.479,
+      "clear": 1.0,
+      "pixels": 4050
+     },
+     {
+      "date": "2024-10-31",
+      "ndvi": -0.449,
+      "clear": 0.909,
+      "pixels": 3680
+     }
+    ]
+   },
+   "previous_verdict": "water_gone",
+   "radar": null,
+   "chip": "KOL-009-2025.jpg",
+   "chip_before": "KOL-009-base2020.jpg"
+  },
+  {
+   "id": "KOL-012",
+   "cls": "Kolleru pond footprint",
+   "ha": 25.9,
+   "lo": 81.34164,
+   "la": 16.69172,
+   "half_width_m": 246,
+   "fragile": false,
+   "verdict": "water_before_and_now",
+   "why": "Open water in the baseline window (0.15) and now (0.15). Whatever is here predates the baseline years.",
+   "baseline": {
+    "ndvi": 0.1457,
+    "years": {
+     "2019": {
+      "ndvi": 0.122,
+      "date": "2019-12-12"
+     },
+     "2020": {
+      "ndvi": 0.288,
+      "date": "2020-11-21"
+     },
+     "2021": {
+      "ndvi": 0.146,
+      "date": "2021-12-06"
+     }
+    },
+    "scenes": 15
+   },
+   "current": {
+    "ndvi": 0.1499,
+    "date": "2025-12-17",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2025-12-17",
+      "ndvi": 0.15,
+      "clear": 1.0,
+      "pixels": 3464
+     },
+     {
+      "date": "2025-12-15",
+      "ndvi": 0.137,
+      "clear": 1.0,
+      "pixels": 3464
+     },
+     {
+      "date": "2025-12-10",
+      "ndvi": 0.138,
+      "clear": 1.0,
+      "pixels": 3464
+     },
+     {
+      "date": "2025-12-05",
+      "ndvi": 0.082,
+      "clear": 1.0,
+      "pixels": 3464
+     },
+     {
+      "date": "2025-11-27",
+      "ndvi": 0.128,
+      "clear": 1.0,
+      "pixels": 3464
+     }
+    ]
+   },
+   "previous": {
+    "ndvi": 0.1852,
+    "date": "2024-11-05",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2024-12-15",
+      "ndvi": 0.107,
+      "clear": 1.0,
+      "pixels": 3464
+     },
+     {
+      "date": "2024-11-20",
+      "ndvi": 0.047,
+      "clear": 1.0,
+      "pixels": 3464
+     },
+     {
+      "date": "2024-11-10",
+      "ndvi": 0.117,
+      "clear": 1.0,
+      "pixels": 3464
+     },
+     {
+      "date": "2024-11-05",
+      "ndvi": 0.185,
+      "clear": 1.0,
+      "pixels": 3464
+     },
+     {
+      "date": "2024-10-31",
+      "ndvi": 0.122,
+      "clear": 0.735,
+      "pixels": 2546
+     }
+    ]
+   },
+   "previous_verdict": "water_before_and_now",
+   "radar": null,
+   "chip": "KOL-012-2025.jpg",
+   "chip_before": "KOL-012-base2020.jpg"
+  },
+  {
+   "id": "KOL-008",
+   "cls": "Kolleru pond footprint",
+   "ha": 16.4,
+   "lo": 81.35259,
+   "la": 16.69954,
+   "half_width_m": 169,
+   "fragile": false,
+   "verdict": "water_before_and_now",
+   "why": "Open water in the baseline window (0.13) and now (0.23). Whatever is here predates the baseline years.",
+   "baseline": {
+    "ndvi": 0.133,
+    "years": {
+     "2019": {
+      "ndvi": 0.133,
+      "date": "2019-12-12"
+     },
+     "2020": {
+      "ndvi": 0.366,
+      "date": "2020-11-21"
+     },
+     "2021": {
+      "ndvi": 0.123,
+      "date": "2021-12-11"
+     }
+    },
+    "scenes": 15
+   },
+   "current": {
+    "ndvi": 0.2306,
+    "date": "2025-11-27",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2025-12-17",
+      "ndvi": 0.098,
+      "clear": 1.0,
+      "pixels": 2140
+     },
+     {
+      "date": "2025-12-15",
+      "ndvi": 0.105,
+      "clear": 1.0,
+      "pixels": 2140
+     },
+     {
+      "date": "2025-12-10",
+      "ndvi": 0.156,
+      "clear": 1.0,
+      "pixels": 2140
+     },
+     {
+      "date": "2025-12-05",
+      "ndvi": 0.099,
+      "clear": 1.0,
+      "pixels": 2140
+     },
+     {
+      "date": "2025-11-27",
+      "ndvi": 0.231,
+      "clear": 1.0,
+      "pixels": 2140
+     }
+    ]
+   },
+   "previous": {
+    "ndvi": 0.2737,
+    "date": "2024-10-31",
+    "clear": 0.637,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2024-12-15",
+      "ndvi": 0.131,
+      "clear": 1.0,
+      "pixels": 2140
+     },
+     {
+      "date": "2024-11-20",
+      "ndvi": 0.066,
+      "clear": 1.0,
+      "pixels": 2140
+     },
+     {
+      "date": "2024-11-10",
+      "ndvi": 0.085,
+      "clear": 1.0,
+      "pixels": 2140
+     },
+     {
+      "date": "2024-11-05",
+      "ndvi": 0.268,
+      "clear": 1.0,
+      "pixels": 2140
+     },
+     {
+      "date": "2024-10-31",
+      "ndvi": 0.274,
+      "clear": 0.637,
+      "pixels": 1363
+     }
+    ]
+   },
+   "previous_verdict": "water_before_and_now",
+   "radar": null,
+   "chip": "KOL-008-2025.jpg",
+   "chip_before": "KOL-008-base2020.jpg"
+  },
+  {
+   "id": "KOL-014",
+   "cls": "Kolleru pond footprint",
+   "ha": 14.0,
+   "lo": 81.32945,
+   "la": 16.68979,
+   "half_width_m": 211,
+   "fragile": false,
+   "verdict": "water_before_and_now",
+   "why": "Open water in the baseline window (0.15) and now (0.05). Whatever is here predates the baseline years.",
+   "baseline": {
+    "ndvi": 0.1527,
+    "years": {
+     "2019": {
+      "ndvi": -0.095,
+      "date": "2019-12-12"
+     },
+     "2020": {
+      "ndvi": 0.27,
+      "date": "2020-11-21"
+     },
+     "2021": {
+      "ndvi": 0.153,
+      "date": "2021-12-11"
+     }
+    },
+    "scenes": 15
+   },
+   "current": {
+    "ndvi": 0.0462,
+    "date": "2025-11-27",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2025-12-17",
+      "ndvi": 0.043,
+      "clear": 1.0,
+      "pixels": 2081
+     },
+     {
+      "date": "2025-12-15",
+      "ndvi": 0.02,
+      "clear": 1.0,
+      "pixels": 2081
+     },
+     {
+      "date": "2025-12-10",
+      "ndvi": 0.029,
+      "clear": 1.0,
+      "pixels": 2081
+     },
+     {
+      "date": "2025-11-27",
+      "ndvi": 0.046,
+      "clear": 1.0,
+      "pixels": 2081
+     },
+     {
+      "date": "2025-11-25",
+      "ndvi": 0.009,
+      "clear": 1.0,
+      "pixels": 2081
+     }
+    ]
+   },
+   "previous": {
+    "ndvi": 0.2283,
+    "date": "2024-11-05",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2024-12-15",
+      "ndvi": 0.084,
+      "clear": 1.0,
+      "pixels": 2081
+     },
+     {
+      "date": "2024-11-20",
+      "ndvi": -0.032,
+      "clear": 1.0,
+      "pixels": 2081
+     },
+     {
+      "date": "2024-11-10",
+      "ndvi": 0.177,
+      "clear": 1.0,
+      "pixels": 2081
+     },
+     {
+      "date": "2024-11-05",
+      "ndvi": 0.228,
+      "clear": 1.0,
+      "pixels": 2081
+     },
+     {
+      "date": "2024-10-31",
+      "ndvi": 0.06,
+      "clear": 1.0,
+      "pixels": 2081
+     }
+    ]
+   },
+   "previous_verdict": "water_before_and_now",
+   "radar": {
+    "vv_vh_db": 2.74,
+    "date": "2025-12-13",
+    "pixels": 2078
+   },
+   "chip": "KOL-014-2025.jpg",
+   "chip_before": "KOL-014-base2020.jpg"
+  },
+  {
+   "id": "KOL-010",
+   "cls": "Kolleru pond footprint",
+   "ha": 12.4,
+   "lo": 81.34503,
+   "la": 16.69789,
+   "half_width_m": 191,
+   "fragile": false,
+   "verdict": "water_before_and_now",
+   "why": "Open water in the baseline window (0.30) and now (0.15). Whatever is here predates the baseline years.",
+   "baseline": {
+    "ndvi": 0.3013,
+    "years": {
+     "2019": {
+      "ndvi": 0.117,
+      "date": "2019-12-12"
+     },
+     "2020": {
+      "ndvi": 0.301,
+      "date": "2020-11-01"
+     },
+     "2021": {
+      "ndvi": 0.4,
+      "date": "2021-12-11"
+     }
+    },
+    "scenes": 15
+   },
+   "current": {
+    "ndvi": 0.1476,
+    "date": "2025-12-10",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2025-12-17",
+      "ndvi": 0.134,
+      "clear": 1.0,
+      "pixels": 1669
+     },
+     {
+      "date": "2025-12-15",
+      "ndvi": 0.134,
+      "clear": 1.0,
+      "pixels": 1669
+     },
+     {
+      "date": "2025-12-10",
+      "ndvi": 0.148,
+      "clear": 1.0,
+      "pixels": 1669
+     },
+     {
+      "date": "2025-12-05",
+      "ndvi": 0.023,
+      "clear": 1.0,
+      "pixels": 1669
+     },
+     {
+      "date": "2025-11-27",
+      "ndvi": 0.069,
+      "clear": 1.0,
+      "pixels": 1669
+     }
+    ]
+   },
+   "previous": {
+    "ndvi": 0.2399,
+    "date": "2024-11-05",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2024-12-15",
+      "ndvi": 0.135,
+      "clear": 1.0,
+      "pixels": 1669
+     },
+     {
+      "date": "2024-11-20",
+      "ndvi": 0.115,
+      "clear": 1.0,
+      "pixels": 1669
+     },
+     {
+      "date": "2024-11-10",
+      "ndvi": 0.159,
+      "clear": 1.0,
+      "pixels": 1669
+     },
+     {
+      "date": "2024-11-05",
+      "ndvi": 0.24,
+      "clear": 1.0,
+      "pixels": 1669
+     },
+     {
+      "date": "2024-10-31",
+      "ndvi": 0.216,
+      "clear": 0.796,
+      "pixels": 1329
+     }
+    ]
+   },
+   "previous_verdict": "water_before_and_now",
+   "radar": {
+    "vv_vh_db": 3.0,
+    "date": "2025-12-13",
+    "pixels": 1668
+   },
+   "chip": "KOL-010-2025.jpg",
+   "chip_before": "KOL-010-base2021.jpg"
+  },
+  {
+   "id": "KOL-007",
+   "cls": "Kolleru pond footprint",
+   "ha": 12.3,
+   "lo": 81.35139,
+   "la": 16.70144,
+   "half_width_m": 129,
+   "fragile": false,
+   "verdict": "water_before_and_now",
+   "why": "Open water in the baseline window (0.15) and now (0.20). Whatever is here predates the baseline years.",
+   "baseline": {
+    "ndvi": 0.1522,
+    "years": {
+     "2019": {
+      "ndvi": 0.149,
+      "date": "2019-12-12"
+     },
+     "2020": {
+      "ndvi": 0.428,
+      "date": "2020-11-21"
+     },
+     "2021": {
+      "ndvi": 0.152,
+      "date": "2021-12-11"
+     }
+    },
+    "scenes": 15
+   },
+   "current": {
+    "ndvi": 0.2014,
+    "date": "2025-11-27",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2025-12-17",
+      "ndvi": 0.068,
+      "clear": 1.0,
+      "pixels": 1602
+     },
+     {
+      "date": "2025-12-15",
+      "ndvi": 0.064,
+      "clear": 1.0,
+      "pixels": 1602
+     },
+     {
+      "date": "2025-12-10",
+      "ndvi": 0.071,
+      "clear": 1.0,
+      "pixels": 1602
+     },
+     {
+      "date": "2025-12-05",
+      "ndvi": 0.077,
+      "clear": 1.0,
+      "pixels": 1602
+     },
+     {
+      "date": "2025-11-27",
+      "ndvi": 0.201,
+      "clear": 1.0,
+      "pixels": 1602
+     }
+    ]
+   },
+   "previous": {
+    "ndvi": 0.3385,
+    "date": "2024-11-05",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2024-12-15",
+      "ndvi": 0.132,
+      "clear": 1.0,
+      "pixels": 1602
+     },
+     {
+      "date": "2024-11-20",
+      "ndvi": 0.086,
+      "clear": 1.0,
+      "pixels": 1602
+     },
+     {
+      "date": "2024-11-10",
+      "ndvi": 0.221,
+      "clear": 1.0,
+      "pixels": 1602
+     },
+     {
+      "date": "2024-11-05",
+      "ndvi": 0.338,
+      "clear": 1.0,
+      "pixels": 1602
+     },
+     {
+      "date": "2024-10-31",
+      "ndvi": 0.277,
+      "clear": 0.752,
+      "pixels": 1204
+     }
+    ]
+   },
+   "previous_verdict": "water_before_and_now",
+   "radar": null,
+   "chip": "KOL-007-2025.jpg",
+   "chip_before": "KOL-007-base2020.jpg"
+  },
+  {
+   "id": "KOL-011",
+   "cls": "Kolleru pond footprint",
+   "ha": 4.5,
+   "lo": 81.343,
+   "la": 16.69662,
+   "half_width_m": 77,
+   "fragile": false,
+   "verdict": "water_before_and_now",
+   "why": "Open water in the baseline window (0.36) and now (0.15). Whatever is here predates the baseline years.",
+   "baseline": {
+    "ndvi": 0.36,
+    "years": {
+     "2019": {
+      "ndvi": 0.123,
+      "date": "2019-12-12"
+     },
+     "2020": {
+      "ndvi": 0.379,
+      "date": "2020-11-21"
+     },
+     "2021": {
+      "ndvi": 0.36,
+      "date": "2021-12-11"
+     }
+    },
+    "scenes": 15
+   },
+   "current": {
+    "ndvi": 0.1469,
+    "date": "2025-12-15",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2025-12-17",
+      "ndvi": 0.144,
+      "clear": 1.0,
+      "pixels": 580
+     },
+     {
+      "date": "2025-12-15",
+      "ndvi": 0.147,
+      "clear": 1.0,
+      "pixels": 580
+     },
+     {
+      "date": "2025-12-10",
+      "ndvi": 0.134,
+      "clear": 1.0,
+      "pixels": 580
+     },
+     {
+      "date": "2025-12-05",
+      "ndvi": 0.047,
+      "clear": 1.0,
+      "pixels": 580
+     },
+     {
+      "date": "2025-11-27",
+      "ndvi": 0.118,
+      "clear": 1.0,
+      "pixels": 580
+     }
+    ]
+   },
+   "previous": {
+    "ndvi": 0.2571,
+    "date": "2024-11-05",
+    "clear": 1.0,
+    "of_scenes": 5,
+    "scenes": [
+     {
+      "date": "2024-12-15",
+      "ndvi": 0.137,
+      "clear": 1.0,
+      "pixels": 580
+     },
+     {
+      "date": "2024-11-20",
+      "ndvi": 0.11,
+      "clear": 1.0,
+      "pixels": 580
+     },
+     {
+      "date": "2024-11-10",
+      "ndvi": 0.173,
+      "clear": 1.0,
+      "pixels": 580
+     },
+     {
+      "date": "2024-11-05",
+      "ndvi": 0.257,
+      "clear": 1.0,
+      "pixels": 580
+     },
+     {
+      "date": "2024-10-31",
+      "ndvi": 0.19,
+      "clear": 0.883,
+      "pixels": 512
+     }
+    ]
+   },
+   "previous_verdict": "water_before_and_now",
+   "radar": {
+    "vv_vh_db": 2.77,
+    "date": "2025-12-13",
+    "pixels": 594
+   },
+   "chip": "KOL-011-2025.jpg",
+   "chip_before": "KOL-011-base2020.jpg"
+  }
+ ]
+}
