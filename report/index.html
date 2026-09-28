@@ -78,15 +78,15 @@
 <div class="wrap">
   <p class="eyebrow">AI Living Labs &middot; platform test &middot; 24&ndash;25 Aug 2026</p>
   <h1>AquaWatch, statewide</h1>
-  <p class="dek">The first whole-state map of Andhra Pradesh coastal aquaculture, detected from Sentinel-1 radar and run end to end on the sovereign AI Labs cluster. Sixty coastal belts, one seasonal pass, sea artefacts removed.</p>
+  <p class="dek">The first whole-state map of Andhra Pradesh coastal aquaculture, detected from Sentinel-1 radar and run end to end on the sovereign AI Labs cluster. Sixty coastal belts, one seasonal pass.</p>
 
   <div class="band">
-    <div class="cell"><div class="n">~115,900 ha</div><div class="l">aquaculture detected &middot; 2024 season</div></div>
+    <div class="cell"><div class="n">~1,32,100 ha</div><div class="l">aquaculture detected &middot; 2025 season</div></div>
     <div class="cell"><div class="n">59</div><div class="l">coastal belts &middot; 7 districts</div></div>
     <div class="cell"><div class="n">4 / 4</div><div class="l">platform gates passed</div></div>
   </div>
 
-  <p class="sub" style="margin-top:-4px;font-size:13px;opacity:.9">The figure above is the <b>2024 season</b>. Across the decade the footprint runs about 1.0&ndash;1.3 lakh ha, rising to <b>~1,31,600 ha by 2026</b> (up ~29%) &mdash; see the trend below.</p>
+  <p class="sub" style="margin-top:-4px;font-size:13px;opacity:.9">The figure above is the <b>2025 season</b>, the last complete one. Across the decade the footprint runs about 1.0&ndash;1.3 lakh ha. Measured like for like &mdash; on the 43 belts with ten satellite passes and one unchanged footprint in every year &mdash; the rise from 2017 to 2025 is <b>about 11%</b>. A 2026 figure is not quoted here: that season is still in progress with seven passes against ten, and extents from a partial stack move substantially as more passes arrive.</p>
 
   <section>
     <h2>Proven on the sovereign cluster</h2>
@@ -301,13 +301,13 @@
         </table>
       </div>
     </div>
-    <p class="note">A first estimate, not yet ground-truthed. This is one season (Jun&ndash;Nov 2024). The southern (Nellore, Prakasam) and northern (Srikakulam) grid boxes likely under-count; the dense delta belts are solid. Open-sea artefacts have been removed by excluding water bodies that run off the belt edge.</p>
+    <p class="note">A first estimate, not yet ground-truthed. This is one season (Jun&ndash;Nov 2025). The southern (Nellore, Prakasam) and northern (Srikakulam) grid boxes likely under-count; the dense delta belts are solid. Open-sea artefacts are removed two ways: water bodies that run off the belt edge are excluded, and, since calm sea also breaks into smooth patches that pass the pond shape tests offshore, detections inside a texture-derived sea mask are dropped. That second filter matters more than expected &mdash; on one East Godavari belt it removed 1,586 ha from 2025 and 0.1 ha from 2017, so leaving it out had been inflating growth.</p>
   </section>
 
 
   <section>
     <h2>The decade trend</h2>
-    <p class="sub">Ten annual estimates, 2017 to 2026. Individual years are noisy, but the trend is a clear rise of about 29% over the decade.</p>
+    <p class="sub">Annual estimates, 2017 to 2026. Individual years are genuinely noisy &mdash; 2019 and 2022 both sit below 2017 &mdash; and the points are not all measured on the same footing: fourteen of sixty belts changed footprint between 2017 and 2025, and 2026 is a partial season. On the 43 belts that are comparable throughout, the rise from 2017 to 2025 is about 11%.</p>
     <div class="mapcard" style="background:var(--surface);border:1px solid var(--hair);box-shadow:none;padding:20px 22px 10px">
 <svg viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" width="100%" role="img" aria-label="Statewide aquaculture extent per year 2017 to 2026, noisy annual points with an upward trend line, net plus 29 percent">
 <defs><linearGradient id="tf" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--accent)" stop-opacity="0.16"/><stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>
@@ -336,7 +336,8 @@
 <line x1="58" y1="109" x2="660" y2="55" stroke="var(--accent)" stroke-width="2.6" stroke-dasharray="7 5" stroke-linecap="round"/>
 <text x="60" y="93" fill="var(--ink)" font-size="12" font-weight="500" font-family="var(--mono)">101,681</text>
 <text x="658" y="42" text-anchor="end" fill="var(--ink)" font-size="12" font-weight="500" font-family="var(--mono)">131,573</text>
-<text x="593" y="51" text-anchor="middle" fill="var(--accent-ink)" font-size="11" font-family="var(--mono)">trend +29% / decade</text>
+<text x="658" y="56" text-anchor="end" fill="var(--muted)" font-size="9.5" font-family="var(--mono)">2026 provisional &middot; 7 of 10 passes</text>
+<text x="593" y="51" text-anchor="middle" fill="var(--accent-ink)" font-size="11" font-family="var(--mono)">+11% on comparable belts</text>
 <text x="58" y="306" text-anchor="middle" fill="var(--muted)" font-size="11" font-family="var(--mono)">2017</text>
 <text x="192" y="306" text-anchor="middle" fill="var(--muted)" font-size="11" font-family="var(--mono)">2019</text>
 <text x="326" y="306" text-anchor="middle" fill="var(--muted)" font-size="11" font-family="var(--mono)">2021</text>
@@ -356,7 +357,7 @@
       <thead><tr><th>Measure</th><th>Before</th><th>After</th></tr></thead>
       <tbody>
         <tr><td>Belts processed</td><td>4</td><td>59, statewide</td></tr>
-        <tr><td>Statewide extent</td><td>none</td><td>~115,900 ha</td></tr>
+        <tr><td>Statewide extent</td><td>none</td><td>~1,32,100 ha (2025)</td></tr>
         <tr><td>Kolleru belt</td><td>15,761.9 ha</td><td>15,761.9 ha, unchanged</td></tr>
         <tr><td>Run on the AP cluster</td><td>no</td><td>yes, all gates passed</td></tr>
         <tr><td>U-Net training</td><td>laptop only</td><td>on the L40S GPU</td></tr>
@@ -369,7 +370,7 @@
     <h2>Where it stands</h2>
     <p class="sub">The heavy runs are done and running live. What is left needs data from the state side.</p>
     <div class="next">
-      <div class="ncard"><p class="k">Decade &mdash; done</p><p><b>2017 to 2026 on the cluster.</b> The trend above is a real ten-year radar series, up about 29%, not a single snapshot.</p></div>
+      <div class="ncard"><p class="k">Decade &mdash; done</p><p><b>2017 to 2026 on the cluster.</b> The trend above is a real ten-year radar series rather than a single snapshot. On belts comparable across every year it rises about 11%; 2026 is excluded as a partial season.</p></div>
       <div class="ncard"><p class="k">Model &mdash; done &amp; live</p><p><b>Trained at scale.</b> A U-Net on 75,000 tiles agrees with the OBIA detector about 90% (F1) on belts it never saw, and is set to re-run weekly on each new satellite pass. That figure is agreement between two automatic methods, not accuracy against the ground &mdash; the hand-checked measurement is underway and is reported separately below.</p></div>
       <div class="ncard"><p class="k">Validation &mdash; under way</p><p><b>Ground truth.</b> Detections are now being checked by eye against cloud-free Sentinel-2 optical, sampled by region and scored blind, so precision and recall can be stated against the ground rather than against another algorithm. Until that lands, no figure here should be quoted as final for enforcement.</p></div>
       <div class="ncard"><p class="k">Compliance &mdash; next</p><p><b>Connect the register.</b> With the APSADA farm licences and protected-zone boundaries, the tool flags unpermitted ponds, not just detects them.</p></div>
