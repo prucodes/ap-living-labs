@@ -5,8 +5,8 @@ Method    : object-based detection on multi-pass SAR
 Sensor    : Sentinel-1 RTC (VV), 10 m, Microsoft Planetary Computer
 CRS       : EPSG:4326 (WGS84 lon/lat)
 Min area  : 0.25 ha
-Features  : 10,658  (see caveat: some are merged farm blocks)
-Total area: 28,323.9 ha
+Features  : 10,579  (see caveat: some are merged farm blocks)
+Total area: 28,106.8 ha
 
 IMPORTANT
 ---------

@@ -1,0 +1,42 @@
+{
+ "tag": "east_12",
+ "years": [
+  2017,
+  2025
+ ],
+ "shared_stretch_db": [
+  -19.36,
+  -4.89
+ ],
+ "footprint_px": [
+  2226,
+  2147
+ ],
+ "tint_alpha": 0.42,
+ "frames": {
+  "2017": {
+   "file": "east_12_2017.jpg",
+   "hectares": 2408.1,
+   "bytes": 672298,
+   "px": [
+    1452,
+    1400
+   ]
+  },
+  "2025": {
+   "file": "east_12_2025.jpg",
+   "hectares": 2816.5,
+   "bytes": 687353,
+   "px": [
+    1452,
+    1400
+   ]
+  }
+ },
+ "sea_removed_ha": {
+  "2017": 0.1,
+  "2025": 1586.5
+ },
+ "growth_ha": 408.4,
+ "growth_pct": 17.0
+}
