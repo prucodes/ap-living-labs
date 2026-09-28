@@ -1,13 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32"
-     role="img" aria-label="AquaWatch: a pond under observation">
-  <!-- The console's own pond-selection reticle, so the icon and the UI share a
-       language. The centre is a rounded POND rather than a dot: the mark reads as
-       "a pond under observation", not a generic target. The ring is thick and the
-       ticks long because both must survive 16px. -->
-  <rect width="32" height="32" rx="7" fill="#0a1217"/>
-  <circle cx="16" cy="16" r="9.5" fill="#13313e" stroke="#2e7a96" stroke-width="2.2"/>
-  <rect x="12" y="12.8" width="8" height="6.4" rx="1.4" fill="#7fe4ff"/>
-  <g stroke="#7fe4ff" stroke-width="2.4" stroke-linecap="round">
-    <path d="M16 1.5v4.5M16 26v4.5M1.5 16h4.5M26 16h4.5"/>
+     role="img" aria-label="AquaWatch: aquaculture ponds seen from above, one detected">
+  <!-- The subject drawn literally: an overhead block of bunded aquaculture ponds,
+       which is exactly what the SAR detector sees. Sizes are deliberately uneven,
+       because real pond blocks are; a tidy 2x2 grid reads as a generic icon.
+       The cyan cell is a detection, which is the product in one mark. -->
+  <rect width="32" height="32" rx="6" fill="#0b1418"/>
+  <g fill="#17323d">
+    <rect x="3"  y="3"  width="12" height="10" rx="1.5"/>
+    <rect x="3"  y="15" width="12" height="14" rx="1.5"/>
+    <rect x="17" y="15" width="12" height="6"  rx="1.5"/>
+    <rect x="17" y="23" width="12" height="6"  rx="1.5"/>
   </g>
+  <!-- detected pond -->
+  <rect x="17" y="3" width="12" height="10" rx="1.5" fill="#7fe4ff"/>
 </svg>
