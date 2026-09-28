@@ -52,6 +52,35 @@
   .iconbtn.on{border-color:var(--line2);color:var(--cyb);background:var(--cy-dim)}
   @media(max-width:1080px){.sel{display:none}}
 
+
+  /* --- download panel: one control in the bar, no per-card clutter --- */
+  .dlwrap{position:fixed;inset:0;z-index:600;display:none;background:rgba(2,8,14,.55)}
+  .dlwrap.on{display:block}
+  .dlpanel{position:absolute;top:56px;right:14px;width:min(408px,calc(100vw - 28px));
+    max-height:min(74vh,660px);overflow:auto;background:rgba(6,17,29,.97);
+    border:1px solid var(--line2);border-radius:12px;padding:16px 16px 13px;
+    box-shadow:0 22px 60px rgba(0,0,0,.6)}
+  .dlpanel h4{margin:0 0 3px;font-size:13px;font-weight:600;color:var(--ink);letter-spacing:.01em}
+  .dlpanel .dsub{font-size:11.5px;color:var(--mut);line-height:1.5;margin:0 0 11px}
+  .dlpanel .warn{font-size:10.5px;line-height:1.55;color:#ffcf96;background:rgba(255,180,84,.08);
+    border:1px solid rgba(255,180,84,.26);border-radius:7px;padding:8px 10px;margin:0 0 12px}
+  .dlrow{display:flex;align-items:center;gap:10px;padding:8px 9px;border-radius:8px;
+    border:1px solid transparent;text-decoration:none;color:var(--ink2);transition:.14s}
+  .dlrow:hover{background:var(--glass2);border-color:var(--line);color:var(--ink)}
+  .dlrow .nm{flex:1;font-size:12.5px;text-transform:capitalize}
+  .dlrow .mt{font-family:var(--mono);font-size:10px;color:var(--mut);
+    font-variant-numeric:tabular-nums;white-space:nowrap}
+  .dlrow .arw{color:var(--cy);opacity:.55;font-size:12px}
+  .dlrow:hover .arw{opacity:1}
+  .dlrow.all{border-color:var(--line2);background:var(--cy-dim);color:var(--ink);margin-bottom:9px}
+  .dlsep{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);
+    margin:4px 0 5px;padding:0 9px}
+  .dlfoot{font-size:10.5px;color:var(--faint);line-height:1.55;margin-top:11px;
+    border-top:1px solid var(--line);padding-top:10px}
+  .dlx{position:absolute;top:11px;right:12px;border:0;background:none;color:var(--mut);
+    font-size:17px;cursor:pointer;line-height:1}
+  .dlx:hover{color:var(--ink)}
+
   .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border-bottom:1px solid var(--line);z-index:20;flex-shrink:0}
   .kpi{background:rgba(5,15,26,.94);padding:11px 18px 10px;display:flex;align-items:baseline;gap:9px}
   .kpi .v{font-family:var(--mono);font-size:19px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:#fff}
@@ -604,6 +633,7 @@
     <button class="iconbtn" id="bD" onclick="tog('d')" title="Record details (right panel)" aria-label="Toggle record details"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="3" width="13" height="10" rx="1.6" stroke="currentColor" stroke-width="1.3"/><rect x="9.9" y="3.9" width="3.7" height="8.2" rx="0.9" fill="currentColor"/></svg></button>
     <button class="iconbtn" id="teBtn" onclick="toggleTelugu()" title="Telugu / &#3108;&#3142;">&#3108;&#3142;</button>
     <button class="iconbtn" id="tblBtn" onclick="toggleTable()" title="Table view">&#9638;</button>
+    <button class="iconbtn" id="dlBtn" onclick="toggleDownload()" title="Download detections (GeoJSON for QGIS / ArcGIS)" aria-label="Download detections"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4.6 7.2 8 10.6l3.4-3.4" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.6 12.4h10.8" stroke="currentColor" stroke-width="1.35" stroke-linecap="round"/></svg></button>
     <button class="iconbtn" id="intBtn" onclick="toggleIntel()" title="Intelligence — compliance, economy, environment, biosecurity">&#9650;</button>
     <button class="iconbtn" id="heroBtn" onclick="heroMap()" title="Focus map — hide both panels">⛶</button>
     <button class="iconbtn" id="wallBtn" onclick="wallMode()" title="Wall mode — ambient room display (W)">◉</button>
@@ -3245,5 +3275,64 @@ function openStatewide(){var o=document.getElementById('swOverlay');o.classList.
 function closeStatewide(){var o=document.getElementById('swOverlay');o.classList.remove('on');o.style.display='none';swStop();swTipHide();}
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){var o=document.getElementById('swOverlay');if(o&&o.style.display==='flex')closeStatewide();}});
 </script>
+
+<div class="dlwrap" id="dlWrap" onclick="if(event.target===this)toggleDownload()">
+  <div class="dlpanel" role="dialog" aria-label="Download detections">
+    <button class="dlx" onclick="toggleDownload()" aria-label="Close">&times;</button>
+    <h4>Download detections</h4>
+    <p class="dsub">Detected water-body polygons in GeoJSON (EPSG:4326). Opens directly in
+      QGIS, ArcGIS or any GIS &mdash; drop it over your own cadastral or CRZ layers.</p>
+    <div class="warn"><b>These are detections, not a survey.</b> Boundaries are
+      raster-derived at 10&nbsp;m and approximate, and adjacent ponds sharing a bund merge
+      into one polygon &mdash; so the feature count is a lower bound on ponds and
+      <b>area is the reliable quantity</b>. Accuracy against the ground is still being
+      measured. Not sole evidence for enforcement or any determination of ownership,
+      extent or permitting.</div>
+    <div id="dlList"><p class="dsub" style="margin:0">Loading&hellip;</p></div>
+    <div class="dlfoot">Sentinel-1 RTC (VV), 10&nbsp;m, via Microsoft Planetary Computer.
+      Ponds below 0.25&nbsp;ha are excluded. Each file carries the caveat in its
+      metadata; see README.txt in the same folder.</div>
+  </div>
+</div>
+<script>
+function toggleDownload(){
+  var w=document.getElementById('dlWrap'), on=!w.classList.contains('on');
+  w.classList.toggle('on',on);
+  var b=document.getElementById('dlBtn'); if(b) b.classList.toggle('on',on);
+  if(on) dlLoad();
+}
+var _dlDone=false;
+function dlKB(b){ return b>=1048576 ? (b/1048576).toFixed(1)+' MB' : Math.round(b/1024)+' KB'; }
+function dlLoad(){
+  if(_dlDone) return; _dlDone=true;
+  var el=document.getElementById('dlList');
+  fetch('data/ponds/index.json').then(function(r){
+    if(!r.ok) throw new Error(r.status); return r.json();
+  }).then(function(d){
+    var h='';
+    h+='<a class="dlrow all" href="data/ponds/'+d.all.file+'" download>'
+      +'<span class="nm">All belts</span><span class="mt">'
+      +d.all.features.toLocaleString('en-IN')+' features &middot; '+dlKB(d.all.bytes)
+      +'</span><span class="arw">&darr;</span></a>';
+    h+='<div class="dlsep">By belt</div>';
+    d.belts.slice().sort(function(a,b){return b.hectares-a.hectares;}).forEach(function(b){
+      h+='<a class="dlrow" href="data/ponds/'+b.file+'" download>'
+        +'<span class="nm">'+b.belt+'</span><span class="mt">'
+        +b.features.toLocaleString('en-IN')+' &middot; '
+        +Math.round(b.hectares).toLocaleString('en-IN')+' ha &middot; '+dlKB(b.bytes)
+        +'</span><span class="arw">&darr;</span></a>';
+    });
+    el.innerHTML=h;
+  }).catch(function(e){
+    el.innerHTML='<p class="dsub" style="margin:0">Downloads are unavailable here '
+      +'(the data folder did not load). They ship with the deployed console.</p>';
+    _dlDone=false;
+  });
+}
+addEventListener('keydown',function(e){
+  if(e.key==='Escape'&&document.getElementById('dlWrap').classList.contains('on')) toggleDownload();
+});
+</script>
+
 </body>
 </html>

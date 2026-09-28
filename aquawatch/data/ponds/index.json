@@ -1,0 +1,76 @@
+{
+ "source": "obia",
+ "min_area_ha": 0.25,
+ "caveat": "Automatic detections from Sentinel-1 SAR, not a cadastral or surveyed product. Boundaries are raster-derived at 10 m and are approximate. Accuracy is still being measured against hand-checked optical imagery; the previously published F1 ~0.90 is agreement with the OBIA detector, NOT accuracy against the ground. Adjacent ponds that share a bund merge into ONE polygon, so a feature can be a farm block rather than a single pond: the feature count is a lower bound on the number of ponds, and area is the reliable quantity. Do not use as sole evidence for enforcement or for any legal determination of ownership, extent or permitting status.",
+ "all": {
+  "file": "aquawatch_ponds_obia.geojson",
+  "features": 10658,
+  "hectares": 28323.9,
+  "bytes": 9725961
+ },
+ "belts": [
+  {
+   "belt": "kolleru",
+   "file": "ponds_kolleru.geojson",
+   "features": 4273,
+   "hectares": 15604.7,
+   "bytes": 4546625
+  },
+  {
+   "belt": "bhimavaram",
+   "file": "ponds_bhimavaram.geojson",
+   "features": 3795,
+   "hectares": 6761.1,
+   "bytes": 2946366
+  },
+  {
+   "belt": "machilipatnam",
+   "file": "ponds_machilipatnam.geojson",
+   "features": 1571,
+   "hectares": 4189.9,
+   "bytes": 1409685
+  },
+  {
+   "belt": "kakinada",
+   "file": "ponds_kakinada.geojson",
+   "features": 323,
+   "hectares": 671.4,
+   "bytes": 244724
+  },
+  {
+   "belt": "konaseema",
+   "file": "ponds_konaseema.geojson",
+   "features": 266,
+   "hectares": 390.8,
+   "bytes": 217001
+  },
+  {
+   "belt": "nellore",
+   "file": "ponds_nellore.geojson",
+   "features": 2,
+   "hectares": 133.8,
+   "bytes": 29279
+  },
+  {
+   "belt": "ongole",
+   "file": "ponds_ongole.geojson",
+   "features": 194,
+   "hectares": 335.4,
+   "bytes": 167226
+  },
+  {
+   "belt": "tuni",
+   "file": "ponds_tuni.geojson",
+   "features": 216,
+   "hectares": 225.8,
+   "bytes": 161462
+  },
+  {
+   "belt": "bapatla",
+   "file": "ponds_bapatla.geojson",
+   "features": 18,
+   "hectares": 10.7,
+   "bytes": 11635
+  }
+ ]
+}
