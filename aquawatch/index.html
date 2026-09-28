@@ -848,7 +848,7 @@ var clusters=[
  {id:"konaseema",lon:82.00,lat:16.63,r:.150,true_:28400,u:.34,p:.03,label:"Amalapuram · Konaseema",short:"KONASEEMA",real_ha:390,under:1},
  {id:"bhimavaram",lon:81.53,lat:16.52,r:.145,true_:26700,u:.30,p:.02,label:"Bhimavaram · W. Godavari",short:"BHIMAVARAM",real_ha:6942},
  {id:"kolleru",lon:81.215,lat:16.645,r:.215,ring:.56,true_:21900,u:.22,p:.09,label:"Kaikaluru · Eluru",short:"KOLLERU",real_ha:15762},
- {id:"machilipatnam",lon:81.14,lat:16.26,r:.130,true_:19600,u:.35,p:.05,label:"Machilipatnam · Krishna",short:"MACHILIPATNAM",real_ha:3299,val:1},
+ {id:"machilipatnam",lon:81.14,lat:16.26,r:.130,true_:19600,u:.35,p:.05,label:"Machilipatnam · Krishna",short:"MACHILIPATNAM",real_ha:4327,val:1},
  {id:"kolleru_se",lon:81.40,lat:16.40,r:.100,true_:9000,u:.24,p:.03,amb:1,real_ha:12639},
  {id:"godavari_mid",lon:81.80,lat:16.40,r:.070,true_:1300,u:.22,p:.03,amb:1,real_ha:1292}];
 var order=["kakinada","konaseema","bhimavaram","kolleru","machilipatnam"];
@@ -2728,7 +2728,7 @@ function drawLabels(){
       if(x<-80||x>w+80||y<-40||y>h+40)return;
       /* belt cards quote extent too — a pond count is not defensible at 10 m */
       var t1=teluguOn?(TEPLACE[c.short]||c.short):c.short;
-      var t4=(c.real_ha?("◉ "+fmt(c.real_ha)+" ha · "+(c.val?"validated":(c.under?"under-count":"detected"))):"");
+      var t4=(c.real_ha?("◉ "+fmt(c.real_ha)+" ha · "+(c.val?"pilot hand-checked":(c.under?"under-count":"detected"))):"");
       var fT=(10*S).toFixed(1), fS=(9.5*S).toFixed(1), fXs=(9*S).toFixed(1);
       lctx.font="700 "+fT+"px ui-monospace,Menlo,monospace";
       var tw=Math.max(lctx.measureText(t1).width,MINW);
