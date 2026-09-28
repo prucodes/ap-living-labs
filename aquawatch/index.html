@@ -596,7 +596,7 @@
     <div><span class="name">AquaWatch AP</span><span class="sub">Pond Intelligence · Concept</span></div>
   </div>
   <button class="demo-chip" onclick="openHelp()"><span class="long">Mixed data — </span>what's real?</button>
-  <span class="real-pill" title="Real pond footprints from OpenStreetMap (ODbL)">1,660 verified footprints</span>
+  <span class="real-pill" title="Real pond footprints from OpenStreetMap (ODbL). Mapped by OSM contributors, not independently checked by us.">1,660 mapped footprints &middot; OSM</span>
   <div class="bar-right">
     <span class="sel sat" title="Illustrative. Sentinel-1 revisits this area about every 7 days; imagery is pulled from the archive, not streamed live."><i class="orb"></i>S-1 next pass <b>2d 06h</b></span>
     <span class="sel">Season <b id="hdrSeason">Kharif 2026</b></span>
@@ -2128,7 +2128,7 @@ function renderIntel(){
    +'<div class="ibig">'+fmt(prod)+'<s>k tonnes / season</s></div>'
    + iarea([26,44,70,94,86,52,24,36,64,90,72,42],{w:300,h:72,col:"#6fd3a6"})
    +'<div class="ilegend"><span><i style="background:#6fd3a6"></i>stocking to harvest, read from radar backscatter</span></div>'
-   +'<div class="inote">From <b>'+fmt(haTot)+' ha</b> of mapped water. <b>'+fmt(credit)+' ha</b> is satellite-verified, '
+   +'<div class="inote">From <b>'+fmt(haTot)+' ha</b> of mapped water. <b>'+fmt(credit)+' ha</b> is satellite-mapped, '
    +'the evidence a lender or insurer needs to underwrite a pond.</div></div>'
 
    +'<div class="ipanel sp4" style="--ac:#ef7266"><h4><i></i>Environmental impact</h4>'
@@ -2292,7 +2292,7 @@ function seedBeams(dt){
    detections it crosses scroll as a live feed, and the seasons loop. Nothing
    here is faked as real-time: it says plainly that it is replaying the archive. */
 var WALL=false, wallTimers=[], WALL_SPEED=1, lastBeamT=0;
-var STAT_TXT={m:"registered",u:"no registry match",p:"inside protected zone",r:"verified footprint"};
+var STAT_TXT={m:"registered",u:"no registry match",p:"inside protected zone",r:"OSM footprint"};
 function wallMode(on){
   WALL=(on===undefined)?!WALL:!!on;
   document.body.classList.toggle("wallon",WALL);
@@ -2873,7 +2873,7 @@ function drawLabels(){
       var tx=(tv2.x*.5+.5)*w, ty=(-tv2.y*.5+.5)*h;
       var pid=selPond.real?("OSM-"+String(selPond.i-100000+1).padStart(4,"0"))
               :("AP-"+String(100000+selPond.i*7%899999).slice(0,6));
-      var l2=selPond.area.toFixed(2)+" ha"+(selPond.real?" · verified":"");
+      var l2=selPond.area.toFixed(2)+" ha"+(selPond.real?" · OSM":"");
       lctx.save();
       /* leader line from the reticle up to the callout */
       lctx.strokeStyle="rgba(190,240,255,.55)";lctx.lineWidth=1;
