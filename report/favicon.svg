@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32"
+     role="img" aria-label="AquaWatch: aquaculture ponds seen from above, one detected">
+  <!-- The subject drawn literally: an overhead block of bunded aquaculture ponds,
+       which is exactly what the SAR detector sees. Sizes are deliberately uneven,
+       because real pond blocks are; a tidy 2x2 grid reads as a generic icon.
+       The cyan cell is a detection, which is the product in one mark. -->
+  <rect width="32" height="32" rx="6" fill="#0b1418"/>
+  <g fill="#17323d">
+    <rect x="3"  y="3"  width="12" height="10" rx="1.5"/>
+    <rect x="3"  y="15" width="12" height="14" rx="1.5"/>
+    <rect x="17" y="15" width="12" height="6"  rx="1.5"/>
+    <rect x="17" y="23" width="12" height="6"  rx="1.5"/>
+  </g>
+  <!-- detected pond -->
+  <rect x="17" y="3" width="12" height="10" rx="1.5" fill="#7fe4ff"/>
+</svg>
