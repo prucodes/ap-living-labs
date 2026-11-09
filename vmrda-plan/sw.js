@@ -15,7 +15,7 @@
  *
  * Nothing here is written by the page and nothing leaves the device.
  */
-const BUILD = "113246f0e9";
+const BUILD = "6af32b4e2a";
 const SHELL_CACHE = "vmr-shell-" + BUILD;
 const TILE_CACHE = "vmr-tiles-v1";
 const ASSET_CACHE = "vmr-assets-" + BUILD;
@@ -25,7 +25,7 @@ const TILE_CAP = 1400;
  * traced polygons are deliberately not here: they are megabytes each, and the
  * runtime cache picks them up the moment they are actually used. */
 const SHELL = ["./", "./index.html", "./places.json", "./rules.json",
-               "./tanks_all.json"];
+               "./locality_layer.json", "./tanks_all.json"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(SHELL_CACHE)

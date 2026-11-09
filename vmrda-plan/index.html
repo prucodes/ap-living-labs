@@ -807,6 +807,7 @@
   .near>span{flex-basis:100%}
   .near i{font-style:normal;display:inline-flex;align-items:center;gap:5px;padding:3px 8px 3px 6px;border:1px solid rgba(150,200,194,.22);border-radius:99px;color:var(--ink,#dfe8e4)}
   .near i b{width:8px;height:8px;border-radius:2px;flex:none}
+  .near u{flex-basis:100%;text-decoration:none;color:var(--faint);font-size:9.5px;margin-top:1px}
   .glinks{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;margin:10px 0 4px;font-size:10.5px;color:var(--faint)}
   .glinks a{color:var(--cy);text-decoration:none}
   .dl-list{list-style:none;margin:10px 0 12px;padding:0}
@@ -1168,7 +1169,11 @@
         bodies the plan protects, checked against Sentinel-2 at their wettest pass and
         against Sentinel-1 for what is on the bed. <b>73 hold no water</b>: 37 across the
         region and 36 inside the city. Radar finds hard structure on <b>3</b>, so the water
-        is going but it is not being built over.</div></div>
+        is going but it is not being built over. <b>Five of the 73 sit outside the three
+        districts VMRDA governs</b>, four in Kakinada and one in Srikakulam, which is either
+        the sheet reaching past the authority&rsquo;s own area or the georeference drifting at
+        its edge. District lines are from OpenStreetMap and the point carries the same
+        &plusmn;200 m, so treat that count as five rather than exactly five.</div></div>
       <div class="f bad"><span class="m">&times;</span><div><b>73 of the water bodies this
         plan protects hold no water.</b> Press the dot in the toolbar to put them on the sheet,
         or see the full evidence at <a href="../dry-tanks/" style="color:var(--cy)">Missing
@@ -1491,6 +1496,65 @@ var PLACES=[];
 var MOBILE=matchMedia("(max-width:760px)").matches;
 var NDRY=73;
 fetch("places.json").then(function(r){return r.json()}).then(function(j){PLACES=j});
+
+/* Who to ask. Every finding this reader makes is a coordinate, and a coordinate
+   is addressed to nobody. A mandal has a Mandal Revenue Officer and revenue
+   records are kept by mandal and village, which is the authority ZDPR 4.14(a)
+   names as final where water-body records disagree. These are NOT wards. GVMC's
+   120 ward boundaries are not published anywhere, and the 63 ward relations
+   OpenStreetMap carries are a partial copy of the superseded 98-ward scheme. */
+var LOCAL=null;
+function bbL(u){var xs=[],ys=[];u.r.forEach(function(r){r.forEach(function(p){xs.push(p[0]);ys.push(p[1])})});
+  u.bb=[Math.min.apply(null,xs),Math.min.apply(null,ys),Math.max.apply(null,xs),Math.max.apply(null,ys)]}
+fetch("locality_layer.json").then(function(r){return r.json()}).then(function(j){
+  j.units.forEach(bbL);j.districts.forEach(bbL);LOCAL=j}).catch(function(){});
+function inRings(rings,x,y){var hit=false;
+  for(var k=0;k<rings.length;k++){var r=rings[k],n=r.length,j=n-1;
+    for(var i=0;i<n;i++){var xi=r[i][0],yi=r[i][1],xj=r[j][0],yj=r[j][1];
+      if((yi>y)!==(yj>y)&&x<(xj-xi)*(y-yi)/(yj-yi)+xi)hit=!hit;j=i}}
+  return hit}
+function unitAt(list,x,y,lvl){
+  for(var i=0;i<list.length;i++){var u=list[i];
+    if(lvl&&u.l!==lvl)continue;
+    if(x<u.bb[0]||x>u.bb[2]||y<u.bb[1]||y>u.bb[3])continue;
+    if(inRings(u.r,x,y))return u.n}
+  return null}
+/* One containment test would overstate what is known, because the sheet places
+   a point to about 200 m. Sample the error disc instead: the centre plus eight
+   points on the 200 m circle. If they do not all land in the same unit, name
+   every candidate rather than picking one. */
+function localityAt(ll){
+  if(!LOCAL||!ll)return null;
+  var lon=ll[0],lat=ll[1],seen={},order=[],sea=0;
+  var mlon=200/(111320*Math.cos(lat*Math.PI/180)),mlat=200/110574;
+  for(var k=0;k<9;k++){
+    var a=(k-1)*Math.PI/4,x=k?lon+mlon*Math.cos(a):lon,y=k?lat+mlat*Math.sin(a):lat;
+    var n=unitAt(LOCAL.units,x,y,6)||unitAt(LOCAL.units,x,y,8);
+    if(n){if(!seen[n]){seen[n]=1;order.push(n)}}else sea++}
+  var centre=unitAt(LOCAL.units,lon,lat,6)||unitAt(LOCAL.units,lon,lat,8);
+  return {centre:centre,candidates:order,sea:sea,
+          district:unitAt(LOCAL.districts,lon,lat,5),
+          certain:!!centre&&order.length===1&&!sea}}
+function localityLine(res){
+  var L=res&&res.ll?localityAt(res.ll):null;
+  if(!L||(!L.centre&&!L.candidates.length))return null;
+  L.who=L.certain?L.centre:(L.candidates.length?L.candidates.join(" or "):"");
+  L.tail=L.certain?"":(L.centre?"The ±200 m placement error reaches more than one, so every candidate is named."
+        :(L.sea?"The point falls seaward of every land boundary; the nearest are named.":"")); 
+  return L}
+function localityHTML(res){
+  var L=localityLine(res);if(!L)return "";
+  return '<div class="near loc"><span>'+t("Administratively this point reads as")+'</span>'+
+    '<i>'+esc(L.who)+(L.district?' &middot; '+esc(L.district):'')+'</i>'+
+    '<u>'+esc((L.tail?L.tail+" ":"")+"Mandal and district from OpenStreetMap. Not a ward: no GVMC ward boundary is published.")+'</u></div>'}
+function localityReportHTML(res){
+  var L=localityLine(res);if(!L)return "";
+  return '<section class="area-summary" aria-label="Administrative locality"><div class="area-summary-head">'+
+    '<b>Who this point sits under</b><span>OpenStreetMap &middot; ODbL</span></div>'+
+    '<div class="area-summary-grid"><span class="area-chip">'+esc(L.who)+'</span>'+
+    (L.district?'<span class="area-chip">'+esc(L.district)+'</span>':'')+'</div>'+
+    '<p class="area-summary-note">'+esc((L.tail?L.tail+" ":"")+
+    "Mandals are used because GVMC's 120 ward boundaries are not published; the ward relations in OpenStreetMap are a partial copy of the superseded 98-ward scheme and are not used here. A mandal has a Mandal Revenue Officer, and revenue and irrigation records, which the zoning schedule makes final where records disagree, are kept by mandal and village.")+'</p></section>'}
 
 /* ---- tile engine ----------------------------------------------------------
    A single downsampled JPEG went soft the moment you zoomed past its own
@@ -2839,7 +2903,7 @@ function renderRead(res){
   document.getElementById("rP").innerHTML=
     (hit ? tf("Legend class {c} on the {v} sheet.",{c:"<b>"+tz(hit.raw)+"</b>",v:t(VERSIONS[VER].label)})+ringNote(res)+"<br>"
          : "Boundary line work, a label, or outside the plan area.<br>")
-    + evidenceHTML(activeCase(res)) + groundHTML(groundAt(res)) + bothHTML(res) + lawHTML(res.rule) + nearHTML(res) + readActions() + groundLinksHTML(res) + coordHTML(res.ll);
+    + evidenceHTML(activeCase(res)) + groundHTML(groundAt(res)) + bothHTML(res) + lawHTML(res.rule) + localityHTML(res) + nearHTML(res) + readActions() + groundLinksHTML(res) + coordHTML(res.ll);
   document.getElementById("read").classList.add("on");
   document.body.classList.add("reading");
   /* The index sits top-left and the readout bottom-left, and a fixed cap kept
@@ -3631,7 +3695,7 @@ function mAnswer(res){
              {c:'&ldquo;'+tz(hit.raw)+'&rdquo;', v:t(VERSIONS[VER].label)})+ringNote(res)
         : t("Boundary line work, a label, or outside the plan area. Try a few metres away."))+
      '</div>'+
-     evidenceHTML(activeCase(res))+groundHTML(groundAt(res))+bothHTML(res)+lawHTML(res.rule)+nearHTML(res)+readActions()+groundLinksHTML(res);
+     evidenceHTML(activeCase(res))+groundHTML(groundAt(res))+bothHTML(res)+lawHTML(res.rule)+localityHTML(res)+nearHTML(res)+readActions()+groundLinksHTML(res);
   if(res.ll) h+='<a class="mmaps" href="https://www.google.com/maps/@'+
       res.ll[1].toFixed(5)+','+res.ll[0].toFixed(5)+',16z" target="_blank" rel="noopener">'+
       '<code>'+res.ll[1].toFixed(5)+', '+res.ll[0].toFixed(5)+'</code>'+
@@ -4307,7 +4371,7 @@ function openReport(){
     (snap?'<img class="report-map" src="'+snap+'" alt="Map view captured for this review brief"><p class="report-map-caption">Current map view, including active overlays. The marker identifies the selected reading. The sheet is approximately placed on the ground.</p>':'<p>Map image unavailable. Use the reading link to inspect the map.</p>');
   if(res){
     h+='<div class="report-facts"><div class="report-fact"><span>Recovered legend class</span><b>'+esc(res.hit?res.hit.raw:"No readable zone colour")+'</b></div><div class="report-fact"><span>'+esc(OTHER.label||"Other sheet")+'</span><b>'+esc(res.other||"Reading unavailable")+'</b></div></div>';
-    h+=areaSummaryHTML(res)+localityRulesHTML(res);
+    h+=localityReportHTML(res)+areaSummaryHTML(res)+localityRulesHTML(res);
     if(res.ring)h+='<p>'+ringNote(res)+'</p>';
   }else h+='<p>No point is selected. This brief records the current regional view. Select a place to include a zoning reading and schedule entries.</p>';
   h+='<div class="report-limit"><b>Reading limits</b><br>Placement is approximately ±200 m. Recovered areas have 43% median error against the published comparison table. Read the ordering, not recovered totals. Differences between sheets at a point can be registration error. This is an independent reading of an image, not a VMRDA record, parcel determination, approval or enforcement finding.</div>';
