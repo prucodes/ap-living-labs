@@ -675,7 +675,7 @@
 
 <div class="kpis">
   <div class="kpi cy"><span class="v" id="kDet">132,135</span><span class="l">hectares mapped statewide &middot; <b id="kDetYr" style="color:var(--cy);font-weight:600">2025</b></span><span class="ksp" id="sDet"></span></div>
-  <div class="kpi"><span class="v" id="kMat">+19%</span><span class="l" title="Measured on the 46 of 60 belts with 10 satellite passes AND an identical footprint in both years. The remaining belts are not comparable across 2017-2025.">since 2017 &middot; comparable belts</span><span class="ksp" id="sMat"></span></div>
+  <div class="kpi"><span class="v" id="kMat">+11%</span><span class="l" title="Measured on a fixed panel of the 43 belts that have 10 satellite passes and one unchanged footprint in every completed year. 2024 has no per-belt data and 2026 is a partial season, so both are excluded. The other 17 belts are not comparable across 2017-2025.">since 2017 &middot; comparable belts</span><span class="ksp" id="sMat"></span></div>
   <div class="kpi"><span class="v" id="kUnm">60</span><span class="l">coastal belts scanned</span><span class="ksp" id="sUnm"></span></div>
   <div class="kpi"><span class="v" id="kPro">12</span><span class="l">districts covered</span><span class="ksp" id="sPro"></span></div>
 </div>
@@ -837,6 +837,7 @@
       <tr><td>18 of 206 flagged illegal ponds cleared</td><td class="rl">Real · reported</td></tr>
       <tr><td><b>Detector run on real Sentinel-1 imagery</b> — Machilipatnam &amp; Kolleru belts, 10-date stacks</td><td class="rl">Real · pilot, Jul 2026</td></tr>
       <tr><td>Validated vs hand-labelled ground truth (81 ponds, 5.52 km²)</td><td class="rl">Real · F1 ≈ 0.74</td></tr>
+      <tr><td><b>Blind accuracy against hand-checked imagery</b>, 200 labelled sites across 6 belts. 33 were too ambiguous to call and recall is measured only within about 400 m of an existing detection. Any &ldquo;F1 ≈ 0.90&rdquo; quoted for the statewide model is agreement with our own OBIA detector, not accuracy.</td><td class="rl">Real · precision 0.89, recall 0.55</td></tr>
       <tr><td><b>15 sanctuary pond footprints dated against Sentinel-2</b> — none appeared after the 2019-21 baseline</td><td class="rl">Real · measured, Sep 2026</td></tr>
       <tr><td>Statewide inference and per-pond counts</td><td class="pl">Not yet — GPU + higher-res</td></tr>
     </table>
@@ -1897,8 +1898,11 @@ function seasonStats(Y){
    archive years are scaled off the model's own growth, so nothing is inflated. */
 /* Measured statewide pond EXTENT in hectares, 2018-2026 — the AP AI Labs cluster
    run over 60 Sentinel-1 belts (OBIA, VV backscatter). Annual values carry real
-   observational noise (S-1 coverage + seasonal water); the decade slope, +29%
-   across 2017-2026, is the signal. Registry-match and production are illustrative
+   observational noise (S-1 coverage + seasonal water). Do NOT read a trend off
+   this series: across all 60 belts 2017-2025 it comes to +30%, inflated by belts
+   whose footprint changed between years, by the partial 2026 season and by
+   offshore false positives. The growth KPI uses CLEAN_HA below, a fixed 43-belt
+   panel, which gives +11%. Registry-match and production are illustrative
    overlays scaled off the measured extent, not survey figures. HA=0.49 ha is the
    median digitised pond, so extent/HA recovers the pond-count units the setter
    multiplies back — real hectares land on screen unchanged. */

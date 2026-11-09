@@ -94,7 +94,7 @@
     <ul class="gates">
       <li class="gate"><span class="tick">&#10003;</span><div><div class="g1">Outbound egress reaches the satellite source</div><div class="g2">Range reads to Microsoft Planetary Computer and Azure blob, intact</div></div><span class="val">passed</span></li>
       <li class="gate"><span class="tick">&#10003;</span><div><div class="g1">Detection reproduces the validated result</div><div class="g2">Kolleru belt, to the decimal, on-cluster vs laptop</div></div><span class="val">15,761.9 ha</span></li>
-      <li class="gate"><span class="tick">&#10003;</span><div><div class="g1">Neural model trains on the L40S GPU</div><div class="g2">U-Net, 7.7M params, full-decade 75k-tile set. F1 is agreement with the OBIA detector, not measured accuracy</div></div><span class="val">F1 ~0.90 vs OBIA</span></li>
+      <li class="gate"><span class="tick">&#10003;</span><div><div class="g1">Neural model trains on the L40S GPU</div><div class="g2">U-Net, 7.7M params, full-decade 75k-tile set. F1 is agreement with the OBIA detector, not measured accuracy. Blind-checked against 200 hand-labelled sites across six belts, the model reads precision 0.89 and recall 0.55, and it beats the OBIA detector it learned from. 33 sites were too ambiguous to call and recall is measured only within about 400 m of an existing detection.</div></div><span class="val">F1 ~0.90 vs OBIA</span></li>
       <li class="gate"><span class="tick">&#10003;</span><div><div class="g1">Container built and app served from the cluster</div><div class="g2">Image pushed to the internal registry, live behind a route</div></div><span class="val">deployed</span></li>
     </ul>
   </section>
