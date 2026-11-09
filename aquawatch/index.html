@@ -827,7 +827,9 @@
       <tr><td>The remaining pond tiles (the display sample)</td><td class="syn">Synthetic</td></tr>
       <tr><td>Registered / unmatched / protected colouring</td><td class="syn">Synthetic — needs registry</td></tr>
       <tr><td>All counts — 241,860 detected, 53,210 unmatched, belt totals</td><td class="syn">Synthetic</td></tr>
-      <tr><td>The five alerts, their IDs, areas and dates</td><td class="syn">Synthetic</td></tr>
+      <tr><td>Four of the five alerts, their IDs, areas and dates</td><td class="syn">Synthetic</td></tr>
+      <tr><td>AW-KOL-0312 area and dating &mdash; 321&ndash;447 ha, none new since the 2019&ndash;21 baseline</td><td class="rl">Real &middot; measured</td></tr>
+      <tr><td>Every alert's imagery chips and dispatch buttons</td><td class="syn">Synthetic</td></tr>
       <tr><td>Coastline, Godavari distributaries, Kolleru, towns</td><td class="rl">Real geography</td></tr>
       <tr><td>The five aquaculture belts and their locations</td><td class="rl">Real</td></tr>
       <tr><td>2.07 lakh ponds already geo-tagged by the state</td><td class="rl">Real · APSADA</td></tr>
@@ -979,10 +981,10 @@ clusters.forEach(function(c){
 });
 
 var ALERTS=[
- {id:"AW-KOL-0312",sev:"red",type:"Sanctuary-buffer encroachment",cl:"kolleru",
-  verdict:["bad","<b>2,760 ha inside the Kolleru sanctuary buffer.</b> Aquaculture is not permitted here at all — these are violations, not paperwork gaps."],
-  stats:"2,760 ha · 1,842 detections",status:["new","New"],
-  attrs:[["Ponds in buffer","1,842"],["Estimated area","2,760 ha"],["Registry match","none","bad"],["Protected zone","Kolleru WLS buffer","bad"],["First seen","Kharif 2024"],["Change","+214 vs last season","warn"]]},
+ {id:"AW-KOL-0312",sev:"red",type:"Sanctuary aquaculture",cl:"kolleru",
+  verdict:["bad","<b>321 to 447 ha of aquaculture inside the Kolleru sanctuary polygon.</b> This area and its dating are measured, and they are the same figures as the panels further down. None of the 15 pond footprints appeared after the 2019 to 2021 baseline, so this is established rather than recent. The index separates water from not-water and cannot tell a lake from a fish pond, so nothing here identifies a violation. The imagery chips and the dispatch buttons on this card are illustrative."],
+  stats:"321 to 447 ha &middot; 15 pond footprints",status:["pending","Field check"],
+  attrs:[["Pond footprints inside","15"],["Measured area","321 to 447 ha"],["Independent check","8 of 15 at or below the +5 ft contour","ok"],["Boundary used","OSM 622 km&sup2; against 308.55 notified","warn"],["Dated","none new since the 2019-21 baseline"],["Imagery chips below","illustrative","warn"]]},
  {id:"AW-EG-0147",sev:"am",type:"Unregistered cluster",cl:"konaseema",
   verdict:["warn","<b>5,180 ha with no licence on record.</b> Visible from space, absent from the registry — needs field verification before enforcement."],
   stats:"5,180 ha · 3,410 detections",status:["assigned","Assigned"],
