@@ -668,15 +668,15 @@
     <button class="iconbtn" id="intBtn" onclick="toggleIntel()" title="Intelligence — compliance, economy, environment, biosecurity">&#9650;</button>
     <button class="iconbtn" id="heroBtn" onclick="heroMap()" title="Focus map — hide both panels">⛶</button>
     <button class="iconbtn" id="wallBtn" onclick="wallMode()" title="Wall mode — ambient room display (W)">◉</button>
-     <button class="iconbtn" id="swBtn" onclick="openStatewide()" title="Statewide footprint — all 45 belts, 12 districts">◈</button>
+     <button class="iconbtn" id="swBtn" onclick="openStatewide()" title="Statewide footprint — 51 belts with aquaculture, 12 districts">◈</button>
     <button class="iconbtn" onclick="openHelp()" title="How to read this">?</button>
   </div>
 </header>
 
 <div class="kpis">
   <div class="kpi cy"><span class="v" id="kDet">132,135</span><span class="l">hectares mapped statewide &middot; <b id="kDetYr" style="color:var(--cy);font-weight:600">2025</b></span><span class="ksp" id="sDet"></span></div>
-  <div class="kpi"><span class="v" id="kMat">+11%</span><span class="l" title="Measured on a fixed panel of the 43 belts that have 10 satellite passes and one unchanged footprint in every completed year. 2024 has no per-belt data and 2026 is a partial season, so both are excluded. The other 17 belts are not comparable across 2017-2025.">since 2017 &middot; comparable belts</span><span class="ksp" id="sMat"></span></div>
-  <div class="kpi"><span class="v" id="kUnm">60</span><span class="l">coastal belts scanned</span><span class="ksp" id="sUnm"></span></div>
+  <div class="kpi"><span class="v" id="kMat">+11%</span><span class="l" title="Measured on a fixed panel of the 43 belts that have 10 satellite passes and one unchanged footprint in every completed year, with offshore detections removed. 2024 has no per-belt data and 2026 is a partial season, so both are excluded. The other 17 belts are not comparable across 2017-2025. This read +11% before the sea mask; it lands in nearly the same place for different reasons, because the old figure carried offshore false positives at both ends.">since 2017 &middot; comparable belts</span><span class="ksp" id="sMat"></span></div>
+  <div class="kpi"><span class="v" id="kUnm">49</span><span class="l" title="60 belts are scanned; 49 of them contain land. The other 11 are open sea, classified from dry-season imagery, and now contribute nothing. They previously reported about 29,000 ha of monsoon sea speckle as aquaculture.">coastal belts with land &middot; of 60 scanned</span><span class="ksp" id="sUnm"></span></div>
   <div class="kpi"><span class="v" id="kPro">12</span><span class="l">districts covered</span><span class="ksp" id="sPro"></span></div>
 </div>
 
@@ -684,7 +684,7 @@
 <div class="tl" id="tl">
   <button class="tlplay" id="tlPlay" title="Play 2018 → 2026" aria-label="Play seasons">
     <svg viewBox="0 0 16 16" fill="currentColor" id="tlIc"><path d="M5 3.5v9l7-4.5z"/></svg></button>
-  <div class="tlyear"><b id="tlYear">2026</b><span id="tlSeason">Kharif</span><span id="tlProv" title="2026 is still in progress: 7 satellite passes so far against 10 in a completed year. Extents from a partial season move substantially as more passes arrive and are not comparable with earlier years." style="display:none;margin-left:7px;font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:#ffcf96;border:1px solid rgba(255,180,84,.42);background:rgba(255,180,84,.11);border-radius:4px;padding:2px 5px;vertical-align:middle">provisional</span></div>
+  <div class="tlyear"><b id="tlYear">2026</b><span id="tlSeason">Kharif</span><span id="tlNoRun" title="No per-belt run exists for 2024, so there is no measured extent for that season. The chart line is drawn straight across it; the figure above reads &ldquo;no data&rdquo; rather than an estimate." style="display:none;margin-left:7px;font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:#cfd6e4;border:1px solid rgba(207,214,228,.42);background:rgba(207,214,228,.11);border-radius:4px;padding:2px 5px;vertical-align:middle">not surveyed</span><span id="tlProv" title="2026 is still in progress: 7 satellite passes so far against 10 in a completed year. Extents from a partial season move substantially as more passes arrive and are not comparable with earlier years." style="display:none;margin-left:7px;font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:#ffcf96;border:1px solid rgba(255,180,84,.42);background:rgba(255,180,84,.11);border-radius:4px;padding:2px 5px;vertical-align:middle">provisional</span></div>
   <div class="tltrack" id="tlTrack">
     <svg class="tlchart" id="tlChart" preserveAspectRatio="none" aria-hidden="true"></svg>
     <input type="range" id="tlRange" min="2018" max="2026" step="1" value="2025" aria-label="Season">
@@ -779,7 +779,7 @@
         <div class="wm hero"><span>Coastal belts scanned</span><b id="wPro">60</b></div>
         <div class="wm"><span>Hectares mapped</span><b id="wDet">0</b></div>
         <div class="wm"><span>Hectares added since 2017</span><b id="wUnm">0</b></div>
-        <div class="wm meas"><span>Active aquaculture belts</span><b id="wHa">45</b></div>
+        <div class="wm meas"><span>Active aquaculture belts</span><b id="wHa">51</b></div>
       </div>
     </div>
 
@@ -837,7 +837,7 @@
       <tr><td>18 of 206 flagged illegal ponds cleared</td><td class="rl">Real · reported</td></tr>
       <tr><td><b>Detector run on real Sentinel-1 imagery</b> — Machilipatnam &amp; Kolleru belts, 10-date stacks</td><td class="rl">Real · pilot, Jul 2026</td></tr>
       <tr><td>Validated vs hand-labelled ground truth (81 ponds, 5.52 km²)</td><td class="rl">Real · F1 ≈ 0.74</td></tr>
-      <tr><td><b>Blind accuracy against hand-checked imagery</b>, 200 labelled sites across 6 belts. 33 were too ambiguous to call and recall is measured only within about 400 m of an existing detection. Any &ldquo;F1 ≈ 0.90&rdquo; quoted for the statewide model is agreement with our own OBIA detector, not accuracy.</td><td class="rl">Real · precision 0.89, recall 0.55</td></tr>
+      <tr><td><b>Blind accuracy against hand-checked imagery</b>, 200 labelled sites across 6 belts. 33 were too ambiguous to call and recall is measured only within about 400 m of an existing detection. All six labelled belts are inland, so this measurement could not and did not catch the offshore false positives found in November. Any &ldquo;F1 ≈ 0.90&rdquo; quoted for the statewide model is agreement with our own OBIA detector, not accuracy.</td><td class="rl">Real · precision 0.89, recall 0.55</td></tr>
       <tr><td><b>15 sanctuary pond footprints dated against Sentinel-2</b> — none appeared after the 2019-21 baseline</td><td class="rl">Real · measured, Sep 2026</td></tr>
       <tr><td>Statewide inference and per-pond counts</td><td class="pl">Not yet — GPU + higher-res</td></tr>
     </table>
@@ -1896,28 +1896,47 @@ function seasonStats(Y){
 }
 /* the console's published statewide figures are the current-season anchor; the
    archive years are scaled off the model's own growth, so nothing is inflated. */
-/* Measured statewide pond EXTENT in hectares, 2018-2026 — the AP AI Labs cluster
-   run over 60 Sentinel-1 belts (OBIA, VV backscatter). Annual values carry real
-   observational noise (S-1 coverage + seasonal water). Do NOT read a trend off
-   this series: across all 60 belts 2017-2025 it comes to +30%, inflated by belts
-   whose footprint changed between years, by the partial 2026 season and by
-   offshore false positives. The growth KPI uses CLEAN_HA below, a fixed 43-belt
-   panel, which gives +11%. Registry-match and production are illustrative
-   overlays scaled off the measured extent, not survey figures. HA=0.49 ha is the
-   median digitised pond, so extent/HA recovers the pond-count units the setter
-   multiplies back — real hectares land on screen unchanged. */
+/* Measured statewide pond EXTENT in hectares — the AP AI Labs cluster run over
+   60 Sentinel-1 belts (OBIA, VV backscatter), with offshore detections removed.
+   REVISED Nov 2026, and the revision is large: 11 of the 60 belts are open sea.
+   Monsoon wind roughens the Bay of Bengal about 3.5 dB, lifting it over the
+   -16 dB water threshold, so between June and November the sea stops reading as
+   water and its speckle passes the pond shape gates. 20% of every detection ever
+   made was offshore, and 2025 falls from 1,32,135 ha to 94,079 ha. Each belt now
+   carries a sea mask built from a calm-season (Jan-Apr) stack, when the sea is
+   findable; see aquawatch-ml/src/seamask.py.
+   2024 is ABSENT, not zero: no per-belt run exists for it, and the figure shown
+   here previously was not measured.
+   Annual values still carry real observational noise (S-1 coverage + seasonal
+   water), so do not read a trend off this all-60 series; the growth KPI uses
+   CLEAN_HA below, a fixed 43-belt panel. Registry-match and production are
+   illustrative overlays scaled off the measured extent, not survey figures.
+   HA=0.49 ha is the median digitised pond, so extent/HA recovers the pond-count
+   units the setter multiplies back — real hectares land on screen unchanged. */
 var HAA=0.49;
-var REAL_HA={2017:101681,2018:113666,2019:91615,2020:104938,2021:122959,2022:106803,2023:127561,2024:115887,2025:132135,2026:131573};
+var REAL_HA={2017:74286,2018:77956,2019:81884,2020:93340,2021:88688,2022:93176,2023:95063,2025:94079,2026:99003};  /* no 2024 key: that season was never run */
 var PUB={det:Math.round(131573/HAA),unm:Math.round(28946/HAA),pro:Math.round(2274/HAA)}, BASE26=null, SCACHE={};
 function seasonScaled(Y){
   if(SCACHE[Y])return SCACHE[Y];
   if(!BASE26)BASE26=seasonStats(2026);
   var s=seasonStats(Y),b=BASE26;
-  var det=(REAL_HA[Y]!=null)?Math.round(REAL_HA[Y]/HAA):Math.round(PUB.det*(b.det?s.det/b.det:0));
+  /* 2024 has no per-belt run. The old code fell through to a model-scaled
+     estimate here, which put 1,15,887 ha on screen labelled as measured. Now it
+     interpolates its NEIGHBOURS purely so the sparkline has no hole, and flags
+     itself so every readout says "no data" instead of a number. */
+  var nodata=(REAL_HA[Y]==null), det;
+  if(!nodata){ det=Math.round(REAL_HA[Y]/HAA); }
+  else {
+    var lo=null,hi=null,k;
+    for(k=Y-1;k>=2017;k--) if(REAL_HA[k]!=null){lo=REAL_HA[k];break;}
+    for(k=Y+1;k<=2026;k++) if(REAL_HA[k]!=null){hi=REAL_HA[k];break;}
+    var mid=(lo!=null&&hi!=null)?(lo+hi)/2:(lo!=null?lo:(hi!=null?hi:0));
+    det=mid?Math.round(mid/HAA):Math.round(PUB.det*(b.det?s.det/b.det:0));
+  }
   var unm=Math.round(det*(PUB.unm/PUB.det));
   var pro=Math.round(det*(PUB.pro/PUB.det));
   var nw =Math.round(PUB.det*(b.det?s.nw/b.det:0));
-  return (SCACHE[Y]={det:det,unm:unm,pro:pro,nw:nw,mat:det?100*(det-unm-pro)/det:0});
+  return (SCACHE[Y]={det:det,unm:unm,pro:pro,nw:nw,nodata:nodata,mat:det?100*(det-unm-pro)/det:0});
 }
 function setSeason(y,quiet){
   SEASON_Y=Math.max(2018,Math.min(2026,y|0));
@@ -1926,14 +1945,16 @@ function setSeason(y,quiet){
   /* Extent, not pond counts. At 10 m pixel spacing 53% of ponds sit closer than
      one pixel to a neighbour, so the detector resolves aquaculture EXTENT and
      block structure. A pond count is not defensible and is not claimed. */
-  var CLEAN_HA={2017:82252,2018:89068,2019:69356,2020:72830,2021:79295,2022:73557,2023:86500,2025:91299};/* fixed 43-belt panel; 2024 has no per-belt data and 2026 is a partial season */
+  var CLEAN_HA={2017:51442,2018:54713,2019:57370,2020:58059,2021:54849,2022:57647,2023:57508,2025:57550};/* fixed 43-belt panel, sea-masked; 2024 has no per-belt data and 2026 is a partial season */
   var HA=0.49;                                   /* median digitised pond, OSM */
-  document.getElementById("kDet").textContent=fmt(Math.round(s.det*HA));var _ky=document.getElementById("kDetYr");if(_ky)_ky.textContent=SEASON_Y;
+  document.getElementById("kDet").textContent=s.nodata?"no data":fmt(Math.round(s.det*HA));
+  var _ky=document.getElementById("kDetYr");if(_ky)_ky.textContent=SEASON_Y;
+  var _nd=document.getElementById("tlNoRun");if(_nd)_nd.style.display=s.nodata?"inline-block":"none";
   var _cb=CLEAN_HA[SEASON_Y], _c0=CLEAN_HA[2017];
   document.getElementById("kMat").textContent=(_cb&&_c0)
     ? (((_cb/_c0-1)*100)>=0?"+":"")+((_cb/_c0-1)*100).toFixed(0)+"%"
     : "n/a";
-  document.getElementById("kUnm").textContent="60";
+  document.getElementById("kUnm").textContent="49";
   document.getElementById("kPro").textContent="12";
   document.getElementById("tlYear").textContent=SEASON_Y;var _pv=document.getElementById("tlProv");if(_pv)_pv.style.display=(SEASON_Y>=2026?"inline-block":"none");
   document.getElementById("tlSeason").textContent=(SEASON_Y%2)?"Rabi":"Kharif";
